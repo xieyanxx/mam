@@ -1,0 +1,108 @@
+@font-face {
+  font-family: "GoodBrush";
+  src: url("~@/assets/fonts/GoodBrush.woff") format("woff");
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  height: auto;
+  background: #000000;
+  height: 100%;
+}
+
+#root {
+  margin: 0 auto;
+  overflow: auto;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+#root::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+ul,
+ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+p,
+h1,
+h2,
+h3 {
+  margin: 0;
+  padding: 0;
+}
+
+::selection {
+  color: rgb(0, 153, 255);
+  background: transparent;
+}
+
+a {
+  text-decoration: none;
+  color: #fff;
+  transition: all 0.25s ease-in;
+
+  &:not([data-disabled="true"]) {
+    cursor: pointer;
+  }
+
+  &[data-disabled="true"] {
+    cursor: not-allowed;
+  }
+}
+.navActive {
+  background: #fff;
+  border-radius: 27px;
+  width: 175px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: bold;
+  color: #000000;
+}
+.navItem {
+  // width: 175px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: bold;
+}
+.navActivem {
+  border-radius: 13px;
+  border: 1px solid #ffb400;
+  font-family: Aller;
+  font-weight: bold;
+  font-size: 18px;
+  color: #ffffff;
+  width: 70px;
+  height: 28px;
+  text-align: center;
+}
+.navItem {
+  font-family: Aller;
+  font-weight: bold;
+  font-size: 18px;
+  color: #ad9ab9;
+  height: 28px;
+}
