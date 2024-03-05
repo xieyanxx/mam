@@ -1,3 +1,41 @@
-.home_warp {
-  height: 100%;
+.wrap {
+  height: 85%;
+  width: 583px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .tab_wrap {
+    display: flex;
+    align-items: center;
+    gap: 48px;
+    margin-top: 96px;
+    font-family: Aller;
+    font-weight: 400;
+    font-size: 31px;
+    color: #464543;
+    .tab_item {
+      position: relative;
+      cursor: pointer;
+    }
+    .active {
+      font-family: Aller;
+      font-weight: bold;
+      font-size: 31px;
+      color: #ffb400;
+      position: relative;
+      &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -8px;
+        width: 100%;
+        height: 3px;
+        background: #8a43b7;
+        display: block;
+        z-index: 0;
+        border-radius: 3px 3px 0px 0px;
+      }
+    }
+  }
 }

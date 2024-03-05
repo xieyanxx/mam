@@ -35,7 +35,7 @@ function Footer() {
         {linkData.map((item) => (
           <img
             className={isMobile ? styles.img_icon : ""}
-            src={isMobile ? item.src1 : item.src}
+            src={item.src1}
             key={item.id}
             onClick={() => window.open(item.link)}
           />
