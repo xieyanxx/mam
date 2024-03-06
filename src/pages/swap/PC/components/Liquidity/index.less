@@ -92,6 +92,13 @@
             outline: none;
           }
         }
+        .num {
+          font-family: Aller;
+          font-weight: 400;
+          font-size: 18px;
+          color: #5e3c73;
+          text-align: end;
+        }
       }
       .label_wrap {
         display: flex;
@@ -135,6 +142,41 @@
         }
       }
     }
+    .initial_wrap {
+      margin-top: 23px;
+      .initial_title {
+        font-family: Aller;
+        font-weight: bold;
+        font-size: 24px;
+        color: #ffffff;
+      }
+      .initial_content {
+        margin-top: 21px;
+        height: 85px;
+        background: #ffffff;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 48px;
+        .item_wrap {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          font-family: Aller;
+          font-weight: 400;
+          font-size: 16px;
+          color: #400068;
+
+          .item_num {
+            font-family: Aller;
+            font-weight: bold;
+            font-size: 24px;
+            color: #400068;
+          }
+        }
+      }
+    }
     .unlock_btn {
       width: 100%;
       display: flex;
@@ -154,5 +196,15 @@
         background: #000000 !important;
       }
     }
+  }
+
+  .refresh_wrap {
+    display: flex;
+    justify-content: center;
+    margin-top: 80px;
+    font-family: Aller;
+    font-weight: bold;
+    font-size: 30px;
+    color: #ffffff;
   }
 }

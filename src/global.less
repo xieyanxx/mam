@@ -67,6 +67,22 @@ a {
     cursor: not-allowed;
   }
 }
+::-webkit-scrollbar {
+  width: 10px;
+  height: 1px;
+}
+/*滚动条滑块*/
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 2px #ae9aba;
+  background: #ae9aba;
+}
+/*滚动条轨道*/
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0);
+  border-radius: 10px;
+  background: #301756;
+}
 .navActive {
   background: #fff;
   border-radius: 27px;
@@ -106,4 +122,3 @@ a {
   color: #ad9ab9;
   height: 28px;
 }
-

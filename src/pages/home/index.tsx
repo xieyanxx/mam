@@ -5,7 +5,6 @@ import Mobile from "./Mobile";
 
 function IndexPage() {
   const isMobile = useMobileToggle();
-  console.log(isMobile, "===22");
   return isMobile ? <Mobile /> : <PC />;
 }
 

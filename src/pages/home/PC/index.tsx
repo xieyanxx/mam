@@ -5,6 +5,7 @@ import sei from "@/assets/logo/sei.png";
 import block1 from "@/assets/logo/block1.png";
 import block2 from "@/assets/logo/block2.png";
 import block3 from "@/assets/logo/block3.png";
+import WalletModal from "@/components/Web/WalletModal";
 
 function PC() {
   return (
@@ -29,7 +30,8 @@ function PC() {
         </div>
       </div>
       <div className={styles.btn_wrap}>
-        <div className={cx(styles.btn, styles.connect_btn)}>Connect Wallet</div>
+        {/* <div className={cx(styles.btn, styles.connect_btn)}>Connect Wallet</div> */}
+        <WalletModal isbig></WalletModal>
         <div className={styles.btn}>Trade Now</div>
       </div>
       <div className={styles.link_text}>About the MAMBA Mentality</div>
