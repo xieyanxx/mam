@@ -5,7 +5,6 @@ import Mobile from "./Mobile";
 import { bigNumberTo, getContract } from "@/components/EthersContainer";
 import { farmContractAddress } from "@/components/EthersContainer/address";
 import { tokenAbi } from "@/components/EthersContainer/abj";
-import { ethers } from "ethers";
 
 function IndexPage() {
   const isMobile = useMobileToggle();
@@ -21,22 +20,17 @@ export const getAllowance = async (
 ) => {
   //判断认证状态
   const contract = await getContract(tokenAddress, tokenAbi, walletType);
-  var allowed = await contract.allowance(userAddress, tokenAddress);
+  var allowed = await contract.allowance(userAddress, farmContractAddress);
   return allowed ? bigNumberTo(allowed) : "0";
 };
 
 //获取精度
 export const getDecimals = async (
   tokenAddress: string,
-  userAddress: string,
   walletType: string
 ) => {
   //判断认证状态
   const contract = await getContract(tokenAddress, tokenAbi, walletType);
   var decimals = await contract.decimals();
-  return decimals
-  console.log(decimals);
-  // return decimals ? bigNumberTo(decimals) : "0";
+  return decimals;
 };
-
-export const handleApprove = async () => {};

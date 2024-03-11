@@ -74,4 +74,4 @@ export function getTime(time: string | number) {
 // 判断是否结束
 export function timeIsEnd(time: string | number) {
   return new Date().getTime()>Number(time) * 1000;
-} 
+}

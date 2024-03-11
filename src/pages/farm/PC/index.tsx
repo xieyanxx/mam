@@ -17,17 +17,12 @@ import down from "@/assets/logo/down.png";
 import share from "@/assets/logo/share.png";
 import metamask from "@/assets/logo/metamask.png";
 import Stake from "./components/Stake";
-import {
-  EthersContext,
-  bigNumberTo,
-  formTo,
-  getContract,
-} from "@/components/EthersContainer";
+import { bigNumberTo, formTo, getContract } from "@/components/EthersContainer";
 import { farmAbi, tokenAbi } from "@/components/EthersContainer/abj";
-import { ethers } from "ethers";
 import { farmContractAddress } from "@/components/EthersContainer/address";
-import { getTime, timeIsEnd } from "@/utils";
+import { formatAmount, getTime, timeIsEnd } from "@/utils";
 import { getAllowance, getDecimals } from "..";
+import Unstake from "./components/Unstake";
 const tabData = [
   { id: 1, name: "Active" },
   { id: 2, name: "Finished" },
@@ -40,13 +35,16 @@ function PC() {
   );
   const [current, setCurrent] = useState<number>(1);
   const [active, setActive] = useState<boolean>(false);
-  const [isoOnly, setIsoOnly] = useState<boolean>(false);
+  const [isOnly, setisOnly] = useState<boolean>(false);
   const [activeCurrent, setActiveCurrent] = useState<number>(0);
   const [stakeModalOpen, setStakeModalOpen] = useState(false);
+  const [unstakeModalOpen, setUnstakeModalOpen] = useState(false);
   const [poolData, setPoolData] = useState<any>([]);
   const [poolList, setPoolList] = useState<any>([]);
   const [currenPoolInfo, setCurrenPoolInfo] = useState<any>({});
   const [poolId, setPoolId] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [claimLoading, setClaimLoading] = useState<boolean>(false);
 
   const stakeShowModal = (pool: any, poolId: number) => {
     setCurrenPoolInfo(pool);
@@ -55,13 +53,25 @@ function PC() {
   };
   const handleStakeCancel = () => {
     setStakeModalOpen(false);
+    getPool();
+    getPoolList();
   };
+  const unstakeShowModal = (pool: any, poolId: number) => {
+    setCurrenPoolInfo(pool);
+    setPoolId(poolId);
+    setUnstakeModalOpen(true);
+  };
+  const handleUnstakeCancel = () => {
+    setUnstakeModalOpen(false);
+    getPool();
+    getPoolList();
+  };
+
   const onChange = (checked: boolean) => {
-    setIsoOnly(checked);
+    setisOnly(checked);
   };
 
   //获取pool数组
-
   async function getPool() {
     const contract = await getContract(
       farmContractAddress,
@@ -69,13 +79,13 @@ function PC() {
       walletType
     );
     let getPoolList = await contract.getpool();
+    console.log(getPoolList, "==>getPoolList");
     let newList = getPoolList.map(async (item: any, index: number) => {
       let userInfo = await contract.users(index, address);
       let pendingInfo = await contract.pending(index, address);
       let stakeStatue = await getAllowance(item.token, address, walletType);
-      let decimals = await getDecimals(item.token, address, walletType);
+      let decimals = await getDecimals(item.token, walletType);
       let newInfo: any = {};
-      console.log(decimals, "==>decimals");
       newInfo.amount = bigNumberTo(userInfo.amount, decimals);
       newInfo.token = item.token;
       newInfo.rewaredtoken = item.rewaredtoken;
@@ -98,12 +108,11 @@ function PC() {
   //获取pool卡片数据
   const getPoolList = useCallback(() => {
     if (current === 1) {
-      if (isoOnly) {
+      if (isOnly) {
+        console.log(isOnly, "==>isOnly");
         //返回用户已经质押的池子
         return setPoolList(
-          poolData.filter((item: any) => {
-            Number(item.amount) > 0;
-          })
+          poolData.filter((item: any) => Number(item.amount) > 0)
         );
       } else {
         return setPoolList(
@@ -111,7 +120,7 @@ function PC() {
         );
       }
     } else {
-      if (isoOnly) {
+      if (isOnly) {
         return setPoolList(
           poolData.filter((item: any) => Number(item.amount) > 0)
         );
@@ -121,22 +130,49 @@ function PC() {
         );
       }
     }
-  }, [current, poolData, isoOnly]);
-  const handleApprove = async (tokenAddress: string) => {
+  }, [current, poolData, isOnly]);
+  //授权
+  const handleApprove = async (tokenAddress: string, poolId: number) => {
+    setPoolId(poolId);
+    setLoading(true);
     var amount =
       "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
     const contract = await getContract(tokenAddress, tokenAbi, walletType);
-    var approveStatus = await contract.approve(tokenAddress, amount);
-    if (approveStatus) {
+    var transaction = await contract.approve(farmContractAddress, amount);
+    let status = transaction.wait().catch((err: any) => {
+      message.error("fail");
+      setLoading(false);
+    });
+    if (status) {
+      message.success("success");
       getPool();
-      message.success("approve success");
+      getPoolList();
+      setLoading(false);
     }
+  };
 
-    console.log(approveStatus, "=====>ddd");
+  //领取奖励
+  const handleClaim = async (poolId: number) => {
+    const contract = await getContract(
+      farmContractAddress,
+      farmAbi,
+      walletType
+    );
+    var transaction = await contract.reclaimReward(poolId);
+    let status = transaction.wait().catch((err: any) => {
+      message.error("fail");
+      setClaimLoading(false);
+    });
+    if (status) {
+      message.success("success");
+      getPool();
+      getPoolList();
+      setClaimLoading(false);
+    }
   };
   useEffect(() => {
     getPoolList();
-  }, [current, poolData, isoOnly]);
+  }, [current, poolData, isOnly]);
   useEffect(() => {
     getPool();
   }, [walletType]);
@@ -144,7 +180,6 @@ function PC() {
     current,
     details
   ) => {
-    console.log(current, details, "===>");
     return [
       {
         key: current,
@@ -202,7 +237,7 @@ function PC() {
         </div>
         <Switch
           className={styles.switch_wrap}
-          defaultChecked={isoOnly}
+          defaultChecked={isOnly}
           onChange={onChange}
         />
         <div className={styles.switch_text}>Staked only</div>
@@ -213,8 +248,8 @@ function PC() {
             <div className={styles.item_wrap}>
               <div className={styles.top_wrap}>
                 <div className={styles.top_l}>
-                  <div className={styles.name}>{item.name[0]}</div>
-                  <div className={styles.name_1}>{item.name[1]}</div>
+                  <div className={styles.name}>Stake {item.name[0]}</div>
+                  <div className={styles.name_1}>Earn {item.name[1]}</div>
                 </div>
                 <div className={styles.top_r}>
                   <img className={styles.img_b} src={sei1} alt="" />
@@ -236,30 +271,46 @@ function PC() {
                 </div>
                 <div className={styles.text_bt}>
                   <div className={styles.bt_l}>
-                    <div className={styles.bt_text}>MAMBA Earned</div>
-                    <div>{item.amount}</div>
+                    <div className={styles.bt_text}>{item.name[1]} Earned</div>
+                    <div>{formatAmount(item.userReward)}</div>
                   </div>
-                  <Button className={styles.btn}>Claim</Button>
+                  <Button
+                    className={styles.btn}
+                    onClick={() => handleClaim(index)}
+                    loading={claimLoading}
+                  >
+                    Claim
+                  </Button>
                 </div>
               </div>
-              <Button
-                className={styles.stake_btn}
-                onClick={
-                  !item.stakeStatue
-                    ? () => handleApprove(item.token)
-                    : () => stakeShowModal(item, index)
-                }
-              >
-                {item.stakeStatue ? "Stake" : "approve"}
-              </Button>
-              {/* <div className={styles.stake_wrap}>
-              <Button className={cx(styles.stake_btn, styles.stake_btn1)}>
-                Stake +
-              </Button>
-              <Button className={cx(styles.stake_btn, styles.stake_btn2)}>
-                Unstake
-              </Button>
-            </div> */}
+              {!Number(item.amount) ? (
+                <Button
+                  className={styles.stake_btn}
+                  loading={index == poolId ? loading : false}
+                  onClick={
+                    !item.stakeStatue
+                      ? () => handleApprove(item.token, index)
+                      : () => stakeShowModal(item, index)
+                  }
+                >
+                  {item.stakeStatue ? "Stake" : "approve"}
+                </Button>
+              ) : (
+                <div className={styles.stake_wrap}>
+                  <Button
+                    className={cx(styles.stake_btn, styles.stake_btn1)}
+                    onClick={() => stakeShowModal(item, index)}
+                  >
+                    Stake +
+                  </Button>
+                  <Button
+                    className={cx(styles.stake_btn, styles.stake_btn2)}
+                    onClick={() => unstakeShowModal(item, index)}
+                  >
+                    Unstake
+                  </Button>
+                </div>
+              )}
             </div>
             <Collapse
               onChange={(v) => {
@@ -286,6 +337,12 @@ function PC() {
         poolId={poolId}
         poolInfo={currenPoolInfo}
       ></Stake>
+      <Unstake
+        isModalOpen={unstakeModalOpen}
+        handleCancel={handleUnstakeCancel}
+        poolId={poolId}
+        poolInfo={currenPoolInfo}
+      ></Unstake>
     </div>
   );
 }

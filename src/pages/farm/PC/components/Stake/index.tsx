@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useState } from "react";
 import styles from "./index.less";
 import cx from "classnames";
-import { Button, Input, Modal, Radio } from "antd";
+import { Button, Input, Modal, Radio, message } from "antd";
 import close from "@/assets/logo/close.png";
 import icon1 from "@/assets/logo/icon1.png";
 import { farmContractAddress } from "@/components/EthersContainer/address";
@@ -20,24 +20,30 @@ function Stake({
   poolInfo: any;
 }) {
   const [stakeAmount, setStakeAmount] = useState<string>("0");
+  const [loading, setLoading] = useState<boolean>(false);
   const [walletType] = useState<string>(
     sessionStorage.getItem("walletType") || ""
   );
-  const [address] = useState<string>(sessionStorage.getItem("address") || "");
   const deposit = useCallback(async () => {
+    setLoading(true);
     const contract = await getContract(
       farmContractAddress,
       farmAbi,
       walletType
     );
-    console.log(contract, "==>status");
-    console.log(poolId, toWei(stakeAmount, poolInfo.decimals));
-    let status = await contract.deposit(
+    let transaction = await contract.deposit(
       poolId,
       toWei(stakeAmount, poolInfo.decimals)
     );
-
-    console.log(status);
+    let status = transaction.wait().catch((err: any) => {
+      message.error("fail");
+      setLoading(false);
+    });
+    if (status) {
+      message.success("success");
+      setLoading(false);
+      handleCancel();
+    }
   }, [stakeAmount]);
 
   return (
@@ -61,7 +67,7 @@ function Stake({
               <p>You are staking:</p>
               <div className={styles.title_r}>
                 <img src="" alt="" />
-                <p>SEI</p>
+                <p>{poolInfo?.name?.[0]}</p>
               </div>
             </div>
             <div className={styles.balance_text}>Balance: 420</div>
@@ -89,9 +95,13 @@ function Stake({
               <div className={styles.item}>MAX</div>
             </div>
             <div className={styles.btn_wrap}>
-              <div className={styles.btn} onClick={deposit}>
+              <Button
+                className={styles.btn}
+                loading={loading}
+                onClick={deposit}
+              >
                 Confirm
-              </div>
+              </Button>
               <div className={cx(styles.btn, styles.sei_btn)}>Get SEI</div>
             </div>
           </div>

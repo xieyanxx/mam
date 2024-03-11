@@ -73,6 +73,29 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      .input_inner {
+        width: 100%;
+        height: 60%;
+        background: none;
+        border: none;
+        font-family: Aller;
+        font-weight: bold;
+        font-size: 43px;
+        color: #ffffff;
+        text-align: end;
+        &:focus-visible {
+          outline: none;
+        }
+        &:focus-within {
+          box-shadow: none;
+        }
+        &::placeholder {
+          font-family: PublicSansRoman;
+          font-weight: 400;
+          font-size: 30px;
+          color: #ae9aba;
+        }
+      }
       .num {
         font-family: PublicSansRoman;
         font-weight: 400;

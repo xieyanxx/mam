@@ -1,6 +1,7 @@
 // 测试
 export const network = "bsc";
-export const farmContractAddress = "0xEcf3B797a8832Cac7D1D3e8Dd8fE6B8ba996CC68"; //合约地址
+export const farmContractAddress = "0x983562C75D92610D06a118F2ad35e2c015120D0C"; //farm合约地址
+export const poolContractAddress = "0x1586d26cf1717d4d520bA3f02D4E9E1286BBF51c"; //pool合约地址
 
 //预发布
 // export const network0913 = 'Goerli';
