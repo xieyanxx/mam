@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import { ethers } from "ethers";
-import { EIP_1193_EVENTS } from "./constant";
+import { EIP_EVENTS } from "./constant";
 import { CoinbaseWallet } from "@/components/EthersContainer/wallet/coinbase";
 import { WalletConnect } from "@/components/EthersContainer/wallet/walletconnect";
 import { MetaMaskWallet } from "@/components/EthersContainer/wallet/metamask";
@@ -101,21 +101,21 @@ const EthersContainer = React.memo((props: any) => {
         console.log("钱包推送消息", params);
       };
 
-      connector.on(EIP_1193_EVENTS.CONNECT, onConnect);
-      connector.on(EIP_1193_EVENTS.DISCONNECT, onDisconnect);
-      connector.on(EIP_1193_EVENTS.ACCOUNTS_CHANGED, onAccountsChanged);
-      connector.on(EIP_1193_EVENTS.CHAIN_CHANGED, onChainChanged);
-      connector.on(EIP_1193_EVENTS.MESSAGE, onMessage);
-      // connector.on(EIP_1193_EVENTS.SESSIONUPDATE,onSessionUpdate)
+      connector.on(EIP_EVENTS.CONNECT, onConnect);
+      connector.on(EIP_EVENTS.DISCONNECT, onDisconnect);
+      connector.on(EIP_EVENTS.ACCOUNTS_CHANGED, onAccountsChanged);
+      connector.on(EIP_EVENTS.CHAIN_CHANGED, onChainChanged);
+      connector.on(EIP_EVENTS.MESSAGE, onMessage);
+      // connector.on(EIP_EVENTS.SESSIONUPDATE,onSessionUpdate)
       return () => {
-        connector.removeListener(EIP_1193_EVENTS.CONNECT, onConnect);
-        connector.removeListener(EIP_1193_EVENTS.DISCONNECT, onDisconnect);
+        connector.removeListener(EIP_EVENTS.CONNECT, onConnect);
+        connector.removeListener(EIP_EVENTS.DISCONNECT, onDisconnect);
         connector.removeListener(
-          EIP_1193_EVENTS.ACCOUNTS_CHANGED,
+          EIP_EVENTS.ACCOUNTS_CHANGED,
           onAccountsChanged
         );
-        connector.removeListener(EIP_1193_EVENTS.CHAIN_CHANGED, onChainChanged);
-        connector.removeListener(EIP_1193_EVENTS.MESSAGE, onMessage);
+        connector.removeListener(EIP_EVENTS.CHAIN_CHANGED, onChainChanged);
+        connector.removeListener(EIP_EVENTS.MESSAGE, onMessage);
       };
     },
     [resetEthers]
@@ -209,13 +209,40 @@ const EthersContainer = React.memo((props: any) => {
 
 export default EthersContainer;
 
-export const getContract = (address: string, abi: any) => {
-  return new ethers.Contract(address, abi);
+export const getContract = async (
+  address: string,
+  abi: any,
+  walletType: string
+) => {
+  let provider: any;
+  switch (walletType) {
+    case WalletType.MetaMaskWallet:
+      provider = await MetaMaskWallet();
+      break;
+    case WalletType.WalletConnect:
+      provider = await WalletConnect();
+      break;
+    case WalletType.OkxWallet:
+      provider = await OkxWallet();
+      break;
+    case WalletType.CoinbaseWallet:
+      provider = await CoinbaseWallet();
+      break;
+  }
+  const _ethers = new ethers.providers.Web3Provider(provider);
+  const signer = _ethers.getSigner();
+  return new ethers.Contract(address, abi, signer);
 };
 
 // 大数转数值
-export const formatEther = (val: string) => {
-  return ethers.utils.formatEther(val);
+export const bigNumberTo = (val: any, num?: number) => {
+  return ethers.utils.formatUnits(val, num).toString();
+};
+export const toWei = (val: any, num: number | string) => {
+  return ethers.utils.parseUnits(val, num).toString();
+};
+export const formTo = (val: any) => {
+  return ethers.BigNumber.from(val).toString();
 };
 //数值转大数
 export const parseEther = (val: string) => {

@@ -1,0 +1,105 @@
+.content_warp {
+  .title_wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    & > img {
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+    }
+    .title_l {
+      display: flex;
+      align-items: center;
+      font-family: PublicSansRoman;
+      font-weight: bold;
+      font-size: 48px;
+      color: #ffffff;
+      .tip_icon {
+        width: 41px;
+        height: 41px;
+        cursor: pointer;
+        margin-left: 21px;
+      }
+    }
+  }
+  .content {
+    margin-top: 38px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .item_wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 380px;
+      height: 85px;
+      background: #190029;
+      border-radius: 20px;
+      .item {
+        height: 42px;
+        background: #6f00b5;
+        border-radius: 10px;
+        padding: 0 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 11px;
+        font-family: Aller;
+        font-weight: bold;
+        font-size: 20px;
+        color: #ffffff;
+        & > img {
+          width: 28px;
+          height: 28px;
+        }
+        .down {
+          width: 11px;
+          height: 7px;
+        }
+      }
+    }
+    .add_icon {
+      width: 33px;
+      height: 25px;
+      margin: 50px 0 39px;
+    }
+    .btn_wrap {
+      margin-top: 65px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+      .btn {
+        width: 290px;
+        height: 82px;
+        background: #ffffff;
+        border-radius: 20px;
+        border: 3px solid #7438cf;
+        font-family: PublicSansRoman;
+        font-weight: bold;
+        font-size: 48px;
+        color: #7438cf;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
+}
+.modal_wrap {
+  :global {
+    .ant-modal-content {
+      background: #3e1d70 !important;
+      border-radius: 60px !important;
+      border: 4px solid #ffffff !important;
+      padding: 47px;
+    }
+    .ant-modal-close {
+      right: 47px;
+    }
+  }
+}

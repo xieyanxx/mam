@@ -1,7 +1,10 @@
+import logo from "@/assets/logo/logo.png";
 import { defineConfig } from "umi";
 import px2vw from "postcss-px-to-viewport";
 
 export default defineConfig({
+  title: "mam",
+  links: [{ rel: "icon", href: "./logo.png" }],
   routes: [
     { path: "/", component: "@/pages/home" },
     { path: "/Pool", component: "@/pages/pool" },

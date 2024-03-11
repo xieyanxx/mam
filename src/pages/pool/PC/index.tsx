@@ -14,6 +14,8 @@ import block1 from "@/assets/logo/block1.png";
 import down from "@/assets/logo/down.png";
 import share from "@/assets/logo/share.png";
 import metamask from "@/assets/logo/metamask.png";
+import Stake from "./components/Stake";
+import ImportPool from "./components/ImportPool";
 
 const tabData = [
   { id: 1, name: "Active" },
@@ -24,7 +26,13 @@ function PC() {
   const [current, setCurrent] = useState<number>(1);
   const [active, setActive] = useState<boolean>(false);
   const onChange = useCallback(() => {}, []);
-
+  const [stakeModalOpen, setStakeModalOpen] = useState(false);
+  const stakeShowModal = () => {
+    setStakeModalOpen(true);
+  };
+  const handleStakeCancel = () => {
+    setStakeModalOpen(false);
+  };
   const getItems: () => CollapseProps["items"] = () => [
     {
       key: "1",
@@ -119,7 +127,9 @@ function PC() {
                 <Button className={styles.btn}>Claim</Button>
               </div>
             </div>
-            <Button className={styles.stake_btn}>Stake</Button>
+            <Button className={styles.stake_btn} onClick={stakeShowModal}>
+              Stake
+            </Button>
             {/* <div className={styles.stake_wrap}>
               <Button className={cx(styles.stake_btn, styles.stake_btn1)}>
                 Stake +
@@ -201,6 +211,14 @@ function PC() {
           />
         </div>
       </div>
+      {/* <Stake
+        isModalOpen={stakeModalOpen}
+        handleCancel={handleStakeCancel}
+      ></Stake> */}
+      <ImportPool
+        isModalOpen={stakeModalOpen}
+        handleCancel={handleStakeCancel}
+      ></ImportPool>
     </div>
   );
 }

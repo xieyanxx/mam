@@ -26,8 +26,8 @@
     background: #6f00b5;
     border-radius: 30px;
     border: 1px solid #25003d;
-    padding: 35px;
-    margin-top: 20px;
+    padding: 23px;
+    margin-top: 16px;
     .from_wrap {
       .from_title {
         display: flex;
@@ -36,91 +36,98 @@
         .name {
           font-family: Aller;
           font-weight: bold;
-          font-size: 24px;
+          font-size: 15px;
           color: #ffffff;
         }
         .balance {
           font-family: Aller;
           font-weight: 400;
-          font-size: 16px;
+          font-size: 10px;
           color: #ae9aba;
         }
       }
       .from_input_wrap {
-        margin-top: 18px;
+        margin-top: 13px;
         width: 100%;
-        height: 85px;
+        height: 54px;
         background: #190029;
         border-radius: 20px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 0 30px 0 45px;
+        padding: 0 19px 0 29px;
         .type_wrap {
-          width: 138px;
-          height: 42px;
+          width: 88px;
+          height: 27px;
           background: #6f00b5;
           border-radius: 10px;
           display: flex;
           align-items: center;
-          gap: 8px;
-          padding: 0 13px;
+          gap: 6px;
+          padding: 0 8px;
           font-family: Aller;
           font-weight: bold;
-          font-size: 20px;
+          font-size: 12px;
           color: #ffffff;
           cursor: pointer;
           & > img {
-            width: 11px;
-            height: 7px;
+            width: 8px;
+            height: 5px;
           }
           .icon_img {
-            width: 28px;
-            height: 28px;
+            width: 18px;
+            height: 18px;
           }
         }
         .input_inner {
-          width: 250px;
+          width: 100%;
           height: 80%;
           background: none;
           border: none;
           font-family: Aller;
           font-weight: bold;
-          font-size: 30px;
+          font-size: 19px;
           color: #5e3c73;
           text-align: end;
           &:focus-visible {
             outline: none;
           }
         }
+        .num {
+          font-family: Aller;
+          font-weight: 400;
+          font-size: 11px;
+          color: #5e3c73;
+          text-align: end;
+        }
       }
       .label_wrap {
         display: flex;
         align-items: center;
         justify-content: end;
-        gap: 10px;
-        margin-top: 15px;
+        gap: 5px;
+        margin-top: 7px;
         .item {
-          padding: 0 13px;
-          border-radius: 12px;
+          padding: 0 8px;
+          border-radius: 8px;
           border: 2px solid #ae99ba;
           font-family: Aller;
           font-weight: bold;
-          font-size: 12px;
+          font-size: 8px;
           color: #ae9aba;
-          height: 26px;
+          height: 17px;
           display: flex;
           align-items: center;
         }
       }
       .change_wrap {
-        height: 40px;
+        height: 27px;
         width: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
         position: relative;
-        margin-bottom: 36px;
+        margin-bottom: 25px;
         .line {
           width: 100%;
           height: 1px;
@@ -128,8 +135,8 @@
         }
         .change_icon {
           position: absolute;
-          width: 40px;
-          height: 40px;
+          width: 27px;
+          height: 27px;
           left: 50%;
           top: 50%;
           transform: translate(-50%, -50%);
@@ -141,18 +148,37 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 83px;
+      height: 53px;
       background: #000000;
       border-radius: 14px;
       font-family: Aller;
       font-weight: bold;
-      font-size: 30px;
+      font-size: 19px;
       color: #ffb400;
-      margin-top: 37px;
+      margin-top: 23px;
       border: none;
       &:hover {
         color: #ffb400 !important;
         background: #000000 !important;
+      }
+    }
+  }
+  .refresh_wrap {
+    display: flex;
+    justify-content: center;
+    margin-top: 11px;
+    .refresh {
+      width: 33px;
+      height: 33px;
+      background: #6f00b5;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      & > img {
+        width: 19px;
+        height: 19px;
       }
     }
   }

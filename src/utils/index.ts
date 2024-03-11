@@ -1,6 +1,7 @@
 import { message } from "antd";
 import { useContext } from "react";
 import { EthersContext } from "@/components/EthersContainer";
+import dayjs from "dayjs";
 
 export function IsMobile() {
   let plat = navigator.userAgent.match(
@@ -67,3 +68,10 @@ export function formatAmount(num: string) {
   return Math.floor(Number(num) * 100) / 100;
 }
 
+export function getTime(time: string | number) {
+  return dayjs(Number(time) * 1000).format("MMM DD,YYYY,HH:mm A");
+}
+// 判断是否结束
+export function timeIsEnd(time: string | number) {
+  return new Date().getTime()>Number(time) * 1000;
+} 

@@ -1,0 +1,115 @@
+.content_warp {
+  .title_wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 40px;
+    & > p {
+      flex: 1;
+
+      font-family: PublicSansRoman;
+      font-weight: bold;
+      font-size: 48px;
+      color: #ffffff;
+    }
+    & > img {
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+    }
+  }
+  .content {
+    margin-top: 56px;
+    .title {
+      display: flex;
+      align-items: center;
+      & > img {
+        width: 74px;
+        height: 74px;
+        margin-right: 18px;
+      }
+      & > p {
+        font-family: PublicSansRoman;
+        font-weight: bold;
+        font-size: 60px;
+        color: #ffffff;
+        margin-right: 42px;
+      }
+    }
+    .radio_wrap {
+      margin-top: 40px;
+      height: 43px;
+      background: #190029;
+      width: 100%;
+      border-radius: 21px;
+      border: 1px solid #ae9aba;
+      display: flex;
+      align-items: center;
+      :global {
+        .ant-radio-button-wrapper {
+          height: 100%;
+          flex: 1;
+          font-family: PublicSansRoman;
+          font-weight: bold;
+          font-size: 12px;
+          color: #ae9aba;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #190029;
+          padding: 0;
+        }
+
+        .ant-radio-button-wrapper:first-child {
+          border-radius: 21px 0px 0px 21px;
+        }
+        .ant-radio-button-wrapper:last-child {
+          border-radius: 0 21px 21px 0;
+        }
+        .ant-radio-button-wrapper-checked {
+          background: #7438cf;
+          border: 1px solid #ffffff;
+          color: #ffffff;
+          &::before {
+            width: 0;
+            background-color: #ffffff;
+          }
+        }
+      }
+    }
+    .btn_wrap {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      .btn {
+        width: 511px;
+        height: 82px;
+        background: #190029;
+        border-radius: 20px;
+        border: 3px solid #7438cf;
+        font-family: PublicSansRoman;
+        font-weight: bold;
+        font-size: 48px;
+        color: #7438cf;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 55px;
+      }
+    }
+  }
+}
+.modal_wrap {
+  :global {
+    .ant-modal-content {
+      background: #3e1d70 !important;
+      border-radius: 60px !important;
+      border: 4px solid #ffffff !important;
+      padding: 54px;
+    }
+    .ant-modal-close {
+      right: 54px;
+    }
+  }
+}

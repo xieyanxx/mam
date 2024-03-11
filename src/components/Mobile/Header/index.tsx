@@ -5,6 +5,7 @@ import styles from "./index.less";
 import logo from "@/assets/logo/logo.png";
 import English from "@/assets/logo/English.png";
 import cx from "classnames";
+import WalletModal from "../WalletModal";
 type Props = {
   isIndex?: boolean;
 };
@@ -55,7 +56,8 @@ const Header: React.FC<Props> = () => {
           <div className={styles.lang_wrap}>
             <img src={English} alt="" />
           </div>
-          <div className={styles.connect_btn}>Connect</div>
+          <WalletModal></WalletModal>
+          {/* <div className={styles.connect_btn}>Connect</div> */}
         </div>
       </div>
       <div className={styles.header_middle}>
@@ -71,7 +73,8 @@ const Header: React.FC<Props> = () => {
           );
         })}
       </div>
-      <div className={styles.connect_btn}>Connect Wallet</div>
+      {/* <WalletModal></WalletModal> */}
+      {/* <div className={styles.connect_btn}>Connect Wallet</div> */}
     </div>
   );
 };

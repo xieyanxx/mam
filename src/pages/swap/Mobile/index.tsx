@@ -3,9 +3,12 @@ import { history } from "umi";
 import styles from "./index.less";
 import cx from "classnames";
 import Swap from "./components/Swap";
+import Liquidity from "./components/Liquidity";
+import MyLps from "./components/MyLps";
 const tabData = [
   { id: 1, name: "Swap" },
   { id: 2, name: "Liquidity" },
+  { id: 3, name: "My LPs" },
 ];
 function Mobile() {
   const [current, setCurrent] = useState<number>(1);
@@ -22,7 +25,9 @@ function Mobile() {
           </div>
         ))}
       </div>
-      <Swap></Swap>
+      {current == 1 && <Swap></Swap>}
+      {current == 2 && <Liquidity />}
+      {current == 3 && <MyLps />}
     </div>
   );
 }

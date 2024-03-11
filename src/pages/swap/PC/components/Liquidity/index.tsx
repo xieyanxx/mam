@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import styles from "./index.less";
 import cx from "classnames";
 import setting from "@/assets/logo/setting.png";
@@ -8,8 +8,19 @@ import down from "@/assets/logo/down.png";
 import usdt from "@/assets/logo/usdt.png";
 import add from "@/assets/logo/add.png";
 import { Button } from "antd";
+import AddLiquidity from "../AddLiquidity";
+import ConfirmSwap from "../ConfirmSwap";
+import RemoveLiquidity from "../RemoveLiquidity";
 
 function Liquidity() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [addModalOpen, setAddModalOpen] = useState(false);
+  const addShowModal = () => {
+    setAddModalOpen(true);
+  };
+  const handleAddCancel = () => {
+    setAddModalOpen(false);
+  };
   return (
     <div className={styles.wrap}>
       <div className={styles.title}>
@@ -85,28 +96,44 @@ function Liquidity() {
           </div>
         </div>
         <div className={styles.initial_wrap}>
-        <div className={styles.initial_title}>Initial Prices & Pool Share</div>
-        <div className={styles.initial_content}>
-          <div className={styles.item_wrap}>
-            <div className={styles.item_num}>1</div>
-            <div>USDC per SEI</div>
+          <div className={styles.initial_title}>
+            Initial Prices & Pool Share
           </div>
-          <div className={styles.item_wrap}>
-            <div className={styles.item_num}>1</div>
-            <div>USDC per SEI</div>
-          </div>
-          <div className={styles.item_wrap}>
-            <div className={styles.item_num}>1</div>
-            <div>USDC per SEI</div>
+          <div className={styles.initial_content}>
+            <div className={styles.item_wrap}>
+              <div className={styles.item_num}>1</div>
+              <div>USDC per SEI</div>
+            </div>
+            <div className={styles.item_wrap}>
+              <div className={styles.item_num}>1</div>
+              <div>USDC per SEI</div>
+            </div>
+            <div className={styles.item_wrap}>
+              <div className={styles.item_num}>1</div>
+              <div>USDC per SEI</div>
+            </div>
           </div>
         </div>
-      </div>
         <div className={styles.btn_wrap}>
-          <Button className={styles.unlock_btn}>Add liquidity</Button>
+          <Button className={styles.unlock_btn} onClick={addShowModal}>
+            Add liquidity
+          </Button>
         </div>
       </div>
-     
+
       <div className={styles.refresh_wrap}>Check my Liquidity Pools</div>
+      {/* <AddLiquidity
+        handleCancel={handleAddCancel}
+        isModalOpen={addModalOpen}
+      ></AddLiquidity> */}
+      {/* <ConfirmSwap
+        handleCancel={handleAddCancel}
+        isModalOpen={addModalOpen}
+      ></ConfirmSwap> */}
+      <RemoveLiquidity
+        handleCancel={handleAddCancel}
+        isModalOpen={addModalOpen}
+      ></RemoveLiquidity>
     </div>
   );
 }
