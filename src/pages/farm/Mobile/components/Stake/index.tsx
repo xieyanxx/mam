@@ -26,19 +26,36 @@ function Stake({
   const [loading, setLoading] = useState<boolean>(false);
 
   const deposit = useCallback(async () => {
+    setLoading(true);
     const contract = await getContract(
       farmContractAddress,
       farmAbi,
       walletType
     );
-    let transaction = await contract
-      .deposit(poolId, toWei(stakeAmount, poolInfo.decimals))
-      .wait()
-      .catch((err: any) => {
-        message.error("fail");
-        setLoading(false);
-      });
-    if (transaction) {
+    let status;
+    if (poolInfo.token.toString() == "0") {
+      //主网币的质押
+      status = await contract
+        .deposit(poolId, toWei(stakeAmount, poolInfo.decimals), {
+          //这个value 就是用户质押的bnb数量
+          value: toWei(stakeAmount, poolInfo.decimals),
+        })
+        .wait() //这种交易 最好是加一个 awit函数 强制阻塞
+        .catch((err: any) => {
+          message.error("fail");
+          setLoading(false);
+        });
+    } else {
+      //正常情况的deposit
+      status = await contract
+        .deposit(poolId, toWei(stakeAmount, poolInfo.decimals))
+        .wait()
+        .catch((err: any) => {
+          message.error("fail");
+          setLoading(false);
+        });
+    }
+    if (status) {
       message.success("success");
       setLoading(false);
       handleCancel();

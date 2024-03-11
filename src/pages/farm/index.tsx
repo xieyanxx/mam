@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import { useMobileToggle } from "@/hooks/useMobileToggle";
 import PC from "./PC";
 import Mobile from "./Mobile";
-import { bigNumberTo, getContract } from "@/components/EthersContainer";
+import { formWei, getContract } from "@/components/EthersContainer";
 import { farmContractAddress } from "@/components/EthersContainer/address";
 import { tokenAbi } from "@/components/EthersContainer/abj";
 
@@ -21,14 +21,11 @@ export const getAllowance = async (
   //判断认证状态
   const contract = await getContract(tokenAddress, tokenAbi, walletType);
   var allowed = await contract.allowance(userAddress, farmContractAddress);
-  return allowed ? bigNumberTo(allowed) : "0";
+  return allowed ? formWei(allowed) : "0";
 };
 
 //获取精度
-export const getDecimals = async (
-  tokenAddress: string,
-  walletType: string
-) => {
+export const getDecimals = async (tokenAddress: string, walletType: string) => {
   //判断认证状态
   const contract = await getContract(tokenAddress, tokenAbi, walletType);
   var decimals = await contract.decimals();

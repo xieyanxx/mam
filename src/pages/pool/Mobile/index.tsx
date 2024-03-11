@@ -9,7 +9,7 @@ import block1 from "@/assets/logo/block1.png";
 import share from "@/assets/logo/share.png";
 import metamask from "@/assets/logo/metamask.png";
 import Stake from "./components/Stake";
-import { bigNumberTo, formTo, getContract } from "@/components/EthersContainer";
+import { formWei, formTo, getContract } from "@/components/EthersContainer";
 import { poolContractAddress } from "@/components/EthersContainer/address";
 import { poolAbi, tokenAbi } from "@/components/EthersContainer/abj";
 import { getAllowance, getDecimals } from "..";
@@ -78,14 +78,14 @@ function Mobile() {
       let stakeStatue = await getAllowance(item.token, address, walletType);
       let decimals = await getDecimals(item.token, walletType);
       let newInfo: any = {};
-      newInfo.amount = bigNumberTo(userInfo.amount, decimals);
+      newInfo.amount = formWei(userInfo.amount, decimals);
       newInfo.token = item.token;
       newInfo.rewaredtoken = item.rewaredtoken;
       newInfo.starttime = formTo(item.starttime);
       newInfo.endtime = formTo(item.endtime);
-      newInfo.totalStake = bigNumberTo(item.totalStake, decimals);
+      newInfo.totalStake = formWei(item.totalStake, decimals);
       newInfo.name = item.name.split(",");
-      newInfo.userReward = bigNumberTo(pendingInfo, decimals);
+      newInfo.userReward = formWei(pendingInfo, decimals);
       if (Number(stakeStatue) > Number(newInfo.amount)) {
         //判断授权状态  true:已授权，fasle:未授权
         newInfo.stakeStatue = true;

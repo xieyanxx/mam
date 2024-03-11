@@ -239,16 +239,13 @@ export const getContract = async (
 };
 
 // 大数转数值
-export const bigNumberTo = (val: any, num?: number) => {
+export const formWei = (val: any, num?: number) => {
   return ethers.utils.formatUnits(val, num).toString();
 };
 export const toWei = (val: any, num: number | string) => {
   return ethers.utils.parseUnits(val, num).toString();
 };
-export const formWei = (val: any, num: number | string) => {
-  console.log(val, "number");
-  return ethers.utils.formatUnits(val, num).toString();
-};
+
 export const formTo = (val: any) => {
   return ethers.BigNumber.from(val).toString();
 };
