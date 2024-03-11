@@ -30,22 +30,20 @@ function Unstake({
       farmAbi,
       walletType
     );
-    let transaction = await contract.withdraw(
-      poolId,
-      toWei(stakeAmount, poolInfo.decimals)
-    );
-    let status = transaction.wait().catch((err: any) => {
-      message.error("fail");
-      setLoading(false);
-    });
-    if (status) {
+    let transaction = await contract
+      .withdraw(poolId, toWei(stakeAmount, poolInfo.decimals))
+      .wait()
+      .catch((err: any) => {
+        message.error("fail");
+        setLoading(false);
+      });
+    if (transaction) {
       message.success("success");
       setLoading(false);
       handleCancel();
     }
   }, [stakeAmount]);
   return (
-    
     <div className={styles.wrap}>
       <Modal
         title=""
@@ -71,7 +69,7 @@ function Unstake({
             </div>
             <div className={styles.balance_text}>Balance: 420</div>
             <div className={styles.input_wrap}>
-            <Input
+              <Input
                 onChange={(e) => {
                   let value = e.target.value;
                   if (!value.match(/^\d+(\.\d{0,16})?$/)) {
@@ -94,7 +92,9 @@ function Unstake({
               <div className={styles.item}>MAX</div>
             </div>
             <div className={styles.btn_wrap}>
-              <Button className={styles.btn} loading={loading}  onClick={submit}>Confirm</Button>
+              <Button className={styles.btn} loading={loading} onClick={submit}>
+                Confirm
+              </Button>
             </div>
           </div>
         </div>

@@ -31,15 +31,15 @@ function Stake({
       farmAbi,
       walletType
     );
-    let transaction = await contract.deposit(
-      poolId,
-      toWei(stakeAmount, poolInfo.decimals)
-    );
-    let status = transaction.wait().catch((err: any) => {
-      message.error("fail");
-      setLoading(false);
-    });
-    if (status) {
+    let transaction = await contract
+      .deposit(poolId, toWei(stakeAmount, poolInfo.decimals))
+      .wait()
+      .catch((err: any) => {
+        message.error("fail");
+        setLoading(false);
+      });
+
+    if (transaction) {
       message.success("success");
       setLoading(false);
       handleCancel();

@@ -31,15 +31,14 @@ function Unstake({
       poolAbi,
       walletType
     );
-    let transaction = await contract.withdraw(
-      poolId,
-      toWei(stakeAmount, poolInfo.decimals)
-    );
-    let status = transaction.wait().catch((err: any) => {
-      message.error("fail");
-      setLoading(false);
-    });
-    if (status) {
+    let transaction = await contract
+      .withdraw(poolId, toWei(stakeAmount, poolInfo.decimals))
+      .wait()
+      .catch((err: any) => {
+        message.error("fail");
+        setLoading(false);
+      });
+    if (transaction) {
       message.success("success");
       setLoading(false);
       handleCancel();
@@ -65,9 +64,7 @@ function Unstake({
             <div className={styles.title}>
               <p>Unstake LP in Pools</p>
               <div className={styles.title_r}>
-                <p>
-                  {poolInfo?.name?.[0]}
-                </p>
+                <p>{poolInfo?.name?.[0]}</p>
               </div>
             </div>
             <div className={styles.balance_text}>

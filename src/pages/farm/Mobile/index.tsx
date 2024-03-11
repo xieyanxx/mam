@@ -126,12 +126,15 @@ function Mobile() {
     var amount =
       "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
     const contract = await getContract(tokenAddress, tokenAbi, walletType);
-    var transaction = await contract.approve(farmContractAddress, amount);
-    let status = transaction.wait().catch((err: any) => {
-      message.error("fail");
-      setLoading(false);
-    });
-    if (status) {
+    var transaction = await contract
+      .approve(farmContractAddress, amount)
+      .wait()
+      .catch((err: any) => {
+        message.error("fail");
+        setLoading(false);
+      });
+
+    if (transaction) {
       message.success("success");
       getPool();
       getPoolList();
@@ -146,12 +149,15 @@ function Mobile() {
       farmAbi,
       walletType
     );
-    var transaction = await contract.reclaimReward(poolId);
-    let status = transaction.wait().catch((err: any) => {
-      message.error("fail");
-      setClaimLoading(false);
-    });
-    if (status) {
+    var transaction = await contract
+      .reclaimReward(poolId)
+      .wait()
+      .catch((err: any) => {
+        message.error("fail");
+        setClaimLoading(false);
+      });
+
+    if (transaction) {
       message.success("success");
       getPool();
       getPoolList();

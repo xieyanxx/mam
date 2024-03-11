@@ -35,12 +35,11 @@ function Unstake({
     let transaction = await contract.withdraw(
       poolId,
       toWei(stakeAmount, poolInfo.decimals)
-    );
-    let status = transaction.wait().catch((err: any) => {
+    ).wait().catch((err: any) => {
       message.error("fail");
       setLoading(false);
     });
-    if (status) {
+    if (transaction) {
       message.success("success");
       setLoading(false);
       handleCancel();
