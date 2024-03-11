@@ -31,14 +31,32 @@ function Stake({
       farmAbi,
       walletType
     );
-    let transaction = await contract.deposit(
-      poolId,
-      toWei(stakeAmount, poolInfo.decimals)
-    );
-    let status = transaction.wait().catch((err: any) => {
-      message.error("fail");
-      setLoading(false);
-    });
+    // let transaction = await contract.deposit(
+    //   poolId,
+    //   toWei(stakeAmount, poolInfo.decimals)
+    // );
+    // let status = transaction.wait().catch((err: any) => {
+    //   message.error("fail");
+    //   setLoading(false);
+    // });
+    let status
+    if(poolId == 0){
+      //主网币的质押
+      status = await contract.deposit(
+        poolId,
+        toWei(stakeAmount, poolInfo.decimals),
+        {
+          //这个value 就是用户质押的bnb数量
+          value:toWei(stakeAmount, poolInfo.decimals)
+        }
+      ).wait();//这种交易 最好是加一个 awit函数 强制阻塞
+    }else{
+      //正常情况的deposit
+      status = await contract.deposit(
+        poolId,
+        toWei(stakeAmount, poolInfo.decimals)
+      ).wait();
+    }
     if (status) {
       message.success("success");
       setLoading(false);
