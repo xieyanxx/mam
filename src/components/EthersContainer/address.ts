@@ -5,13 +5,45 @@ import usdc from "@/assets/logo/usdc.png";
 
 // 测试
 export const network = "bsc";
-export const farmContractAddress = "0x983562C75D92610D06a118F2ad35e2c015120D0C"; //farm合约地址
-export const poolContractAddress = "0x1586d26cf1717d4d520bA3f02D4E9E1286BBF51c"; //pool合约地址
+export const farmContractAddress = "0x4BF4F322F1ee0953A2EF12E2E34c99FF63631a95"; //farm合约地址
+export const poolContractAddress = "0x5D2D7f28F99C0CDf09D4175C159A505559A74c76"; //pool合约地址
+export const routeContractAddress =
+  "0x62ae1cd50c392e78e9482a151240302A30610635";
+export const factoryContractAddress =
+  "0x07820957A53A2Eea3d94d0fca9Cc693a23530ceD";
 export const ChainToken = [
-  { id: 1, src: block1, name: "MAMABA", name1: "Mamaba" },
-  { id: 2, src: sei1, name: "SEI", name1: "Sei" },
-  { id: 3, src: usdc, name: "USDC", name1: "Usdc" },
-  { id: 4, src: usdt, name: "USDT", name1: "Usdt" },
+  {
+    id: 1,
+    src: block1,
+    name: "MAMABA",
+    name1: "Mamaba",
+    address: "0x61b040e9630873138329E706f20ef534Bb77cB5E",
+    address1:''
+  },
+  {
+    id: 2,
+    src: sei1,
+    name: "SEI",
+    name1: "Sei",
+    address: "0x0000000000000000000000000000000000000000",
+    address1:'0x149f9234B8327C7Bb279E9Fd100919fc0a3e2Abd'
+  },
+  {
+    id: 3,
+    src: usdc,
+    name: "USDC",
+    name1: "Usdc",
+    address: "0x54317F70bBF9776C817BDA9455D8179C70c429aA",
+    address1:''
+  },
+  {
+    id: 4,
+    src: usdt,
+    name: "USDT",
+    name1: "Usdt",
+    address: "0x3A989dc09dA5623A7c868061ff7ae0b7fA4A3EC3",
+    address1:''
+  },
 ];
 
 //预发布

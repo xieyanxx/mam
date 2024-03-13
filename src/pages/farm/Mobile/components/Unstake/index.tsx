@@ -7,6 +7,7 @@ import icon1 from "@/assets/logo/icon1.png";
 import { getContract, toWei } from "@/components/EthersContainer";
 import { farmContractAddress } from "@/components/EthersContainer/address";
 import { farmAbi } from "@/components/EthersContainer/abj";
+import { formatAmount } from "@/utils";
 
 function Unstake({
   handleCancel,
@@ -67,7 +68,7 @@ function Unstake({
                 <p>{poolInfo?.name?.[0]}</p>
               </div>
             </div>
-            <div className={styles.balance_text}>Balance: 420</div>
+            <div className={styles.balance_text}>Balance: {formatAmount(poolInfo.amount)}</div>
             <div className={styles.input_wrap}>
               <Input
                 onChange={(e) => {

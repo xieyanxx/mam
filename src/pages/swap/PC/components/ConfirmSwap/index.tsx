@@ -4,13 +4,20 @@ import cx from "classnames";
 import { Button, Input, Modal, Radio } from "antd";
 import close from "@/assets/logo/close.png";
 import down1 from "@/assets/logo/down1.png";
+import { formatAmount, formatAmount1 } from "@/utils";
 
 function AddLiquidity({
   handleCancel,
   isModalOpen,
+  formData,
+  toData,
+  settingData,
 }: {
   handleCancel: () => void;
   isModalOpen: boolean;
+  formData: any;
+  toData: any;
+  settingData: any;
 }) {
   return (
     <div className={styles.wrap}>
@@ -31,24 +38,24 @@ function AddLiquidity({
           <div className={styles.content}>
             <div className={styles.num_wrap}>
               <div className={styles.num_item}>
-                <p className={styles.num}>10.5</p>
+                <p className={styles.num}>{formatAmount1(formData.amount)}</p>
                 <div className={styles.num_r}>
-                  <img src="" alt="" />
-                  <p>10.5 MAMBA</p>
+                  <img src={formData.src} alt="" />
+                  <p>{formData.name}</p>
                 </div>
               </div>
               <img className={styles.icon} src={down1} alt="" />
               <div className={styles.num_item}>
-                <p className={styles.num}>10.5</p>
+                <p className={styles.num}>{formatAmount1(toData.amount)}</p>
                 <div className={styles.num_r}>
-                  <img src="" alt="" />
-                  <p>10.5 MAMBA</p>
+                  <img src={toData.src} alt="" />
+                  <p>{toData.name}</p>
                 </div>
               </div>
             </div>
             <div className={styles.share_wrap}>
               <div>Slippage Tolerance: </div>
-              <div className={styles.Share_r}>0.25%</div>
+              <div className={styles.Share_r}>{settingData.num}%</div>
             </div>
             <div className={styles.price_wrap}>
               <div className={styles.price_item}>

@@ -44,6 +44,29 @@
       border: 1px solid #ae9aba;
       display: flex;
       align-items: center;
+      .input_inner {
+        width: 100%;
+        height: 100%;
+        background: none;
+        border: none;
+        font-family: Aller;
+        font-weight: bold;
+        font-size: 24px;
+        color: #ae9aba;
+        text-align: center;
+        &:focus-visible {
+          outline: none;
+        }
+        &:focus-within {
+          box-shadow: none;
+        }
+        &::placeholder {
+          font-family: PublicSansRoman;
+          font-weight: 400;
+          font-size: 24px;
+          color: #ae9aba;
+        }
+      }
       :global {
         .ant-radio-button-wrapper {
           height: 100%;

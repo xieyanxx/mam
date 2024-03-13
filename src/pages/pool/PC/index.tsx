@@ -9,12 +9,11 @@ import down from "@/assets/logo/down.png";
 import share from "@/assets/logo/share.png";
 import metamask from "@/assets/logo/metamask.png";
 import ImportPool from "./components/ImportPool";
-import { formWei, formTo, getContract } from "@/components/EthersContainer";
+import { formWei, formTo, getContract, getAllowance, getDecimals } from "@/components/EthersContainer";
 import {
   ChainToken,
   poolContractAddress,
 } from "@/components/EthersContainer/address";
-import { getAllowance, getDecimals } from "..";
 import { formatAmount, getTime, timeIsEnd } from "@/utils";
 import Stake from "./components/Stake";
 import Unstake from "./components/Unstake";
@@ -80,8 +79,8 @@ function PC() {
     let newList = getPoolList.map(async (item: any, index: number) => {
       let userInfo = await contract.users(index, address);
       let pendingInfo = await contract.pending(index, address);
-      let stakeStatue = await getAllowance(item.token, address, walletType);
-      let decimals = await getDecimals(item.token, walletType);
+      let stakeStatue = await getAllowance(item.token, address, walletType,tokenAbi,poolContractAddress);
+      let decimals = await getDecimals(item.token, walletType,tokenAbi);
       let newInfo: any = {};
       newInfo.amount = formWei(userInfo.amount, decimals);
       newInfo.token = item.token;

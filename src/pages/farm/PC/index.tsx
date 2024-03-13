@@ -1,30 +1,25 @@
-import React, {
-  CSSProperties,
-  memo,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import styles from "./index.less";
 import venom from "@/assets/logo/venom city logo.png";
 import cx from "classnames";
 import { Button, Collapse, CollapseProps, Switch, message } from "antd";
-import sei1 from "@/assets/logo/sei1.png";
-import block1 from "@/assets/logo/block1.png";
 import down from "@/assets/logo/down.png";
 import share from "@/assets/logo/share.png";
-import metamask from "@/assets/logo/metamask.png";
 import Stake from "./components/Stake";
-import { formWei, formTo, getContract } from "@/components/EthersContainer";
+import {
+  formWei,
+  formTo,
+  getContract,
+  getAllowance,
+  getDecimals,
+} from "@/components/EthersContainer";
 import { farmAbi, tokenAbi } from "@/components/EthersContainer/abj";
 import {
   ChainToken,
   farmContractAddress,
 } from "@/components/EthersContainer/address";
 import { formatAmount, getTime, timeIsEnd } from "@/utils";
-import { getAllowance, getDecimals } from "..";
+
 import Unstake from "./components/Unstake";
 const tabData = [
   { id: 1, name: "Active" },
@@ -85,8 +80,14 @@ function PC() {
     let newList = getPoolList.map(async (item: any, index: number) => {
       let userInfo = await contract.users(index, address);
       let pendingInfo = await contract.pending(index, address);
-      let stakeStatue = await getAllowance(item.token, address, walletType);
-      let decimals = await getDecimals(item.token, walletType);
+      let stakeStatue = await getAllowance(
+        item.token,
+        address,
+        walletType,
+        tokenAbi,
+        farmContractAddress
+      );
+      let decimals = await getDecimals(item.token, walletType, tokenAbi);
       let newInfo: any = {};
       newInfo.amount = formWei(userInfo.amount, decimals);
       newInfo.token = item.token;

@@ -1,11 +1,15 @@
-import React, { memo, useCallback, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import styles from "./index.less";
 import cx from "classnames";
 import { Button, Input, Modal, Radio, message } from "antd";
 import close from "@/assets/logo/close.png";
-import { farmContractAddress } from "@/components/EthersContainer/address";
-import { farmAbi } from "@/components/EthersContainer/abj";
-import { getContract, toWei } from "@/components/EthersContainer";
+import {
+  ChainToken,
+  farmContractAddress,
+} from "@/components/EthersContainer/address";
+import { farmAbi, tokenAbi } from "@/components/EthersContainer/abj";
+import { balanceOf, getContract, toWei } from "@/components/EthersContainer";
+import { formatAmount } from "@/utils";
 
 function Stake({
   handleCancel,
@@ -20,9 +24,11 @@ function Stake({
 }) {
   const [stakeAmount, setStakeAmount] = useState<string>("0");
   const [loading, setLoading] = useState<boolean>(false);
+  const [balance, setBalance] = useState<number | string>(0);
   const [walletType] = useState<string>(
     sessionStorage.getItem("walletType") || ""
   );
+  const [address] = useState<string>(sessionStorage.getItem("address") || "");
   const deposit = useCallback(async () => {
     setLoading(true);
     const contract = await getContract(
@@ -59,6 +65,21 @@ function Stake({
       handleCancel();
     }
   }, [stakeAmount]);
+  //获取用户金额
+  const getBalanceOf = useCallback(async () => {
+    if (isModalOpen) {
+      const balance = await balanceOf(
+        poolInfo.token,
+        tokenAbi,
+        walletType,
+        address
+      );
+      setBalance(formatAmount(balance));
+    }
+  }, [address, walletType, poolInfo, isModalOpen]);
+  useEffect(() => {
+    getBalanceOf();
+  }, [address, walletType, poolInfo, isModalOpen]);
 
   return (
     <div className={styles.wrap}>
@@ -80,11 +101,17 @@ function Stake({
             <div className={styles.title}>
               <p>You are staking:</p>
               <div className={styles.title_r}>
-                <img src="" alt="" />
+                <img
+                  src={
+                    ChainToken.filter((i) => i.name == poolInfo.name?.[0])[0]
+                      ?.src
+                  }
+                  alt=""
+                />
                 <p>{poolInfo?.name?.[0]}</p>
               </div>
             </div>
-            <div className={styles.balance_text}>Balance: 420</div>
+            <div className={styles.balance_text}>Balance: {balance}</div>
             <div className={styles.input_wrap}>
               <Input
                 onChange={(e) => {
@@ -104,8 +131,8 @@ function Stake({
               <div className={styles.num}>$8.67</div>
             </div>
             <div className={styles.label_wrap}>
-              <div className={styles.item}>25%</div>
-              <div className={styles.item}>50%</div>
+              {/* <div className={styles.item}>25%</div>
+              <div className={styles.item}>50%</div> */}
               <div className={styles.item}>MAX</div>
             </div>
             <div className={styles.btn_wrap}>

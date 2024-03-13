@@ -65,7 +65,34 @@ export function formatAmount(num: string) {
   if (!num) {
     return "0.00";
   }
-  return Math.floor(Number(num) * 100) / 100;
+  let value: any = Math.floor(Number(num) * 100) / 100;
+  var xsd = value.toString().split(".");
+  if (xsd.length == 1) {
+    value = value.toString() + ".00";
+    return value;
+  }
+  if (xsd.length > 1) {
+    if (xsd[1].length < 2) {
+      value = value.toString() + "0";
+    }
+    return value;
+  }
+  // return Math.floor(Number(num) * 100) / 100;
+}
+
+//保留六位小数
+
+export function formatAmount1(num: string, sub?: number) {
+  if (num.split(".").length == 1) {
+    return `${num}.00`;
+  }
+  if (num.split(".")[1].length > 1 && num.split(".")[1].length < 6) {
+    return num;
+  }
+  if (num.split(".")[1].length > 6) {
+    
+    return num.substring(0, num.indexOf(".") + 7);
+  }
 }
 
 export function getTime(time: string | number) {
@@ -73,5 +100,14 @@ export function getTime(time: string | number) {
 }
 // 判断是否结束
 export function timeIsEnd(time: string | number) {
-  return new Date().getTime()>Number(time) * 1000;
+  return new Date().getTime() > Number(time) * 1000;
+}
+
+//判断是否是平台币
+export function isplatformCoin(address: string) {
+  if (address == "0x0000000000000000000000000000000000000000") {
+    return true;
+  } else {
+    return false;
+  }
 }

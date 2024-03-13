@@ -238,12 +238,50 @@ export const getContract = async (
   return new ethers.Contract(address, abi, signer);
 };
 
+//获取代币未转换的余额
+export const balanceOf = async (
+  ContractAddress: string, //合约地址
+  abi: any,
+  walletType: string,
+  userAddress: string, //用户钱包地址
+  decimals?: number,//转换精度
+) => {
+  var contract = await getContract(ContractAddress, abi, walletType);
+  var transaction = await contract.balanceOf(userAddress);
+  return formWei(transaction,decimals);
+
+};
+
+
+//获取授权值
+export const getAllowance = async (
+  tokenAddress: string,
+  userAddress: string,
+  walletType: string,
+  tokenAbi:any,
+  contractAddress:string
+) => {
+  //判断认证状态
+  const contract = await getContract(tokenAddress, tokenAbi, walletType);
+  var allowed = await contract.allowance(userAddress, contractAddress);
+  return allowed ? formWei(allowed) : "0";
+};
+
+//获取精度
+export const getDecimals = async (tokenAddress: string, walletType: string,tokenAbi:any) => {
+  //判断认证状态
+  const contract = await getContract(tokenAddress, tokenAbi, walletType);
+  var decimals = await contract.decimals();
+  return decimals;
+};
+
+
 // 大数转数值
 export const formWei = (val: any, num?: number) => {
-  return ethers.utils.formatUnits(val, num).toString();
+  return ethers.utils.formatUnits(val, num);
 };
 export const toWei = (val: any, num: number | string) => {
-  return ethers.utils.parseUnits(val, num).toString();
+  return ethers.utils.parseUnits(val, num);
 };
 
 export const formTo = (val: any) => {

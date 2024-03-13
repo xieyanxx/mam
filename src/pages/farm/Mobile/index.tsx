@@ -1,22 +1,25 @@
 import React, { memo, useCallback, useEffect, useState } from "react";
-import { history } from "umi";
 import cx from "classnames";
 import styles from "./index.less";
 import { Button, Collapse, CollapseProps, Switch, message } from "antd";
 import down from "@/assets/logo/down.png";
-import sei1 from "@/assets/logo/sei1.png";
-import block1 from "@/assets/logo/block1.png";
 import share from "@/assets/logo/share.png";
 import metamask from "@/assets/logo/metamask.png";
 import Stake from "./components/Stake";
-import { formWei, formTo, getContract } from "@/components/EthersContainer";
+import {
+  formWei,
+  formTo,
+  getContract,
+  getAllowance,
+  getDecimals,
+} from "@/components/EthersContainer";
 import {
   ChainToken,
   farmContractAddress,
 } from "@/components/EthersContainer/address";
 import { farmAbi, tokenAbi } from "@/components/EthersContainer/abj";
 import { formatAmount, getTime, timeIsEnd } from "@/utils";
-import { getAllowance, getDecimals } from "..";
+
 import Unstake from "./components/Unstake";
 
 const tabData = [
@@ -74,10 +77,15 @@ function Mobile() {
     let newList = getPoolList.map(async (item: any, index: number) => {
       let userInfo = await contract.users(index, address);
       let pendingInfo = await contract.pending(index, address);
-      let stakeStatue = await getAllowance(item.token, address, walletType);
-      let decimals = await getDecimals(item.token, walletType);
+      let stakeStatue = await getAllowance(
+        item.token,
+        address,
+        walletType,
+        tokenAbi,
+        farmContractAddress
+      );
+      let decimals = await getDecimals(item.token, walletType, tokenAbi);
       let newInfo: any = {};
-      console.log(pendingInfo, "==>decimals");
       newInfo.amount = formWei(userInfo.amount, decimals);
       newInfo.token = item.token;
       newInfo.rewaredtoken = item.rewaredtoken;
