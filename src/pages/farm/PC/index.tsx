@@ -19,7 +19,10 @@ import metamask from "@/assets/logo/metamask.png";
 import Stake from "./components/Stake";
 import { formWei, formTo, getContract } from "@/components/EthersContainer";
 import { farmAbi, tokenAbi } from "@/components/EthersContainer/abj";
-import { farmContractAddress } from "@/components/EthersContainer/address";
+import {
+  ChainToken,
+  farmContractAddress,
+} from "@/components/EthersContainer/address";
 import { formatAmount, getTime, timeIsEnd } from "@/utils";
 import { getAllowance, getDecimals } from "..";
 import Unstake from "./components/Unstake";
@@ -79,7 +82,6 @@ function PC() {
       walletType
     );
     let getPoolList = await contract.getpool();
-    console.log(getPoolList, "==>getPoolList");
     let newList = getPoolList.map(async (item: any, index: number) => {
       let userInfo = await contract.users(index, address);
       let pendingInfo = await contract.pending(index, address);
@@ -110,9 +112,9 @@ function PC() {
   }
   //获取pool卡片数据
   const getPoolList = useCallback(() => {
+    console.log(poolData, "==>isOnly");
     if (current === 1) {
       if (isOnly) {
-        console.log(isOnly, "==>isOnly");
         //返回用户已经质押的池子
         return setPoolList(
           poolData.filter((item: any) => Number(item.amount) > 0)
@@ -207,9 +209,6 @@ function PC() {
             <div className={styles.share_wrap}>
               <p>Farm Contract</p> <img src={share} alt="" />
             </div>
-            <div className={styles.share_wrap}>
-              <p>Add to Wallet</p> <img src={metamask} alt="" />
-            </div>
           </div>
         ),
       },
@@ -259,8 +258,20 @@ function PC() {
                   <div className={styles.name_1}>Earn {item.name[1]}</div>
                 </div>
                 <div className={styles.top_r}>
-                  <img className={styles.img_b} src={sei1} alt="" />
-                  <img className={styles.img_s} src={block1} alt="" />
+                  <img
+                    className={styles.img_b}
+                    src={
+                      ChainToken.filter((i) => i.name == item.name[0])[0]?.src
+                    }
+                    alt=""
+                  />
+                  <img
+                    className={styles.img_s}
+                    src={
+                      ChainToken.filter((i) => i.name == item.name[1])[0]?.src
+                    }
+                    alt=""
+                  />
                 </div>
               </div>
               <div className={styles.stake}>

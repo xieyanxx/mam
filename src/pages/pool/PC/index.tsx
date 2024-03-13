@@ -10,7 +10,10 @@ import share from "@/assets/logo/share.png";
 import metamask from "@/assets/logo/metamask.png";
 import ImportPool from "./components/ImportPool";
 import { formWei, formTo, getContract } from "@/components/EthersContainer";
-import { poolContractAddress } from "@/components/EthersContainer/address";
+import {
+  ChainToken,
+  poolContractAddress,
+} from "@/components/EthersContainer/address";
 import { getAllowance, getDecimals } from "..";
 import { formatAmount, getTime, timeIsEnd } from "@/utils";
 import Stake from "./components/Stake";
@@ -245,12 +248,34 @@ function PC() {
             <div className={styles.item_wrap}>
               <div className={styles.top_wrap}>
                 <div className={styles.top_l}>
-                  <div className={styles.name}>Stake {item.name[0]}</div>
-                  <div className={styles.name_1}>Earn {item.name[1]}</div>
+                  <div className={styles.name}>
+                    {item.name[0].split(" ")[0]}
+                  </div>
+                  <div className={styles.name_1}>
+                    {item.name[0].split(" ")[1]}
+                  </div>
                 </div>
                 <div className={styles.top_r}>
-                  <img className={styles.img_b} src={sei1} alt="" />
-                  <img className={styles.img_s} src={block1} alt="" />
+                  <img
+                    className={styles.img_b}
+                    src={
+                      ChainToken.filter(
+                        (i) =>
+                          i.name == item.name[0].split(" ")[0].split("-")[0]
+                      )[0]?.src
+                    }
+                    alt=""
+                  />
+                  <img
+                    className={styles.img_s}
+                    src={
+                      ChainToken.filter(
+                        (i) =>
+                          i.name == item.name[0].split(" ")[0].split("-")[1]
+                      )[0]?.src
+                    }
+                    alt=""
+                  />
                 </div>
               </div>
               <div className={styles.stake}>

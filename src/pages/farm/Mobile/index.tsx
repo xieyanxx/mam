@@ -10,7 +10,10 @@ import share from "@/assets/logo/share.png";
 import metamask from "@/assets/logo/metamask.png";
 import Stake from "./components/Stake";
 import { formWei, formTo, getContract } from "@/components/EthersContainer";
-import { farmContractAddress } from "@/components/EthersContainer/address";
+import {
+  ChainToken,
+  farmContractAddress,
+} from "@/components/EthersContainer/address";
 import { farmAbi, tokenAbi } from "@/components/EthersContainer/abj";
 import { formatAmount, getTime, timeIsEnd } from "@/utils";
 import { getAllowance, getDecimals } from "..";
@@ -183,8 +186,16 @@ function Mobile() {
             <div className={styles.name1}>Earn {details.name[1]}</div>
           </div>
           <div className={styles.top_m}>
-            <img className={styles.img_b} src={sei1} alt="" />
-            <img className={styles.img_s} src={block1} alt="" />
+            <img
+              className={styles.img_b}
+              src={ChainToken.filter((i) => i.name == details.name[0])[0]?.src}
+              alt=""
+            />
+            <img
+              className={styles.img_s}
+              src={ChainToken.filter((i) => i.name == details.name[1])[0]?.src}
+              alt=""
+            />
           </div>
           <div className={styles.top_r}>
             <div className={styles.top_r_text}>APY</div>
