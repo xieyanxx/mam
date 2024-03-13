@@ -10,7 +10,10 @@ import share from "@/assets/logo/share.png";
 import metamask from "@/assets/logo/metamask.png";
 import Stake from "./components/Stake";
 import { formWei, formTo, getContract } from "@/components/EthersContainer";
-import { poolContractAddress } from "@/components/EthersContainer/address";
+import {
+  ChainToken,
+  poolContractAddress,
+} from "@/components/EthersContainer/address";
 import { poolAbi, tokenAbi } from "@/components/EthersContainer/abj";
 import { getAllowance, getDecimals } from "..";
 import { formatAmount, getTime, timeIsEnd } from "@/utils";
@@ -183,12 +186,28 @@ function Mobile() {
       label: (
         <div className={styles.header_wrap}>
           <div className={styles.name_wrap}>
-            <div className={styles.name}>Stake {details.name[0]}</div>
-            <div className={styles.name1}>Earn {details.name[1]}</div>
+            <div className={styles.name}> {details.name[0].split(" ")[0]}</div>
+            <div className={styles.name1}>{details.name[0].split(" ")[1]}</div>
           </div>
           <div className={styles.top_m}>
-            <img className={styles.img_b} src={sei1} alt="" />
-            <img className={styles.img_s} src={block1} alt="" />
+            <img
+              className={styles.img_b}
+              src={
+                ChainToken.filter(
+                  (i) => i.name == details.name[0].split(" ")[0].split("-")[0]
+                )[0]?.src
+              }
+              alt=""
+            />
+            <img
+              className={styles.img_s}
+              src={
+                ChainToken.filter(
+                  (i) => i.name == details.name[0].split(" ")[0].split("-")[1]
+                )[0]?.src
+              }
+              alt=""
+            />
           </div>
           <div className={styles.top_r}>
             <div className={styles.top_r_text}>APY</div>
