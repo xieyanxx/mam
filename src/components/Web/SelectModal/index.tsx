@@ -12,9 +12,11 @@ import { ChainToken } from "@/components/EthersContainer/address";
 function WalletModal({
   handleCancel,
   isModalOpen,
+  selectAddress,
 }: {
   handleCancel: () => void;
   isModalOpen: boolean;
+  selectAddress: (val: any) => void;
 }) {
   return (
     <div className={styles.wrap}>
@@ -41,7 +43,11 @@ function WalletModal({
           </div>
           <div className={styles.common_wrap}>
             {ChainToken.map((item) => (
-              <div className={styles.common_item} key={item.id}>
+              <div
+                className={styles.common_item}
+                key={item.id}
+                onClick={() => selectAddress(item)}
+              >
                 <img src={item.src} alt="" />
                 {item.name}
               </div>
@@ -50,7 +56,7 @@ function WalletModal({
           <div className={styles.line}></div>
           <div className={styles.item_wrap}>
             {ChainToken.map((item) => (
-              <div className={styles.item}>
+              <div className={styles.item} onClick={() => selectAddress(item)}>
                 <img src={item.src} alt="" className={styles.logo} />
                 <div className={styles.name_wrap}>
                   <div className={styles.name}>{item.name}</div>

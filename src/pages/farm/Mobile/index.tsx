@@ -12,13 +12,15 @@ import {
   getContract,
   getAllowance,
   getDecimals,
+  balanceOf,
+  getBalance,
 } from "@/components/EthersContainer";
 import {
   ChainToken,
   farmContractAddress,
 } from "@/components/EthersContainer/address";
 import { farmAbi, tokenAbi } from "@/components/EthersContainer/abj";
-import { formatAmount, getTime, timeIsEnd } from "@/utils";
+import { formatAmount, getTime, isplatformCoin, timeIsEnd } from "@/utils";
 
 import Unstake from "./components/Unstake";
 
@@ -73,18 +75,27 @@ function Mobile() {
       walletType
     );
     let getPoolList = await contract.getpool();
-    console.log(getPoolList, "==>getPoolList");
     let newList = getPoolList.map(async (item: any, index: number) => {
       let userInfo = await contract.users(index, address);
       let pendingInfo = await contract.pending(index, address);
-      let stakeStatue = await getAllowance(
-        item.token,
-        address,
-        walletType,
-        tokenAbi,
-        farmContractAddress
-      );
-      let decimals = await getDecimals(item.token, walletType, tokenAbi);
+      let decimals = 18;
+      let stakeStatue = "0";
+      let balance = "0";
+      if (!isplatformCoin(item.token)) {
+        // 只有非平台币才需要授权
+        decimals = await getDecimals(item.token, walletType, tokenAbi);
+        stakeStatue = await getAllowance(
+          item.token,
+          address,
+          walletType,
+          tokenAbi,
+          farmContractAddress
+        );
+        balance = await balanceOf(item.token, tokenAbi, walletType, address);
+      } else {
+        balance = (await getBalance(walletType, address)).balanceVal;
+      }
+
       let newInfo: any = {};
       newInfo.amount = formWei(userInfo.amount, decimals);
       newInfo.token = item.token;
@@ -94,8 +105,9 @@ function Mobile() {
       newInfo.totalStake = formWei(item.totalStake, decimals);
       newInfo.name = item.name.split(",");
       newInfo.userReward = formWei(pendingInfo, decimals);
-      if (Number(stakeStatue) > Number(newInfo.amount)) {
-        //判断授权状态  true:已授权，fasle:未授权
+      newInfo.balance=balance
+      if (Number(stakeStatue) > Number(balance) || isplatformCoin(item.token)) {
+        //判断授权状态  true:已授权，fasle:未授权 2.平台币不需要授权
         newInfo.stakeStatue = true;
       } else {
         newInfo.stakeStatue = false;

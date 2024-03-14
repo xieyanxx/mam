@@ -9,7 +9,7 @@ import {
 } from "@/components/EthersContainer/address";
 import { farmAbi, tokenAbi } from "@/components/EthersContainer/abj";
 import { balanceOf, getContract, toWei } from "@/components/EthersContainer";
-import { formatAmount } from "@/utils";
+import { formatAmount, formatAmount1, isplatformCoin } from "@/utils";
 
 function Stake({
   handleCancel,
@@ -24,7 +24,6 @@ function Stake({
 }) {
   const [stakeAmount, setStakeAmount] = useState<string>("0");
   const [loading, setLoading] = useState<boolean>(false);
-  const [balance, setBalance] = useState<number | string>(0);
   const [walletType] = useState<string>(
     sessionStorage.getItem("walletType") || ""
   );
@@ -37,14 +36,13 @@ function Stake({
       walletType
     );
     let status;
-    if (poolInfo.token.toString() == "0") {
+    if (isplatformCoin(poolInfo.token)) {
       //主网币的质押
       status = await contract
         .deposit(poolId, toWei(stakeAmount, poolInfo.decimals), {
           //这个value 就是用户质押的bnb数量
           value: toWei(stakeAmount, poolInfo.decimals),
         })
-        .wait() //这种交易 最好是加一个 awit函数 强制阻塞
         .catch((err: any) => {
           message.error("fail");
           setLoading(false);
@@ -53,33 +51,18 @@ function Stake({
       //正常情况的deposit
       status = await contract
         .deposit(poolId, toWei(stakeAmount, poolInfo.decimals))
-        .wait()
         .catch((err: any) => {
           message.error("fail");
           setLoading(false);
         });
     }
-    if (status) {
+    let transaction = await status.wait();
+    if (transaction) {
       message.success("success");
       setLoading(false);
       handleCancel();
     }
   }, [stakeAmount]);
-  //获取用户金额
-  const getBalanceOf = useCallback(async () => {
-    if (isModalOpen) {
-      const balance = await balanceOf(
-        poolInfo.token,
-        tokenAbi,
-        walletType,
-        address
-      );
-      setBalance(formatAmount(balance));
-    }
-  }, [address, walletType, poolInfo, isModalOpen]);
-  useEffect(() => {
-    getBalanceOf();
-  }, [address, walletType, poolInfo, isModalOpen]);
 
   return (
     <div className={styles.wrap}>
@@ -111,7 +94,9 @@ function Stake({
                 <p>{poolInfo?.name?.[0]}</p>
               </div>
             </div>
-            <div className={styles.balance_text}>Balance: {balance}</div>
+            <div className={styles.balance_text}>
+              Balance: {formatAmount1(poolInfo.balance)}
+            </div>
             <div className={styles.input_wrap}>
               <Input
                 onChange={(e) => {
@@ -133,7 +118,12 @@ function Stake({
             <div className={styles.label_wrap}>
               {/* <div className={styles.item}>25%</div>
               <div className={styles.item}>50%</div> */}
-              <div className={styles.item}>MAX</div>
+              <div
+                className={styles.item}
+                onClick={() => setStakeAmount(poolInfo.balance)}
+              >
+                MAX
+              </div>
             </div>
             <div className={styles.btn_wrap}>
               <Button

@@ -21,6 +21,7 @@ import {
   balanceOf,
   formWei,
   getAllowance,
+  getBalance,
   getContract,
   getDecimals,
   toWei,
@@ -47,6 +48,7 @@ function Swap() {
   );
   const [address] = useState<string>(sessionStorage.getItem("address") || "");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectType, setSelectType] = useState(1);
   const [selectModalOpen, setSelectModalOpen] = useState(false);
   const [swapModalOpen, setSwapModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -79,7 +81,8 @@ function Swap() {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  const selectShowModal = () => {
+  const selectShowModal = (type: number) => {
+    setSelectType(type);
     setSelectModalOpen(true);
   };
   const selectHandleCancel = () => {
@@ -90,9 +93,10 @@ function Swap() {
   };
   const swapHandleCancel = () => {
     getTransactionData();
-    getBalance();
+    getBalanceData();
     setSwapModalOpen(false);
   };
+  //保存设置
   const saveSetting = (time: number, num: number) => {
     localStorage.setItem("num", num.toString());
     localStorage.setItem("time", time.toString());
@@ -100,6 +104,29 @@ function Swap() {
       time,
       num,
     });
+  };
+  //选择兑换地址
+  const selectAddress = (val: any) => {
+    if (selectType == 1) {
+      setFormData({
+        ...formData,
+        ...val,
+        amount: "",
+        isEmpower: false,
+        balance: 0,
+        decimal: 18,
+      });
+    } else {
+      setToData({
+        ...toData,
+        ...val,
+        amount: "",
+        isEmpower: false,
+        balance: 0,
+        decimal: 18,
+      });
+    }
+    selectHandleCancel();
   };
 
   const getBalanceNum = async (
@@ -125,19 +152,19 @@ function Swap() {
     return balanceVal;
   };
   // 获取用户剩余币
-  const getBalance = async () => {
+  const getBalanceData = async () => {
     if (!isplatformCoin(formData.address)) {
       let formBalance = await getBalanceNum(formData.address, true, 1); //1表示form，2表示to
       setFormBalance(formBalance);
     } else {
-      let formBalance = await getBalanceNum(formData.address, false, 1);
+      let formBalance = (await getBalance(walletType, address)).balanceVal;
       setFormBalance(formBalance);
     }
     if (!isplatformCoin(toData.address)) {
       let toBalance = await getBalanceNum(toData.address, true, 2);
       setTOBalance(toBalance);
     } else {
-      let toBalance = await getBalanceNum(toData.address, false, 2);
+      let toBalance = (await getBalance(walletType, address)).balanceVal;
       setTOBalance(toBalance);
     }
   };
@@ -265,8 +292,8 @@ function Swap() {
 
   useEffect(() => {
     getTransactionData();
-    getBalance();
-  }, []);
+    getBalanceData();
+  }, [formData.address, toData.address]);
   return (
     <div className={styles.wrap}>
       <div className={styles.title}>
@@ -285,7 +312,10 @@ function Swap() {
             </span>
           </div>
           <div className={styles.from_input_wrap}>
-            <div className={styles.type_wrap} onClick={selectShowModal}>
+            <div
+              className={styles.type_wrap}
+              onClick={() => selectShowModal(1)}
+            >
               <img className={styles.icon_img} src={formData.src} alt="" />
               <span>{formData.name}</span>
               <img src={down} alt="" />
@@ -328,7 +358,10 @@ function Swap() {
             </span>
           </div>
           <div className={styles.from_input_wrap}>
-            <div className={styles.type_wrap}>
+            <div
+              className={styles.type_wrap}
+              onClick={() => selectShowModal(2)}
+            >
               <img className={styles.icon_img} src={toData.src} alt="" />
               <span>{toData.name}</span>
               <img src={down} alt="" />
@@ -364,6 +397,7 @@ function Swap() {
             className={styles.unlock_btn}
             disabled={status == 0 || status == 1}
             onClick={handleSubmit}
+            loading={loading}
           >
             {statusType[status]}
           </Button>
@@ -381,6 +415,7 @@ function Swap() {
         handleCancel={handleCancel}
       ></SettingModal>
       <SelectModal
+        selectAddress={(val: any) => selectAddress(val)}
         isModalOpen={selectModalOpen}
         handleCancel={selectHandleCancel}
       ></SelectModal>

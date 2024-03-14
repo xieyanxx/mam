@@ -244,22 +244,50 @@ export const balanceOf = async (
   abi: any,
   walletType: string,
   userAddress: string, //用户钱包地址
-  decimals?: number,//转换精度
+  decimals?: number //转换精度
 ) => {
   var contract = await getContract(ContractAddress, abi, walletType);
   var transaction = await contract.balanceOf(userAddress);
-  return formWei(transaction,decimals);
-
+  return formWei(transaction, decimals);
 };
-
+//获取平台币的余额
+export const getBalance = async (
+  walletType: string,
+  userAddress: string //用户钱包地址
+) => {
+  let provider: any;
+  switch (walletType) {
+    case WalletType.MetaMaskWallet:
+      provider = await MetaMaskWallet();
+      break;
+    case WalletType.WalletConnect:
+      provider = await WalletConnect();
+      break;
+    case WalletType.OkxWallet:
+      provider = await OkxWallet();
+      break;
+    case WalletType.CoinbaseWallet:
+      provider = await CoinbaseWallet();
+      break;
+    default: {
+      provider = await MetaMaskWallet();
+      break;
+    }
+  }
+  const _ethers = new ethers.providers.Web3Provider(provider);
+  var balance = await _ethers.getBalance(userAddress);
+  console.log(balance, "balance");
+  let balanceVal = formWei(balance);
+  return { balanceVal };
+};
 
 //获取授权值
 export const getAllowance = async (
   tokenAddress: string,
   userAddress: string,
   walletType: string,
-  tokenAbi:any,
-  contractAddress:string
+  tokenAbi: any,
+  contractAddress: string
 ) => {
   //判断认证状态
   const contract = await getContract(tokenAddress, tokenAbi, walletType);
@@ -268,20 +296,23 @@ export const getAllowance = async (
 };
 
 //获取精度
-export const getDecimals = async (tokenAddress: string, walletType: string,tokenAbi:any) => {
+export const getDecimals = async (
+  tokenAddress: string,
+  walletType: string,
+  tokenAbi: any
+) => {
   //判断认证状态
   const contract = await getContract(tokenAddress, tokenAbi, walletType);
   var decimals = await contract.decimals();
   return decimals;
 };
 
-
 // 大数转数值
 export const formWei = (val: any, num?: number) => {
   return ethers.utils.formatUnits(val, num);
 };
 export const toWei = (val: any, num: number | string) => {
-  return ethers.utils.parseUnits(val, num);
+  return ethers.utils.parseUnits(val, num).toString();
 };
 
 export const formTo = (val: any) => {

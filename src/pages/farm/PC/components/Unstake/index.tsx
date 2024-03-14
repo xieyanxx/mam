@@ -5,9 +5,12 @@ import { Button, Input, Modal, Radio, message } from "antd";
 import close from "@/assets/logo/close.png";
 import icon1 from "@/assets/logo/icon1.png";
 import { getContract, toWei } from "@/components/EthersContainer";
-import { farmContractAddress } from "@/components/EthersContainer/address";
+import {
+  ChainToken,
+  farmContractAddress,
+} from "@/components/EthersContainer/address";
 import { farmAbi } from "@/components/EthersContainer/abj";
-import { formatAmount } from "@/utils";
+import { formatAmount1 } from "@/utils";
 
 function Unstake({
   handleCancel,
@@ -34,12 +37,12 @@ function Unstake({
     );
     let transaction = await contract
       .withdraw(poolId, toWei(stakeAmount, poolInfo.decimals))
-      .wait()
       .catch((err: any) => {
         message.error("fail");
         setLoading(false);
       });
-    if (transaction) {
+    let status = transaction.wait();
+    if (status) {
       message.success("success");
       setLoading(false);
       handleCancel();
@@ -65,12 +68,18 @@ function Unstake({
             <div className={styles.title}>
               <p>You are withdrawing:</p>
               <div className={styles.title_r}>
-                <img src="" alt="" />
+                <img
+                  src={
+                    ChainToken.filter((i) => i.name == poolInfo.name?.[0])[0]
+                      ?.src
+                  }
+                  alt=""
+                />
                 <p>{poolInfo?.name?.[0]}</p>
               </div>
             </div>
             <div className={styles.balance_text}>
-              Balance: {formatAmount(poolInfo.amount)}
+              Balance: {formatAmount1(poolInfo.amount)}
             </div>
             <div className={styles.input_wrap}>
               <Input
@@ -91,9 +100,14 @@ function Unstake({
               <div className={styles.num}>$8.67</div>
             </div>
             <div className={styles.label_wrap}>
-              <div className={styles.item}>25%</div>
-              <div className={styles.item}>50%</div>
-              <div className={styles.item}>MAX</div>
+              {/* <div className={styles.item}>25%</div>
+              <div className={styles.item}>50%</div> */}
+              <div
+                className={styles.item}
+                onClick={() => setStakeAmount(poolInfo.amount)}
+              >
+                MAX
+              </div>
             </div>
             <div className={styles.btn_wrap}>
               <Button className={styles.btn} loading={loading} onClick={submit}>

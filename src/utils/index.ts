@@ -83,14 +83,16 @@ export function formatAmount(num: string) {
 //保留六位小数
 
 export function formatAmount1(num: string, sub?: number) {
+  if (!Number(num)) {
+    return "0.00";
+  }
   if (num.split(".").length == 1) {
     return `${num}.00`;
   }
-  if (num.split(".")[1].length > 1 && num.split(".")[1].length < 6) {
+  if (num.split(".").length > 1 && num.split(".")[1].length < 6) {
     return num;
   }
   if (num.split(".")[1].length > 6) {
-    
     return num.substring(0, num.indexOf(".") + 7);
   }
 }

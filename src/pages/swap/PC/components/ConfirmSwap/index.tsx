@@ -1,10 +1,13 @@
-import React, { memo, useState } from "react";
+import React, { memo, useCallback, useState } from "react";
 import styles from "./index.less";
 import cx from "classnames";
-import { Button, Input, Modal, Radio } from "antd";
+import { Button, Modal, message } from "antd";
 import close from "@/assets/logo/close.png";
 import down1 from "@/assets/logo/down1.png";
-import { formatAmount, formatAmount1 } from "@/utils";
+import { formatAmount1, isplatformCoin } from "@/utils";
+import { getContract, toWei } from "@/components/EthersContainer";
+import { routeContractAddress } from "@/components/EthersContainer/address";
+import { routeAbi } from "@/components/EthersContainer/abj";
 
 function AddLiquidity({
   handleCancel,
@@ -19,6 +22,217 @@ function AddLiquidity({
   toData: any;
   settingData: any;
 }) {
+  const [walletType] = useState<string>(
+    sessionStorage.getItem("walletType") || ""
+  );
+  const [address] = useState<string>(sessionStorage.getItem("address") || "");
+  const [loading, setLoading] = useState(false);
+  const getValue = useCallback(() => {
+    if (isModalOpen) {
+      let price = Number(formData.amount) / Number(toData.amount);
+      let Minimum =
+        Number(toData.amount) - Number(toData.amount) * (settingData.num / 100);
+    }
+  }, [toData, formData, settingData]);
+
+  const exchangeMethod = async (type: number) => {
+    setLoading(true);
+    const contract = await getContract(
+      routeContractAddress,
+      routeAbi,
+      walletType
+    );
+    //普通代币之间的兑换
+    if (type == 1) {
+      let amountIn = toWei(formData.amount, formData.decimal);
+      let amountOutMin = toWei(
+        (
+          Number(toData.amount) -
+          Number(toData.amount) * (settingData.num / 100)
+        ).toString(),
+        toData.decimal
+      );
+      let dataPath = [formData.address, toData.address];
+      let time = (
+        Math.floor(Date.now() / 1000) +
+        settingData.time * 60
+      ).toString();
+      console.log(amountIn, amountOutMin, dataPath, time, "===>11111");
+      let status = await contract
+        .swapExactTokensForTokens(
+          amountIn,
+          amountOutMin,
+          dataPath,
+          address,
+          time
+        )
+        .catch(() => {
+          setLoading(false);
+          message.error("fail");
+        });
+      let transaction = await status.wait();
+      if (transaction) setLoading(false);
+    }
+    //平台代币与普通代币的兑换
+    if (type == 2) {
+      let amountOutMin = (
+        Number(toData.amount) -
+        Number(toData.amount) * (settingData.num / 100)
+      ).toString();
+      let dataPath = [formData.address1, toData.address];
+      let time = (
+        Math.floor(Date.now() / 1000) +
+        settingData.time * 60
+      ).toString();
+      let status = await contract
+        .swapExactTokensForTokens(amountOutMin, dataPath, address, time, {
+          value: toWei(formData.amount, formData.decimal),
+        })
+        .catch(() => {
+          setLoading(false);
+          message.error("fail");
+        });
+      let transaction = await status.wait();
+      if (transaction) setLoading(false);
+      console.log(status);
+    }
+    // 普通币与平台币之间的兑换
+    if (type == 3) {
+      let amountIn = toWei(formData.amount, formData.decimal);
+      let amountOutMin = (
+        Number(toData.amount) -
+        Number(toData.amount) * (settingData.num / 100)
+      ).toString();
+      let dataPath = [formData.address, toData.address1];
+      let time = (
+        Math.floor(Date.now() / 1000) +
+        settingData.time * 60
+      ).toString();
+      let status = await contract
+        .swapExactTokensForETH(amountIn, amountOutMin, dataPath, address, time)
+        .catch(() => {
+          setLoading(false);
+          message.error("fail");
+        });
+      let transaction = await status.wait();
+      if (transaction) setLoading(false);
+
+      console.log(status);
+    }
+
+    // 普通代币之间的兑换 如果滑点大于百分之1
+    if (type == 4) {
+      let amountIn = toWei(formData.amount, formData.decimal);
+      let amountOutMin = (
+        Number(toData.amount) -
+        Number(toData.amount) * (settingData.num / 100)
+      ).toString();
+      let dataPath = [formData.address, toData.address1];
+      let time = (
+        Math.floor(Date.now() / 1000) +
+        settingData.time * 60
+      ).toString();
+      let status = await contract
+        .swapExactTokensForTokensSupportingFeeOnTransferTokens(
+          amountIn,
+          amountOutMin,
+          dataPath,
+          address,
+          time
+        )
+        .catch(() => {
+          setLoading(false);
+          message.error("fail");
+        });
+      let transaction = await status.wait();
+      if (transaction) setLoading(false);
+    }
+    //平台代币与普通代币的兑换 如果滑点大于百分之1
+    if (type == 5) {
+      let amountOutMin = (
+        Number(toData.amount) -
+        Number(toData.amount) * (settingData.num / 100)
+      ).toString();
+      let dataPath = [formData.address1, toData.address];
+      let time = (
+        Math.floor(Date.now() / 1000) +
+        settingData.time * 60
+      ).toString();
+      let status = await contract
+        .swapExactETHForTokensSupportingFeeOnTransferTokens(
+          amountOutMin,
+          dataPath,
+          address,
+          time,
+          {
+            value: toWei(formData.amount, formData.decimal),
+          }
+        )
+        .catch(() => {
+          setLoading(false);
+          message.error("fail");
+        });
+      let transaction = await status.wait();
+      if (transaction) setLoading(false);
+    }
+    // 普通币与平台币之间的兑换如果滑点大于百分之1
+    if (type == 6) {
+      let amountIn = toWei(formData.amount, formData.decimal);
+      let amountOutMin = (
+        Number(toData.amount) -
+        Number(toData.amount) * (settingData.num / 100)
+      ).toString();
+      let dataPath = [formData.address, toData.address1];
+      let time = (
+        Math.floor(Date.now() / 1000) +
+        settingData.time * 60
+      ).toString();
+      let status =
+        await contract.swapExactTokensForETHSupportingFeeOnTransferTokens(
+          amountIn,
+          amountOutMin,
+          dataPath,
+          address,
+          time
+        ) .catch(() => {
+          setLoading(false);
+          message.error("fail");
+        });
+      let transaction = await status.wait();
+      if (transaction) setLoading(false);
+    }
+  };
+
+  const submit = () => {
+    console.log(Number(settingData.num));
+    if (Number(settingData.num) > 1) {
+      if (
+        !isplatformCoin(formData.address) &&
+        !isplatformCoin(toData.address)
+      ) {
+        exchangeMethod(4);
+      }
+      if (isplatformCoin(formData.address) && !isplatformCoin(toData.address)) {
+        exchangeMethod(5);
+      }
+      if (!isplatformCoin(formData.address) && isplatformCoin(toData.address)) {
+        exchangeMethod(6);
+      }
+    } else {
+      if (
+        !isplatformCoin(formData.address) &&
+        !isplatformCoin(toData.address)
+      ) {
+        exchangeMethod(1);
+      }
+      if (isplatformCoin(formData.address) && !isplatformCoin(toData.address)) {
+        exchangeMethod(2);
+      }
+      if (!isplatformCoin(formData.address) && isplatformCoin(toData.address)) {
+        exchangeMethod(3);
+      }
+    }
+  };
   return (
     <div className={styles.wrap}>
       <Modal
@@ -76,7 +290,9 @@ function AddLiquidity({
               </div>
             </div>
             <div className={styles.btn_wrap}>
-              <div className={styles.btn}>Swap</div>
+              <Button loading={loading} className={styles.btn} onClick={submit}>
+                Swap
+              </Button>
             </div>
           </div>
         </div>
