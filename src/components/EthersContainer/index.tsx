@@ -317,7 +317,8 @@ export const toWei = (val: any, num: number | string) => {
 };
 
 export const formTo = (val: any) => {
-  return ethers.BigNumber.from(val).toString();
+  let value = val.toString();
+  return ethers.BigNumber.from(value);
 };
 //数值转大数
 export const parseEther = (val: string) => {

@@ -8,7 +8,6 @@ import share from "@/assets/logo/share.png";
 import Stake from "./components/Stake";
 import {
   formWei,
-  formTo,
   getContract,
   getAllowance,
   getDecimals,
@@ -104,8 +103,8 @@ function PC() {
       newInfo.amount = formWei(userInfo.amount, decimals);
       newInfo.token = item.token;
       newInfo.rewaredtoken = item.rewaredtoken;
-      newInfo.starttime = formTo(item.starttime);
-      newInfo.endtime = formTo(item.endtime);
+      newInfo.starttime = item.starttime.toString();
+      newInfo.endtime = item.endtime.toString();
       newInfo.totalStake = formWei(item.totalStake, decimals);
       newInfo.name = item.name.split(",");
       newInfo.userReward = formWei(pendingInfo, decimals);

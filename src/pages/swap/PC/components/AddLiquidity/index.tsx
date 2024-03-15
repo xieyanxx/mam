@@ -5,9 +5,17 @@ import { Button, Input, Modal, Radio, message } from "antd";
 import close from "@/assets/logo/close.png";
 import icon1 from "@/assets/logo/icon1.png";
 import { formatAmount1, isplatformCoin } from "@/utils";
-import { getContract, toWei } from "@/components/EthersContainer";
-import { routeContractAddress } from "@/components/EthersContainer/address";
-import { routeAbi } from "@/components/EthersContainer/abj";
+import {
+  formTo,
+  formWei,
+  getContract,
+  toWei,
+} from "@/components/EthersContainer";
+import {
+  readyContractAddress,
+  routeContractAddress,
+} from "@/components/EthersContainer/address";
+import { readyAbi, routeAbi } from "@/components/EthersContainer/abj";
 
 function AddLiquidity({
   handleCancel,
@@ -27,6 +35,7 @@ function AddLiquidity({
   );
   const [address] = useState<string>(sessionStorage.getItem("address") || "");
   const [loading, setLoading] = useState(false);
+  const [trateData, setTrateData] = useState("0");
   const getValue = () => {
     if (isModalOpen) {
       let formTo = (Number(toData.amount) / Number(formData.amount)).toString();
@@ -97,10 +106,10 @@ function AddLiquidity({
       exchangeMethod(2);
     }
   };
-  const getrate = async () => {
+  const geTrate = async () => {
     const contract = await getContract(
-      routeContractAddress,
-      routeAbi,
+      readyContractAddress,
+      readyAbi,
       walletType
     );
     let tokenA = formData.address;
@@ -108,11 +117,13 @@ function AddLiquidity({
     let amount = toWei(formData.amount, formData.decimal);
     let amount1 = toWei(toData.amount, toData.decimal);
     let status = await contract.getrate(tokenA, tokenB, amount, amount1);
-    let transaction = await status.wait();
-    console.log(transaction);
+    let val = ((Number(status) / Math.pow(10, 20)) * 100).toString();
+    setTrateData(val);
   };
 
-  useEffect(() => {}, [isModalOpen]);
+  useEffect(() => {
+    if (isModalOpen) geTrate();
+  }, [isModalOpen]);
   return (
     <div className={styles.wrap}>
       <Modal
@@ -166,7 +177,7 @@ function AddLiquidity({
             </div>
             <div className={styles.Share_wrap}>
               <div>Share of pool: </div>
-              <div className={styles.Share_r}>0.25%</div>
+              <div className={styles.Share_r}>{formatAmount1(trateData)}%</div>
             </div>
             <div className={styles.btn_wrap}>
               <Button loading={loading} onClick={submit} className={styles.btn}>

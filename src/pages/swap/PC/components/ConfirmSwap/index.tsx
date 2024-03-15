@@ -31,7 +31,7 @@ function AddLiquidity({
 
   const getValue = () => {
     if (isModalOpen) {
-      let price = (Number(formData.amount) / Number(toData.amount)).toString();
+      let price = (Number(toData.amount) / Number(formData.amount)).toString();
       let Minimum = (
         Number(toData.amount) -
         Number(toData.amount) * (settingData.num / 100)
@@ -77,6 +77,7 @@ function AddLiquidity({
         });
       let transaction = await status.wait();
       if (transaction) setLoading(false);
+      handleCancel();
     }
     //平台代币与普通代币的兑换
     if (type == 2) {
@@ -99,7 +100,7 @@ function AddLiquidity({
         });
       let transaction = await status.wait();
       if (transaction) setLoading(false);
-      console.log(status);
+      handleCancel();
     }
     // 普通币与平台币之间的兑换
     if (type == 3) {
@@ -121,7 +122,7 @@ function AddLiquidity({
         });
       let transaction = await status.wait();
       if (transaction) setLoading(false);
-
+      handleCancel();
       console.log(status);
     }
 
@@ -151,6 +152,7 @@ function AddLiquidity({
         });
       let transaction = await status.wait();
       if (transaction) setLoading(false);
+      handleCancel();
     }
     //平台代币与普通代币的兑换 如果滑点大于百分之1
     if (type == 5) {
@@ -179,6 +181,7 @@ function AddLiquidity({
         });
       let transaction = await status.wait();
       if (transaction) setLoading(false);
+      handleCancel();
     }
     // 普通币与平台币之间的兑换如果滑点大于百分之1
     if (type == 6) {
@@ -206,11 +209,11 @@ function AddLiquidity({
         });
       let transaction = await status.wait();
       if (transaction) setLoading(false);
+      handleCancel();
     }
   };
 
   const submit = () => {
-    console.log(Number(settingData.num));
     if (Number(settingData.num) > 1) {
       if (
         !isplatformCoin(formData.address) &&

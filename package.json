@@ -9,6 +9,7 @@
     "start": "npm run dev"
   },
   "dependencies": {
+    "@types/lodash": "^4.17.0",
     "@walletconnect/web3-provider": "^1.8.0",
     "add": "^2.0.6",
     "ahooks": "^3.7.10",

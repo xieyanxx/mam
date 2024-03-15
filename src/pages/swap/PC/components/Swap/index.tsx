@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import styles from "./index.less";
 import cx from "classnames";
 import setting from "@/assets/logo/setting.png";
@@ -34,6 +34,7 @@ import {
 } from "@/components/EthersContainer/abj";
 import { formatAmount, formatAmount1, isplatformCoin } from "@/utils";
 import ConfirmSwap from "../ConfirmSwap";
+import { debounce } from "lodash";
 
 const statusType: any = {
   0: "Invalid pai", //地址无效，
@@ -59,14 +60,12 @@ function Swap() {
   const [formData, setFormData] = useState({
     ...ChainToken[3],
     amount: "", //输入金额
-    isEmpower: false, //是否授权
     balance: 0, //账户金额
     decimal: 18, //精度
   });
   const [toData, setToData] = useState({
     ...ChainToken[0],
     amount: "",
-    isEmpower: false, //是否授权
     balance: 0,
     decimal: 18, //精度
   });
@@ -112,7 +111,6 @@ function Swap() {
         ...formData,
         ...val,
         amount: "",
-        isEmpower: false,
         balance: 0,
         decimal: 18,
       });
@@ -121,7 +119,6 @@ function Swap() {
         ...toData,
         ...val,
         amount: "",
-        isEmpower: false,
         balance: 0,
         decimal: 18,
       });
@@ -171,6 +168,7 @@ function Swap() {
 
   //获取授权状态
   const getApproveStatus = async () => {
+    console.log(formData);
     if (!isplatformCoin(formData.address)) {
       let value = await getAllowance(
         formData.address,
@@ -181,7 +179,6 @@ function Swap() {
       );
       if (Number(value) > Number(formBalance)) {
         setStatus(3);
-        setFormData({ ...formData, isEmpower: true });
       } else {
         setStatus(2);
       }
@@ -191,7 +188,7 @@ function Swap() {
   };
 
   //输入获取值
-  const getEnterNum = async () => {
+  const getEnterNum = debounce(async (val: string, type: number) => {
     const contract = await getContract(
       routeContractAddress,
       routeAbi,
@@ -203,39 +200,42 @@ function Swap() {
     let toAddress = isplatformCoin(toData.address)
       ? toData.address1
       : toData.address;
-    if (isEnterForm) {
-      if (Number(formData.amount) == 0) {
-        // message.error("Please enter a number greater than zero");
+    if (type == 1) {
+      if (Number(val) == 0) {
         return;
       }
-      let amount = toWei(formData.amount, formData.decimal);
-      const getToNum = await contract.getAmountsOut(amount, [
-        formAddress,
-        toAddress,
-      ]);
-      setToData({
-        ...toData,
-        amount: formWei(getToNum[1], toData.decimal),
-      });
-      getApproveStatus();
+      let amount = toWei(val, formData.decimal);
+      const getToNum = await contract
+        .getAmountsOut(amount, [formAddress, toAddress])
+        .catch((e: any) => {
+          message.error(e.message);
+        });
+      if (getToNum) {
+        setToData({
+          ...toData,
+          amount: formWei(getToNum[1], toData.decimal),
+        });
+        getApproveStatus();
+      }
     } else {
-      if (Number(toData.amount) == 0) {
-        message.error("Please enter a number greater than zero");
+      if (Number(val) == 0) {
         return;
       }
-      let amount = toWei(toData.amount, toData.decimal);
-      const getFormNum = await contract.getAmountsIn(amount, [
-        toAddress,
-        formAddress,
-      ]);
-
-      setFormData({
-        ...formData,
-        amount: formWei(getFormNum[0], formData.decimal),
-      });
-      getApproveStatus();
+      let amount = toWei(val, toData.decimal);
+      const getFormNum = await contract
+        .getAmountsIn(amount, [toAddress, formAddress])
+        .catch((err: any) => {
+          message.error(err.message);
+        });
+      if (getFormNum) {
+        setFormData({
+          ...formData,
+          amount: formWei(getFormNum[0], formData.decimal),
+        });
+        getApproveStatus();
+      }
     }
-  };
+  }, 300);
 
   const getTransactionData = async () => {
     const contract = await getContract(
@@ -254,9 +254,7 @@ function Swap() {
     if (isplatformCoin(addressStatus)) {
       setStatus(0); // 表示位无效地址
     } else {
-      if (formData.amount && toData.amount) {
-        console.log(111);
-      } else {
+      if (!formData.amount && !toData.amount) {
         setStatus(1);
       }
     }
@@ -281,14 +279,11 @@ function Swap() {
     }
   };
 
-
-
   const handleSubmit = () => {
     if (status == 2) {
       handleApprove();
     }
     if (status == 3) {
-
       swapShowModal();
     }
   };
@@ -327,15 +322,17 @@ function Swap() {
               <Input
                 onChange={(e) => {
                   let value = e.target.value;
-                  setIsEnterForm(true);
+
                   if (!value.match(/^\d+(\.\d{0,16})?$/)) {
                     let newValue = value.slice(0, -1);
                     setFormData({ ...formData, amount: newValue });
+                    getEnterNum(newValue, 1);
                   } else {
                     setFormData({ ...formData, amount: value });
+                    getEnterNum(value, 1);
                   }
                 }}
-                onBlur={getEnterNum}
+                // onBlur={getEnterNum}
                 type="text"
                 value={formData.amount}
                 placeholder={"0.0"}
@@ -349,7 +346,7 @@ function Swap() {
             <div
               className={styles.item}
               onClick={() => {
-                setIsEnterForm(true);
+                getEnterNum(formBalance, 1);
                 setFormData({ ...formData, amount: formBalance });
               }}
             >
@@ -385,11 +382,13 @@ function Swap() {
                   if (!value.match(/^\d+(\.\d{0,16})?$/)) {
                     let newValue = value.slice(0, -1);
                     setToData({ ...toData, amount: newValue });
+                    getEnterNum(newValue, 2);
                   } else {
                     setToData({ ...toData, amount: value });
+                    getEnterNum(value, 2);
                   }
                 }}
-                onBlur={getEnterNum}
+                // onBlur={getEnterNum}
                 type="text"
                 placeholder={"0.0"}
                 value={toData.amount}
@@ -403,7 +402,8 @@ function Swap() {
             <div
               className={styles.item}
               onClick={() => {
-                setFormData({ ...formData, amount: toBalance });
+                setToData({ ...toData, amount: toBalance });
+                getEnterNum(toBalance, 2);
               }}
             >
               MAX
