@@ -11,6 +11,8 @@ export const routeContractAddress =
   "0x62ae1cd50c392e78e9482a151240302A30610635";
 export const factoryContractAddress =
   "0x07820957A53A2Eea3d94d0fca9Cc693a23530ceD";
+export const readyContractAddress =
+  "0xa1c69b8F3e319ED29F65FE76842690e6266156BD";
 export const ChainToken = [
   {
     id: 1,
@@ -18,7 +20,7 @@ export const ChainToken = [
     name: "MAMABA",
     name1: "Mamaba",
     address: "0x61b040e9630873138329E706f20ef534Bb77cB5E",
-    address1:''
+    address1: "",
   },
   {
     id: 2,
@@ -26,7 +28,7 @@ export const ChainToken = [
     name: "SEI",
     name1: "Sei",
     address: "0x0000000000000000000000000000000000000000",
-    address1:'0x149f9234B8327C7Bb279E9Fd100919fc0a3e2Abd'
+    address1: "0x149f9234B8327C7Bb279E9Fd100919fc0a3e2Abd",
   },
   {
     id: 3,
@@ -34,7 +36,7 @@ export const ChainToken = [
     name: "USDC",
     name1: "Usdc",
     address: "0x54317F70bBF9776C817BDA9455D8179C70c429aA",
-    address1:''
+    address1: "",
   },
   {
     id: 4,
@@ -42,7 +44,7 @@ export const ChainToken = [
     name: "USDT",
     name1: "Usdt",
     address: "0x3A989dc09dA5623A7c868061ff7ae0b7fA4A3EC3",
-    address1:''
+    address1: "",
   },
 ];
 

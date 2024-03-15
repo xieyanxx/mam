@@ -1,11 +1,11 @@
-import React, { memo, useCallback, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import styles from "./index.less";
 import cx from "classnames";
 import { Button, Modal, message } from "antd";
 import close from "@/assets/logo/close.png";
 import down1 from "@/assets/logo/down1.png";
 import { formatAmount1, isplatformCoin } from "@/utils";
-import { getContract, toWei } from "@/components/EthersContainer";
+import { getBalance, getContract, toWei } from "@/components/EthersContainer";
 import { routeContractAddress } from "@/components/EthersContainer/address";
 import { routeAbi } from "@/components/EthersContainer/abj";
 
@@ -27,13 +27,19 @@ function AddLiquidity({
   );
   const [address] = useState<string>(sessionStorage.getItem("address") || "");
   const [loading, setLoading] = useState(false);
-  const getValue = useCallback(() => {
+  const [gas, setGas] = useState("0");
+
+  const getValue = () => {
     if (isModalOpen) {
-      let price = Number(formData.amount) / Number(toData.amount);
-      let Minimum =
-        Number(toData.amount) - Number(toData.amount) * (settingData.num / 100);
+      let price = (Number(formData.amount) / Number(toData.amount)).toString();
+      let Minimum = (
+        Number(toData.amount) -
+        Number(toData.amount) * (settingData.num / 100)
+      ).toString();
+      getGas();
+      return { price, Minimum };
     }
-  }, [toData, formData, settingData]);
+  };
 
   const exchangeMethod = async (type: number) => {
     setLoading(true);
@@ -57,7 +63,6 @@ function AddLiquidity({
         Math.floor(Date.now() / 1000) +
         settingData.time * 60
       ).toString();
-      console.log(amountIn, amountOutMin, dataPath, time, "===>11111");
       let status = await contract
         .swapExactTokensForTokens(
           amountIn,
@@ -187,14 +192,15 @@ function AddLiquidity({
         Math.floor(Date.now() / 1000) +
         settingData.time * 60
       ).toString();
-      let status =
-        await contract.swapExactTokensForETHSupportingFeeOnTransferTokens(
+      let status = await contract
+        .swapExactTokensForETHSupportingFeeOnTransferTokens(
           amountIn,
           amountOutMin,
           dataPath,
           address,
           time
-        ) .catch(() => {
+        )
+        .catch(() => {
           setLoading(false);
           message.error("fail");
         });
@@ -232,6 +238,11 @@ function AddLiquidity({
         exchangeMethod(3);
       }
     }
+  };
+  const getGas = async () => {
+    let gasFree = (await getBalance(walletType, address)).gasFreeVal;
+    console.log(gasFree);
+    setGas(gasFree);
   };
   return (
     <div className={styles.wrap}>
@@ -274,19 +285,27 @@ function AddLiquidity({
             <div className={styles.price_wrap}>
               <div className={styles.price_item}>
                 <p className={styles.name}>price:</p>
-                <p>10.5 MAMBA</p>
+                <p>
+                  {formatAmount1(getValue()?.price || "0")}{" "}
+                  {`${toData.name}/${formData.name}`}
+                </p>
               </div>
               <div className={styles.price_item}>
                 <p className={styles.name}>Minimum received:</p>
-                <p>10.5 MAMBA</p>
+                <p>
+                  {formatAmount1(getValue()?.Minimum || "0")}
+                  {toData.name}
+                </p>
               </div>
               <div className={styles.price_item}>
                 <p className={styles.name}>Price impact:</p>
-                <p>10.5 MAMBA</p>
+                <p>0.00 MAMBA</p>
               </div>
               <div className={styles.price_item}>
                 <p className={styles.name}>Trading fee:</p>
-                <p>0.00002 SEI</p>
+                <p>
+                  {formatAmount1(gas)} {toData.name}
+                </p>
               </div>
             </div>
             <div className={styles.btn_wrap}>

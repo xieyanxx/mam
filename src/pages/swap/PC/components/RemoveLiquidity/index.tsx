@@ -4,13 +4,16 @@ import cx from "classnames";
 import { Button, Input, Modal, Progress, Radio } from "antd";
 import close from "@/assets/logo/close.png";
 import icon1 from "@/assets/logo/icon1.png";
+import { ChainToken } from "@/components/EthersContainer/address";
 
 function RemoveLiquidity({
   handleCancel,
   isModalOpen,
+  removeData,
 }: {
   handleCancel: () => void;
   isModalOpen: boolean;
+  removeData: any;
 }) {
   return (
     <div className={styles.wrap}>
@@ -30,9 +33,23 @@ function RemoveLiquidity({
           </div>
           <div className={styles.content}>
             <div className={styles.title}>
-              <img src="" alt="" />
-              <img src="" alt="" />
-              <p>MAMBA-SEI </p>
+              <img
+                src={
+                  ChainToken.filter((i) => i.name == removeData.tokenName1)[0]
+                    ?.src
+                }
+                alt=""
+              />
+              <img
+                src={
+                  ChainToken.filter((i) => i.name == removeData.tokenName2)[0]
+                    ?.src
+                }
+                alt=""
+              />
+              <p>
+                {removeData.tokenName1}-{removeData.tokenName2}{" "}
+              </p>
             </div>
             <Radio.Group
               defaultValue="a"

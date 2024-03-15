@@ -7,6 +7,8 @@ import time from "@/assets/logo/time.png";
 
 
 function MyLps() {
+
+  
   return (
     <div className={styles.wrap}>
       <div className={styles.title}>

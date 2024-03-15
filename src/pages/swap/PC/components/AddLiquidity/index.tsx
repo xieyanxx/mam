@@ -29,7 +29,6 @@ function AddLiquidity({
   const [loading, setLoading] = useState(false);
   const getValue = () => {
     if (isModalOpen) {
-      console.log(Number(formData.amount));
       let formTo = (Number(toData.amount) / Number(formData.amount)).toString();
       let toForm = (Number(formData.amount) / Number(toData.amount)).toString();
       return { formTo, toForm };
@@ -47,7 +46,13 @@ function AddLiquidity({
       let tokenA = formData.address;
       let tokenB = toData.address;
       let amountADesired = toWei(formData.amount, formData.decimal);
-      let amountOutMin = toWei(toData.amount, toData.decimal);
+      let amountOutMin = toWei(
+        (
+          Number(toData.amount) -
+          Number(toData.amount) * (settingData.num / 100)
+        ).toString(),
+        toData.decimal
+      );
       let time = (
         Math.floor(Date.now() / 1000) +
         settingData.time * 60
@@ -62,8 +67,7 @@ function AddLiquidity({
         address,
         time
       );
-      console.log(status1, "===>");
-      let transaction = await status1?.wait();
+      let transaction = await status1.wait();
       if (transaction) setLoading(false);
     }
     //普通代币与平台之间的添加
@@ -86,8 +90,6 @@ function AddLiquidity({
     }
   };
   const submit = () => {
-    console.log(Number(settingData.num));
-
     if (!isplatformCoin(formData.address) && !isplatformCoin(toData.address)) {
       exchangeMethod(1);
     }

@@ -185,7 +185,7 @@ function Liquidity() {
         routeContractAddress
       );
       if (Number(value) > Number(formBalance)) {
-        // setStatus(3);
+        // setStatus(3);;
         isformApprove = true;
       } else {
         isformApprove = false;
@@ -232,12 +232,9 @@ function Liquidity() {
     let toAddress = isplatformCoin(toData.address)
       ? toData.address1
       : toData.address;
-    console.log(formData, toData, "====>");
     //无效数据需要自己输入值
     if (!isEffective) {
-      console.log(22222);
       if (Number(formData.amount) && Number(toData.amount)) {
-        console.log(3333);
         getApproveStatus();
       }
       return;
@@ -291,12 +288,10 @@ function Liquidity() {
       ? toData.address1
       : toData.address;
     const addressStatus = await contract.getPair(formAddress, toAddress);
-    console.log(addressStatus, "===>");
     if (formAddress == toAddress) {
       setStatus(0);
     }
     if (isplatformCoin(addressStatus) && formAddress != toAddress) {
-      console.log(1111);
       setEffective(false);
       setStatus(1);
     } else {
@@ -326,7 +321,10 @@ function Liquidity() {
           message.error("fail");
           setLoading(false);
         });
-      status = await transaction?.wait();
+
+      status = await transaction.wait();
+    } else {
+      status = true;
     }
     if (!toApprove) {
       const contract = await getContract(toData.address, tokenAbi, walletType);
@@ -336,9 +334,10 @@ function Liquidity() {
           message.error("fail");
           setLoading(false);
         });
-      toStatus = await transaction1?.wait();
+      toStatus = await transaction1.wait();
+    } else {
+      toStatus = true;
     }
-
     if (status && toStatus) {
       setStatus(3);
       message.success("success");
@@ -364,7 +363,7 @@ function Liquidity() {
       <div className={styles.title}>
         Add liquidity to get LP tokens
         <div className={styles.icon_wrap}>
-          <img src={setting} alt="" />
+          <img src={setting} onClick={showModal} alt="" />
           <img src={time} alt="" />
         </div>
       </div>

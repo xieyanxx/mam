@@ -276,9 +276,10 @@ export const getBalance = async (
   }
   const _ethers = new ethers.providers.Web3Provider(provider);
   var balance = await _ethers.getBalance(userAddress);
-  console.log(balance, "balance");
+  const gasFree = await _ethers.getGasPrice();
   let balanceVal = formWei(balance);
-  return { balanceVal };
+  let gasFreeVal = formWei(gasFree);
+  return { balanceVal, gasFreeVal };
 };
 
 //获取授权值
