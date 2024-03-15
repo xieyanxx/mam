@@ -47,34 +47,22 @@ function AddLiquidity({
       let tokenA = formData.address;
       let tokenB = toData.address;
       let amountADesired = toWei(formData.amount, formData.decimal);
-      let amountOutMin = toWei(
-        (
-          Number(toData.amount) -
-          Number(toData.amount) * (settingData.num / 100)
-        ).toString(),
-        toData.decimal
-      );
+      let amountOutMin = toWei(toData.amount, toData.decimal);
       let time = (
         Math.floor(Date.now() / 1000) +
         settingData.time * 60
       ).toString();
-      console.log(tokenA, tokenB, amountADesired, amountOutMin, time, "==>");
-      let status1 = await contract
-        .addLiquidity(
-          tokenA,
-          tokenB,
-          amountADesired,
-          amountOutMin,
-          0,
-          0,
-          address,
-          time
-        )
-        .catch(() => {
-          setLoading(false);
-          message.error("fail");
-        });
-      console.log(status1, "==>");
+      let status1 = await contract.addLiquidity(
+        tokenA,
+        tokenB,
+        amountADesired,
+        amountOutMin,
+        0,
+        0,
+        address,
+        time
+      );
+      console.log(status1, "===>");
       let transaction = await status1?.wait();
       if (transaction) setLoading(false);
     }

@@ -172,56 +172,51 @@ function Liquidity() {
   };
   //获取授权状态
   const getApproveStatus = async () => {
-    //必须两个都有值
-    if (!isEffective) {
-      if (!Number(formData.amount) || !Number(toData.amount)) {
-        setStatus(1);
-        return;
-      }
-    }
+    // if (!isplatformCoin(formData.address) && !isplatformCoin(toData.address)) {
+    let isformApprove = false;
+    let istoApprove = false;
 
-    if (!isplatformCoin(formData.address) && !isplatformCoin(toData.address)) {
-      let isformApprove = false;
-      let istoApprove = false;
-      if (!isplatformCoin(formData.address)) {
-        let value = await getAllowance(
-          formData.address,
-          address,
-          walletType,
-          tokenAbi,
-          routeContractAddress
-        );
-        if (Number(value) > Number(formBalance)) {
-          // setStatus(3);
-          isformApprove = true;
-        } else {
-          isformApprove = false;
-        }
+    if (!isplatformCoin(formData.address)) {
+      let value = await getAllowance(
+        formData.address,
+        address,
+        walletType,
+        tokenAbi,
+        routeContractAddress
+      );
+      if (Number(value) > Number(formBalance)) {
+        // setStatus(3);
+        isformApprove = true;
+      } else {
+        isformApprove = false;
       }
-      if (!isplatformCoin(toData.address)) {
-        let value = await getAllowance(
-          toData.address,
-          address,
-          walletType,
-          tokenAbi,
-          routeContractAddress
-        );
-        if (Number(value) > Number(formBalance)) {
-          istoApprove = true;
-        } else {
-          istoApprove = false;
-        }
-        if (isformApprove && istoApprove) {
-          setStatus(3);
-          setIsApptove(true);
-          setIsApptove1(true);
-          // setFormData({ ...formData, isEmpower: true });
-          // setToData({ ...toData, isEmpower: true });
-        } else {
-          setStatus(2);
-        }
-      }
+    } else {
+      isformApprove = true;
     }
+    if (!isplatformCoin(toData.address)) {
+      let value = await getAllowance(
+        toData.address,
+        address,
+        walletType,
+        tokenAbi,
+        routeContractAddress
+      );
+      if (Number(value) > Number(formBalance)) {
+        istoApprove = true;
+      } else {
+        istoApprove = false;
+      }
+    } else {
+      isformApprove = true;
+    }
+    if (isformApprove && istoApprove) {
+      setStatus(3);
+      setIsApptove(true);
+      setIsApptove1(true);
+    } else {
+      setStatus(2);
+    }
+    // }
   };
 
   //输入获取值
@@ -237,14 +232,19 @@ function Liquidity() {
     let toAddress = isplatformCoin(toData.address)
       ? toData.address1
       : toData.address;
+    console.log(formData, toData, "====>");
     //无效数据需要自己输入值
     if (!isEffective) {
-      getApproveStatus();
+      console.log(22222);
+      if (Number(formData.amount) && Number(toData.amount)) {
+        console.log(3333);
+        getApproveStatus();
+      }
       return;
     }
     if (isEnterForm) {
       if (Number(formData.amount) == 0) {
-        message.error("Please enter a number greater than zero");
+        // message.error("Please enter a number greater than zero");
         return;
       }
       let amount = toWei(formData.amount, formData.decimal);
@@ -291,7 +291,7 @@ function Liquidity() {
       ? toData.address1
       : toData.address;
     const addressStatus = await contract.getPair(formAddress, toAddress);
-    console.log(addressStatus);
+    console.log(addressStatus, "===>");
     if (formAddress == toAddress) {
       setStatus(0);
     }
