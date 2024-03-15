@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import styles from "./index.less";
 import cx from "classnames";
 import setting from "@/assets/logo/setting.png";
@@ -27,7 +27,7 @@ import {
   getDecimals,
   toWei,
 } from "@/components/EthersContainer";
-import { isplatformCoin } from "@/utils";
+import { formatAmount1, isplatformCoin } from "@/utils";
 import {
   factoryAbi,
   routeAbi,
@@ -55,6 +55,8 @@ function Liquidity() {
   const [isEnterForm, setIsEnterForm] = useState(false); //是否是先从form输入值
   const [removeModalOpen, setRemoveModalOpen] = useState(false);
   const [isEffective, setEffective] = useState(true); //判断地址是否有效
+  const [isApptove, setIsApptove] = useState(false); //判断token1是否授权
+  const [isApptove1, setIsApptove1] = useState(true); //判断token2是否授权
   const [status, setStatus] = useState(1);
   const [formData, setFormData] = useState({
     ...ChainToken[3],
@@ -171,43 +173,54 @@ function Liquidity() {
   //获取授权状态
   const getApproveStatus = async () => {
     //必须两个都有值
-    if (!Number(formData.amount) || !Number(toData.amount)) {
-      setStatus(1);
-      return;
-    }
-    if (!isplatformCoin(formData.address)) {
-      let value = await getAllowance(
-        formData.address,
-        address,
-        walletType,
-        tokenAbi,
-        routeContractAddress
-      );
-      if (Number(value) > Number(formBalance)) {
-        setStatus(3);
-        setFormData({ ...formData, isEmpower: true });
-      } else {
-        setStatus(2);
+    if (!isEffective) {
+      if (!Number(formData.amount) || !Number(toData.amount)) {
+        setStatus(1);
+        return;
       }
-    } else {
-      setStatus(3);
     }
-    if (!isplatformCoin(toData.address)) {
-      let value = await getAllowance(
-        toData.address,
-        address,
-        walletType,
-        tokenAbi,
-        routeContractAddress
-      );
-      if (Number(value) > Number(formBalance)) {
-        setStatus(3);
-        setToData({ ...toData, isEmpower: true });
-      } else {
-        setStatus(2);
+
+    if (!isplatformCoin(formData.address) && !isplatformCoin(toData.address)) {
+      let isformApprove = false;
+      let istoApprove = false;
+      if (!isplatformCoin(formData.address)) {
+        let value = await getAllowance(
+          formData.address,
+          address,
+          walletType,
+          tokenAbi,
+          routeContractAddress
+        );
+        if (Number(value) > Number(formBalance)) {
+          // setStatus(3);
+          isformApprove = true;
+        } else {
+          isformApprove = false;
+        }
       }
-    } else {
-      setStatus(3);
+      if (!isplatformCoin(toData.address)) {
+        let value = await getAllowance(
+          toData.address,
+          address,
+          walletType,
+          tokenAbi,
+          routeContractAddress
+        );
+        if (Number(value) > Number(formBalance)) {
+          istoApprove = true;
+        } else {
+          istoApprove = false;
+        }
+        if (isformApprove && istoApprove) {
+          setStatus(3);
+          setIsApptove(true);
+          setIsApptove1(true);
+          // setFormData({ ...formData, isEmpower: true });
+          // setToData({ ...toData, isEmpower: true });
+        } else {
+          setStatus(2);
+        }
+      }
     }
   };
 
@@ -243,6 +256,7 @@ function Liquidity() {
         ...toData,
         amount: formWei(getToNum[1], toData.decimal),
       });
+
       getApproveStatus();
     } else {
       if (Number(toData.amount) == 0) {
@@ -277,11 +291,16 @@ function Liquidity() {
       ? toData.address1
       : toData.address;
     const addressStatus = await contract.getPair(formAddress, toAddress);
+    console.log(addressStatus);
     if (formAddress == toAddress) {
       setStatus(0);
     }
     if (isplatformCoin(addressStatus) && formAddress != toAddress) {
+      console.log(1111);
       setEffective(false);
+      setStatus(1);
+    } else {
+      setEffective(true);
       setStatus(1);
     }
   };
@@ -289,16 +308,38 @@ function Liquidity() {
   //授权
   const handleApprove = async () => {
     setLoading(true);
+    let formApprove = isApptove;
+    let toApprove = isApptove1;
     var amount =
       "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
-    const contract = await getContract(formData.address, tokenAbi, walletType);
-    var transaction = await contract
-      .approve(routeContractAddress, amount)
-      .catch((err: any) => {
-        message.error("fail");
-        setLoading(false);
-      });
-    if (transaction) {
+    let status = null;
+    let toStatus = null;
+    if (!formApprove) {
+      const contract = await getContract(
+        formData.address,
+        tokenAbi,
+        walletType
+      );
+      var transaction = await contract
+        .approve(routeContractAddress, amount)
+        .catch((err: any) => {
+          message.error("fail");
+          setLoading(false);
+        });
+      status = await transaction?.wait();
+    }
+    if (!toApprove) {
+      const contract = await getContract(toData.address, tokenAbi, walletType);
+      var transaction1 = await contract
+        .approve(routeContractAddress, amount)
+        .catch((err: any) => {
+          message.error("fail");
+          setLoading(false);
+        });
+      toStatus = await transaction1?.wait();
+    }
+
+    if (status && toStatus) {
       setStatus(3);
       message.success("success");
       setLoading(false);
@@ -310,7 +351,7 @@ function Liquidity() {
       handleApprove();
     }
     if (status == 3) {
-      // swapShowModal();
+      addShowModal();
     }
   };
 
@@ -331,52 +372,17 @@ function Liquidity() {
         <div className={styles.from_wrap}>
           <div className={styles.from_title}>
             <span className={styles.name}>Token 1</span>
-            <span className={styles.balance}>Balance: 10.265</span>
+            <span className={styles.balance}>
+              Balance: {formatAmount1(formBalance)}
+            </span>
           </div>
           <div className={styles.from_input_wrap}>
-            <div className={styles.type_wrap}>
-              <img className={styles.icon_img} src={usdt} alt="" />
-              <span>USDC</span>
-              <img src={down} alt="" />
-            </div>
-            <div>
-              <Input
-                onChange={(e) => {
-                  let value = e.target.value;
-                  setIsEnterForm(false);
-                  if (!value.match(/^\d+(\.\d{0,16})?$/)) {
-                    let newValue = value.slice(0, -1);
-                    setToData({ ...toData, amount: newValue });
-                  } else {
-                    setToData({ ...toData, amount: value });
-                  }
-                }}
-                onBlur={getEnterNum}
-                type="text"
-                placeholder={"0.0"}
-                className={styles.input_inner}
-              />
-              <div className={styles.num}>$8.67</div>
-            </div>
-          </div>
-          <div className={styles.label_wrap}>
-            <div className={styles.item}>50%</div>
-            <div className={styles.item}>MAX</div>
-          </div>
-          <div className={styles.change_wrap}>
-            {/* <div className={styles.line}></div> */}
-            <img className={styles.change_icon} src={add} alt="" />
-          </div>
-        </div>
-        <div className={styles.from_wrap}>
-          <div className={styles.from_title}>
-            <span className={styles.name}>Token 2</span>
-            <span className={styles.balance}>Balance: 10.265</span>
-          </div>
-          <div className={styles.from_input_wrap}>
-            <div className={styles.type_wrap}>
-              <img className={styles.icon_img} src={sei1} alt="" />
-              <span>SEI</span>
+            <div
+              className={styles.type_wrap}
+              onClick={() => selectShowModal(1)}
+            >
+              <img className={styles.icon_img} src={formData.src} alt="" />
+              <span>{formData.name}</span>
               <img src={down} alt="" />
             </div>
             <div>
@@ -393,14 +399,61 @@ function Liquidity() {
                 }}
                 onBlur={getEnterNum}
                 type="text"
+                value={formData.amount}
                 placeholder={"0.0"}
                 className={styles.input_inner}
               />
-              <div className={styles.num}>$8.67</div>
+              {/* <div className={styles.num}>$8.67</div> */}
             </div>
           </div>
           <div className={styles.label_wrap}>
-            <div className={styles.item}>50%</div>
+            {/* <div className={styles.item}>50%</div> */}
+            <div className={styles.item}>MAX</div>
+          </div>
+          <div className={styles.change_wrap}>
+            {/* <div className={styles.line}></div> */}
+            <img className={styles.change_icon} src={add} alt="" />
+          </div>
+        </div>
+        <div className={styles.from_wrap}>
+          <div className={styles.from_title}>
+            <span className={styles.name}>Token 2</span>
+            <span className={styles.balance}>
+              Balance: {formatAmount1(toBalance)}
+            </span>
+          </div>
+          <div className={styles.from_input_wrap}>
+            <div
+              className={styles.type_wrap}
+              onClick={() => selectShowModal(2)}
+            >
+              <img className={styles.icon_img} src={toData.src} alt="" />
+              <span>{toData.name}</span>
+              <img src={down} alt="" />
+            </div>
+            <div>
+              <Input
+                onChange={(e) => {
+                  let value = e.target.value;
+                  setIsEnterForm(false);
+                  if (!value.match(/^\d+(\.\d{0,16})?$/)) {
+                    let newValue = value.slice(0, -1);
+                    setToData({ ...toData, amount: newValue });
+                  } else {
+                    setToData({ ...toData, amount: value });
+                  }
+                }}
+                onBlur={getEnterNum}
+                value={toData.amount}
+                type="text"
+                placeholder={"0.0"}
+                className={styles.input_inner}
+              />
+              {/* <div className={styles.num}>$8.67</div> */}
+            </div>
+          </div>
+          <div className={styles.label_wrap}>
+            {/* <div className={styles.item}>50%</div> */}
             <div className={styles.item}>MAX</div>
           </div>
         </div>
@@ -424,8 +477,13 @@ function Liquidity() {
           </div>
         </div> */}
         <div className={styles.btn_wrap}>
-          <Button className={styles.unlock_btn} onClick={addShowModal}>
-            Add liquidity
+          <Button
+            loading={loading}
+            disabled={status == 0 || status == 1}
+            className={styles.unlock_btn}
+            onClick={handleSubmit}
+          >
+            {statusType[status]}
           </Button>
         </div>
       </div>
@@ -434,6 +492,9 @@ function Liquidity() {
       <AddLiquidity
         handleCancel={handleAddCancel}
         isModalOpen={addModalOpen}
+        formData={formData}
+        toData={toData}
+        settingData={settingData}
       ></AddLiquidity>
       <SettingModal
         settingData={settingData}

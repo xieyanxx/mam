@@ -26,7 +26,7 @@ function PC() {
         ))}
       </div>
       {current == 1 && <Swap></Swap>}
-      {current == 2 && <Liquidity />}
+      {current == 2 && <Liquidity  />}
       {current == 3 && <MyLps />}
     </div>
   );

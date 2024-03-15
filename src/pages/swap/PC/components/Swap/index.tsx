@@ -32,7 +32,7 @@ import {
   routeAbi,
   tokenAbi,
 } from "@/components/EthersContainer/abj";
-import { formatAmount, isplatformCoin } from "@/utils";
+import { formatAmount, formatAmount1, isplatformCoin } from "@/utils";
 import ConfirmSwap from "../ConfirmSwap";
 
 const statusType: any = {
@@ -354,7 +354,7 @@ function Swap() {
           <div className={styles.from_title}>
             <span className={styles.name}>To</span>
             <span className={styles.balance}>
-              Balance: {formatAmount(toBalance)}
+              Balance: {formatAmount1(toBalance)}
             </span>
           </div>
           <div className={styles.from_input_wrap}>
