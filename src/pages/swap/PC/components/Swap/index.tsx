@@ -205,7 +205,7 @@ function Swap() {
       : toData.address;
     if (isEnterForm) {
       if (Number(formData.amount) == 0) {
-        message.error("Please enter a number greater than zero");
+        // message.error("Please enter a number greater than zero");
         return;
       }
       let amount = toWei(formData.amount, formData.decimal);
@@ -281,11 +281,14 @@ function Swap() {
     }
   };
 
+
+
   const handleSubmit = () => {
     if (status == 2) {
       handleApprove();
     }
     if (status == 3) {
+
       swapShowModal();
     }
   };
@@ -342,8 +345,16 @@ function Swap() {
             </div>
           </div>
           <div className={styles.label_wrap}>
-            <div className={styles.item}>50%</div>
-            <div className={styles.item}>MAX</div>
+            {/* <div className={styles.item}>50%</div> */}
+            <div
+              className={styles.item}
+              onClick={() => {
+                setIsEnterForm(true);
+                setFormData({ ...formData, amount: formBalance });
+              }}
+            >
+              MAX
+            </div>
           </div>
           <div className={styles.change_wrap}>
             <div className={styles.line}></div>
@@ -388,8 +399,15 @@ function Swap() {
             </div>
           </div>
           <div className={styles.label_wrap}>
-            <div className={styles.item}>50%</div>
-            <div className={styles.item}>MAX</div>
+            {/* <div className={styles.item}>50%</div> */}
+            <div
+              className={styles.item}
+              onClick={() => {
+                setFormData({ ...formData, amount: toBalance });
+              }}
+            >
+              MAX
+            </div>
           </div>
         </div>
         <div className={styles.btn_wrap}>

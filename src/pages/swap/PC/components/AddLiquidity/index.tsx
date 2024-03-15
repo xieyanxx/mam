@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import styles from "./index.less";
 import cx from "classnames";
 import { Button, Input, Modal, Radio, message } from "antd";
@@ -97,6 +97,22 @@ function AddLiquidity({
       exchangeMethod(2);
     }
   };
+  const getrate = async () => {
+    const contract = await getContract(
+      routeContractAddress,
+      routeAbi,
+      walletType
+    );
+    let tokenA = formData.address;
+    let tokenB = toData.address;
+    let amount = toWei(formData.amount, formData.decimal);
+    let amount1 = toWei(toData.amount, toData.decimal);
+    let status = await contract.getrate(tokenA, tokenB, amount, amount1);
+    let transaction = await status.wait();
+    console.log(transaction);
+  };
+
+  useEffect(() => {}, [isModalOpen]);
   return (
     <div className={styles.wrap}>
       <Modal

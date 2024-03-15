@@ -453,7 +453,7 @@ function Liquidity() {
           </div>
           <div className={styles.label_wrap}>
             {/* <div className={styles.item}>50%</div> */}
-            <div className={styles.item}>MAX</div>
+            <div className={styles.item} >MAX</div>
           </div>
         </div>
         {/* <div className={styles.initial_wrap}>
