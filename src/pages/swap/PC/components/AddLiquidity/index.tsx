@@ -108,7 +108,9 @@ function AddLiquidity({
       readyAbi,
       walletType
     );
-    let tokenA = formData.address;
+    let tokenA = isplatformCoin(formData.address)
+      ? formData.address1
+      : formData.address;
     let tokenB = isplatformCoin(toData.address)
       ? toData.address1
       : toData.address;

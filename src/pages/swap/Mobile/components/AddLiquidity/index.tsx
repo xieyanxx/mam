@@ -110,7 +110,9 @@ function AddLiquidity({
       readyAbi,
       walletType
     );
-    let tokenA = formData.address;
+    let tokenA = isplatformCoin(formData.address)
+      ? formData.address1
+      : formData.address;
     let tokenB = isplatformCoin(toData.address)
       ? toData.address1
       : toData.address;
@@ -181,7 +183,9 @@ function AddLiquidity({
               <div className={styles.Share_r}>{formatAmount1(trateData)}%</div>
             </div>
             <div className={styles.btn_wrap}>
-              <Button loading={loading} onClick={submit} className={styles.btn}>Add</Button>
+              <Button loading={loading} onClick={submit} className={styles.btn}>
+                Add
+              </Button>
             </div>
           </div>
         </div>
