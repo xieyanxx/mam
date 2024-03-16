@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import styles from "./index.less";
 import cx from "classnames";
 import setting from "@/assets/logo/setting.png";
@@ -215,7 +215,7 @@ function Liquidity() {
   };
 
   //输入获取值
-  const getEnterNum = debounce(async (val: string, type: number) => {
+  const getEnterNum = useCallback(debounce(async (val: string, type: number) => {
     const contract = await getContract(
       routeContractAddress,
       routeAbi,
@@ -268,7 +268,7 @@ function Liquidity() {
         getApproveStatus();
       }
     }
-  }, 300);
+  }, 300),[]);
 
   const getTransactionData = async () => {
     const contract = await getContract(

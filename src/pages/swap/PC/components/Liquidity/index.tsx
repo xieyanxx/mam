@@ -216,7 +216,7 @@ function Liquidity() {
   };
 
   //输入获取值
-  const getEnterNum = debounce(async (val: string, type: number) => {
+  const getEnterNum = useCallback( debounce(async (val: string, type: number) => {
     const contract = await getContract(
       routeContractAddress,
       routeAbi,
@@ -269,7 +269,7 @@ function Liquidity() {
         getApproveStatus();
       }
     }
-  }, 300);
+  }, 300),[]);
 
   const getTransactionData = async () => {
     const contract = await getContract(
