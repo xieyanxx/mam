@@ -111,6 +111,7 @@ function Swap() {
         balance: 0,
         decimal: 18,
       });
+      setToData({ ...toData, amount: "" });
     } else {
       setToData({
         ...toData,
@@ -119,6 +120,7 @@ function Swap() {
         balance: 0,
         decimal: 18,
       });
+      setFormData({ ...formData, amount: "" });
     }
     selectHandleCancel();
   };

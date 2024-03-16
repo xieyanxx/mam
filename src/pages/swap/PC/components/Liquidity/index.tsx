@@ -33,6 +33,7 @@ import {
   routeAbi,
   tokenAbi,
 } from "@/components/EthersContainer/abj";
+import { debounce } from "lodash";
 
 const statusType: any = {
   0: "Invalid pai", //地址无效，
@@ -53,7 +54,6 @@ function Liquidity() {
   const [loading, setLoading] = useState(false);
   const [selectType, setSelectType] = useState(1);
   const [isEnterForm, setIsEnterForm] = useState(false); //是否是先从form输入值
-  const [removeModalOpen, setRemoveModalOpen] = useState(false);
   const [isEffective, setEffective] = useState(true); //判断地址是否有效
   const [isApptove, setIsApptove] = useState(false); //判断token1是否授权
   const [isApptove1, setIsApptove1] = useState(true); //判断token2是否授权
@@ -61,14 +61,12 @@ function Liquidity() {
   const [formData, setFormData] = useState({
     ...ChainToken[3],
     amount: "", //输入金额
-    isEmpower: false, //是否授权
     balance: 0, //账户金额
     decimal: 18, //精度
   });
   const [toData, setToData] = useState({
     ...ChainToken[0],
     amount: "",
-    isEmpower: false, //是否授权
     balance: 0,
     decimal: 18, //精度
   });
@@ -88,6 +86,8 @@ function Liquidity() {
     setAddModalOpen(true);
   };
   const handleAddCancel = () => {
+    getTransactionData();
+    getBalanceData();
     setAddModalOpen(false);
   };
   //选择弹窗
@@ -115,19 +115,19 @@ function Liquidity() {
         ...formData,
         ...val,
         amount: "",
-        isEmpower: false,
         balance: 0,
         decimal: 18,
       });
+      setToData({ ...toData, amount: "" });
     } else {
       setToData({
         ...toData,
         ...val,
         amount: "",
-        isEmpower: false,
         balance: 0,
         decimal: 18,
       });
+      setFormData({ ...formData, amount: "" });
     }
     selectHandleCancel();
   };
@@ -172,10 +172,8 @@ function Liquidity() {
   };
   //获取授权状态
   const getApproveStatus = async () => {
-    // if (!isplatformCoin(formData.address) && !isplatformCoin(toData.address)) {
     let isformApprove = false;
     let istoApprove = false;
-
     if (!isplatformCoin(formData.address)) {
       let value = await getAllowance(
         formData.address,
@@ -185,7 +183,6 @@ function Liquidity() {
         routeContractAddress
       );
       if (Number(value) > Number(formBalance)) {
-        // setStatus(3);;
         isformApprove = true;
       } else {
         isformApprove = false;
@@ -207,7 +204,7 @@ function Liquidity() {
         istoApprove = false;
       }
     } else {
-      isformApprove = true;
+      istoApprove = true;
     }
     if (isformApprove && istoApprove) {
       setStatus(3);
@@ -216,11 +213,10 @@ function Liquidity() {
     } else {
       setStatus(2);
     }
-    // }
   };
 
   //输入获取值
-  const getEnterNum = async () => {
+  const getEnterNum = debounce(async (val: string, type: number) => {
     const contract = await getContract(
       routeContractAddress,
       routeAbi,
@@ -234,45 +230,46 @@ function Liquidity() {
       : toData.address;
     //无效数据需要自己输入值
     if (!isEffective) {
-      if (Number(formData.amount) && Number(toData.amount)) {
+      if (Number(val)) {
         getApproveStatus();
       }
       return;
     }
-    if (isEnterForm) {
-      if (Number(formData.amount) == 0) {
-        // message.error("Please enter a number greater than zero");
+    if (type == 1) {
+      if (Number(val) == 0) {
         return;
       }
-      let amount = toWei(formData.amount, formData.decimal);
+      let amount = toWei(val, formData.decimal);
       const getToNum = await contract.getAmountsOut(amount, [
         formAddress,
         toAddress,
       ]);
-      setToData({
-        ...toData,
-        amount: formWei(getToNum[1], toData.decimal),
-      });
-
-      getApproveStatus();
+      if (getToNum) {
+        setToData({
+          ...toData,
+          amount: formWei(getToNum[1], toData.decimal),
+        });
+        getApproveStatus();
+      }
     } else {
-      if (Number(toData.amount) == 0) {
-        message.error("Please enter a number greater than zero");
+      if (Number(val) == 0) {
+        // message.error("Please enter a number greater than zero");
         return;
       }
-      let amount = toWei(toData.amount, toData.decimal);
+      let amount = toWei(val, toData.decimal);
       const getFormNum = await contract.getAmountsIn(amount, [
         toAddress,
         formAddress,
       ]);
-
-      setFormData({
-        ...formData,
-        amount: formWei(getFormNum[0], formData.decimal),
-      });
-      getApproveStatus();
+      if (getFormNum) {
+        setFormData({
+          ...formData,
+          amount: formWei(getFormNum[0], formData.decimal),
+        });
+        getApproveStatus();
+      }
     }
-  };
+  }, 300);
 
   const getTransactionData = async () => {
     const contract = await getContract(
@@ -290,6 +287,7 @@ function Liquidity() {
     const addressStatus = await contract.getPair(formAddress, toAddress);
     if (formAddress == toAddress) {
       setStatus(0);
+      return;
     }
     if (isplatformCoin(addressStatus) && formAddress != toAddress) {
       setEffective(false);
@@ -392,11 +390,13 @@ function Liquidity() {
                   if (!value.match(/^\d+(\.\d{0,16})?$/)) {
                     let newValue = value.slice(0, -1);
                     setFormData({ ...formData, amount: newValue });
+                    getEnterNum(newValue, 1);
                   } else {
                     setFormData({ ...formData, amount: value });
+                    getEnterNum(value, 1);
                   }
                 }}
-                onBlur={getEnterNum}
+                // onBlur={getEnterNum}
                 type="text"
                 value={formData.amount}
                 placeholder={"0.0"}
@@ -407,7 +407,15 @@ function Liquidity() {
           </div>
           <div className={styles.label_wrap}>
             {/* <div className={styles.item}>50%</div> */}
-            <div className={styles.item}>MAX</div>
+            <div
+              className={styles.item}
+              onClick={() => {
+                getEnterNum(formBalance, 1);
+                setFormData({ ...formData, amount: formBalance });
+              }}
+            >
+              MAX
+            </div>
           </div>
           <div className={styles.change_wrap}>
             {/* <div className={styles.line}></div> */}
@@ -438,11 +446,13 @@ function Liquidity() {
                   if (!value.match(/^\d+(\.\d{0,16})?$/)) {
                     let newValue = value.slice(0, -1);
                     setToData({ ...toData, amount: newValue });
+                    getEnterNum(newValue, 2);
                   } else {
                     setToData({ ...toData, amount: value });
+                    getEnterNum(value, 2);
                   }
                 }}
-                onBlur={getEnterNum}
+                // onBlur={getEnterNum}
                 value={toData.amount}
                 type="text"
                 placeholder={"0.0"}
@@ -453,7 +463,15 @@ function Liquidity() {
           </div>
           <div className={styles.label_wrap}>
             {/* <div className={styles.item}>50%</div> */}
-            <div className={styles.item} >MAX</div>
+            <div
+              className={styles.item}
+              onClick={() => {
+                setToData({ ...toData, amount: toBalance });
+                getEnterNum(toBalance, 2);
+              }}
+            >
+              MAX
+            </div>
           </div>
         </div>
         {/* <div className={styles.initial_wrap}>

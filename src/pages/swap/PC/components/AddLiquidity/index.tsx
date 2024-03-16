@@ -1,16 +1,9 @@
 import React, { memo, useCallback, useEffect, useState } from "react";
 import styles from "./index.less";
-import cx from "classnames";
 import { Button, Input, Modal, Radio, message } from "antd";
 import close from "@/assets/logo/close.png";
-import icon1 from "@/assets/logo/icon1.png";
 import { formatAmount1, isplatformCoin } from "@/utils";
-import {
-  formTo,
-  formWei,
-  getContract,
-  toWei,
-} from "@/components/EthersContainer";
+import { getContract, toWei } from "@/components/EthersContainer";
 import {
   readyContractAddress,
   routeContractAddress,
@@ -78,6 +71,7 @@ function AddLiquidity({
       );
       let transaction = await status1.wait();
       if (transaction) setLoading(false);
+      handleCancel();
     }
     //普通代币与平台之间的添加
     if (type == 2) {
@@ -96,6 +90,7 @@ function AddLiquidity({
         });
       let transaction = await status?.wait();
       if (transaction) setLoading(false);
+      handleCancel();
     }
   };
   const submit = () => {
@@ -107,15 +102,19 @@ function AddLiquidity({
     }
   };
   const geTrate = async () => {
+    console.log(formData, toData);
     const contract = await getContract(
       readyContractAddress,
       readyAbi,
       walletType
     );
     let tokenA = formData.address;
-    let tokenB = toData.address;
+    let tokenB = isplatformCoin(toData.address)
+      ? toData.address1
+      : toData.address;
     let amount = toWei(formData.amount, formData.decimal);
     let amount1 = toWei(toData.amount, toData.decimal);
+    console.log(tokenA, tokenB, amount, amount1);
     let status = await contract.getrate(tokenA, tokenB, amount, amount1);
     let val = ((Number(status) / Math.pow(10, 20)) * 100).toString();
     setTrateData(val);
