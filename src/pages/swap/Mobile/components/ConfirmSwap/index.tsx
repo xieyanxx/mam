@@ -1,17 +1,252 @@
 import React, { memo, useState } from "react";
 import styles from "./index.less";
 import cx from "classnames";
-import { Button, Input, Modal, Radio } from "antd";
+import { Button, Input, Modal, Radio, message } from "antd";
 import close from "@/assets/logo/close.png";
 import down1 from "@/assets/logo/down1.png";
+import { getBalance, getContract, toWei } from "@/components/EthersContainer";
+import { routeContractAddress } from "@/components/EthersContainer/address";
+import { routeAbi } from "@/components/EthersContainer/abj";
+import { formatAmount1, isplatformCoin } from "@/utils";
 
 function AddLiquidity({
   handleCancel,
   isModalOpen,
+  formData,
+  toData,
+  settingData,
 }: {
   handleCancel: () => void;
   isModalOpen: boolean;
+  formData: any;
+  toData: any;
+  settingData: any;
 }) {
+  const [walletType] = useState<string>(
+    sessionStorage.getItem("walletType") || ""
+  );
+  const [address] = useState<string>(sessionStorage.getItem("address") || "");
+  const [loading, setLoading] = useState(false);
+  const [gas, setGas] = useState("0");
+
+  const getValue = () => {
+    if (isModalOpen) {
+      let price = (Number(toData.amount) / Number(formData.amount)).toString();
+      let Minimum = (
+        Number(toData.amount) -
+        Number(toData.amount) * (settingData.num / 100)
+      ).toString();
+      getGas();
+      return { price, Minimum };
+    }
+  };
+
+  const exchangeMethod = async (type: number) => {
+    setLoading(true);
+    const contract = await getContract(
+      routeContractAddress,
+      routeAbi,
+      walletType
+    );
+    //普通代币之间的兑换
+    if (type == 1) {
+      let amountIn = toWei(formData.amount, formData.decimal);
+      let amountOutMin = toWei(
+        (
+          Number(toData.amount) -
+          Number(toData.amount) * (settingData.num / 100)
+        ).toString(),
+        toData.decimal
+      );
+      let dataPath = [formData.address, toData.address];
+      let time = (
+        Math.floor(Date.now() / 1000) +
+        settingData.time * 60
+      ).toString();
+      let status = await contract
+        .swapExactTokensForTokens(
+          amountIn,
+          amountOutMin,
+          dataPath,
+          address,
+          time
+        )
+        .catch(() => {
+          setLoading(false);
+          message.error("fail");
+        });
+      let transaction = await status.wait();
+      if (transaction) setLoading(false);
+      handleCancel();
+    }
+    //平台代币与普通代币的兑换
+    if (type == 2) {
+      let amountOutMin = (
+        Number(toData.amount) -
+        Number(toData.amount) * (settingData.num / 100)
+      ).toString();
+      let dataPath = [formData.address1, toData.address];
+      let time = (
+        Math.floor(Date.now() / 1000) +
+        settingData.time * 60
+      ).toString();
+      let status = await contract
+        .swapExactTokensForTokens(amountOutMin, dataPath, address, time, {
+          value: toWei(formData.amount, formData.decimal),
+        })
+        .catch(() => {
+          setLoading(false);
+          message.error("fail");
+        });
+      let transaction = await status.wait();
+      if (transaction) setLoading(false);
+      handleCancel();
+    }
+    // 普通币与平台币之间的兑换
+    if (type == 3) {
+      let amountIn = toWei(formData.amount, formData.decimal);
+      let amountOutMin = (
+        Number(toData.amount) -
+        Number(toData.amount) * (settingData.num / 100)
+      ).toString();
+      let dataPath = [formData.address, toData.address1];
+      let time = (
+        Math.floor(Date.now() / 1000) +
+        settingData.time * 60
+      ).toString();
+      let status = await contract
+        .swapExactTokensForETH(amountIn, amountOutMin, dataPath, address, time)
+        .catch(() => {
+          setLoading(false);
+          message.error("fail");
+        });
+      let transaction = await status.wait();
+      if (transaction) setLoading(false);
+      handleCancel();
+      console.log(status);
+    }
+
+    // 普通代币之间的兑换 如果滑点大于百分之1
+    if (type == 4) {
+      let amountIn = toWei(formData.amount, formData.decimal);
+      let amountOutMin = (
+        Number(toData.amount) -
+        Number(toData.amount) * (settingData.num / 100)
+      ).toString();
+      let dataPath = [formData.address, toData.address1];
+      let time = (
+        Math.floor(Date.now() / 1000) +
+        settingData.time * 60
+      ).toString();
+      let status = await contract
+        .swapExactTokensForTokensSupportingFeeOnTransferTokens(
+          amountIn,
+          amountOutMin,
+          dataPath,
+          address,
+          time
+        )
+        .catch(() => {
+          setLoading(false);
+          message.error("fail");
+        });
+      let transaction = await status.wait();
+      if (transaction) setLoading(false);
+      handleCancel();
+    }
+    //平台代币与普通代币的兑换 如果滑点大于百分之1
+    if (type == 5) {
+      let amountOutMin = (
+        Number(toData.amount) -
+        Number(toData.amount) * (settingData.num / 100)
+      ).toString();
+      let dataPath = [formData.address1, toData.address];
+      let time = (
+        Math.floor(Date.now() / 1000) +
+        settingData.time * 60
+      ).toString();
+      let status = await contract
+        .swapExactETHForTokensSupportingFeeOnTransferTokens(
+          amountOutMin,
+          dataPath,
+          address,
+          time,
+          {
+            value: toWei(formData.amount, formData.decimal),
+          }
+        )
+        .catch(() => {
+          setLoading(false);
+          message.error("fail");
+        });
+      let transaction = await status.wait();
+      if (transaction) setLoading(false);
+      handleCancel();
+    }
+    // 普通币与平台币之间的兑换如果滑点大于百分之1
+    if (type == 6) {
+      let amountIn = toWei(formData.amount, formData.decimal);
+      let amountOutMin = (
+        Number(toData.amount) -
+        Number(toData.amount) * (settingData.num / 100)
+      ).toString();
+      let dataPath = [formData.address, toData.address1];
+      let time = (
+        Math.floor(Date.now() / 1000) +
+        settingData.time * 60
+      ).toString();
+      let status = await contract
+        .swapExactTokensForETHSupportingFeeOnTransferTokens(
+          amountIn,
+          amountOutMin,
+          dataPath,
+          address,
+          time
+        )
+        .catch(() => {
+          setLoading(false);
+          message.error("fail");
+        });
+      let transaction = await status.wait();
+      if (transaction) setLoading(false);
+      handleCancel();
+    }
+  };
+
+  const submit = () => {
+    if (Number(settingData.num) > 1) {
+      if (
+        !isplatformCoin(formData.address) &&
+        !isplatformCoin(toData.address)
+      ) {
+        exchangeMethod(4);
+      }
+      if (isplatformCoin(formData.address) && !isplatformCoin(toData.address)) {
+        exchangeMethod(5);
+      }
+      if (!isplatformCoin(formData.address) && isplatformCoin(toData.address)) {
+        exchangeMethod(6);
+      }
+    } else {
+      if (
+        !isplatformCoin(formData.address) &&
+        !isplatformCoin(toData.address)
+      ) {
+        exchangeMethod(1);
+      }
+      if (isplatformCoin(formData.address) && !isplatformCoin(toData.address)) {
+        exchangeMethod(2);
+      }
+      if (!isplatformCoin(formData.address) && isplatformCoin(toData.address)) {
+        exchangeMethod(3);
+      }
+    }
+  };
+  const getGas = async () => {
+    let gasFree = (await getBalance(walletType, address)).gasFreeVal;
+    console.log(gasFree);
+    setGas(gasFree);
+  };
   return (
     <div className={styles.wrap}>
       <Modal
@@ -30,47 +265,56 @@ function AddLiquidity({
           </div>
           <div className={styles.content}>
             <div className={styles.num_wrap}>
-              
               <div className={styles.num_item}>
-                <p className={styles.num}>10.5</p>
+                <p className={styles.num}>{formatAmount1(formData.amount)}</p>
                 <div className={styles.num_r}>
-                  <img src="" alt="" />
-                  <p>10.5 MAMBA</p>
+                  <img src={formData.src} alt="" />
+                  <p>{formData.name}</p>
                 </div>
               </div>
               <img className={styles.icon} src={down1} alt="" />
               <div className={styles.num_item}>
-                <p className={styles.num}>10.5</p>
+                <p className={styles.num}>{formatAmount1(toData.amount)}</p>
                 <div className={styles.num_r}>
-                  <img src="" alt="" />
-                  <p>10.5 MAMBA</p>
+                  <img src={toData.src} alt="" />
+                  <p>{toData.name}</p>
                 </div>
               </div>
             </div>
             <div className={styles.share_wrap}>
               <div>Slippage Tolerance: </div>
-              <div className={styles.Share_r}>0.25%</div>
+              <div className={styles.Share_r}>{settingData.num}%</div>
             </div>
             <div className={styles.price_wrap}>
               <div className={styles.price_item}>
                 <p className={styles.name}>price:</p>
-                <p>10.5 MAMBA</p>
+                <p>
+                  {formatAmount1(getValue()?.price || "0")}{" "}
+                  {`${toData.name}/${formData.name}`}
+                </p>
               </div>
               <div className={styles.price_item}>
                 <p className={styles.name}>Minimum received:</p>
-                <p>10.5 MAMBA</p>
+                <p>
+                  {formatAmount1(getValue()?.Minimum || "0")}
+                  {toData.name}
+                </p>
               </div>
               <div className={styles.price_item}>
                 <p className={styles.name}>Price impact:</p>
-                <p>10.5 MAMBA</p>
+                <p>0.00 MAMBA</p>
               </div>
               <div className={styles.price_item}>
                 <p className={styles.name}>Trading fee:</p>
-                <p>0.00002 SEI</p>
+                <p>
+                  {formatAmount1(gas)} {toData.name}
+                </p>
               </div>
             </div>
             <div className={styles.btn_wrap}>
-              <div className={styles.btn}>Swap</div>
+              <Button loading={loading} onClick={submit} className={styles.btn}>
+                Swap
+              </Button>
             </div>
           </div>
         </div>

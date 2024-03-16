@@ -8,9 +8,11 @@ import icon1 from "@/assets/logo/icon1.png";
 function RemoveLiquidity({
   handleCancel,
   isModalOpen,
+  removeData,
 }: {
   handleCancel: () => void;
   isModalOpen: boolean;
+  removeData:any
 }) {
   return (
     <div className={styles.wrap}>

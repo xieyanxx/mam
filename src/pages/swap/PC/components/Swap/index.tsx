@@ -305,7 +305,7 @@ function Swap() {
           <div className={styles.from_title}>
             <span className={styles.name}>From</span>
             <span className={styles.balance}>
-              Balance: {formatAmount(formBalance)}
+              Balance: {formatAmount1(formBalance)}
             </span>
           </div>
           <div className={styles.from_input_wrap}>

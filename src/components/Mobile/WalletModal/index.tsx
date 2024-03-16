@@ -37,6 +37,7 @@ function WalletModal({ isbig }: { isbig?: boolean }) {
     try {
       const wallet = await getWallet();
       await ethersData?.initEthers(wallet, walletType1);
+      handleCancel()
     } catch (error: any) {
       console.log("error", error);
       if (error?.code === -32002) {

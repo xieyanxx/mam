@@ -57,7 +57,7 @@
         justify-content: space-between;
         padding: 0 19px 0 29px;
         .type_wrap {
-          width: 88px;
+          // width: 88px;
           height: 27px;
           background: #6f00b5;
           border-radius: 10px;
@@ -87,10 +87,19 @@
           font-family: Aller;
           font-weight: bold;
           font-size: 19px;
-          color: #5e3c73;
+          color: #ffffff;
           text-align: end;
           &:focus-visible {
             outline: none;
+          }
+          &:focus-within {
+            box-shadow: none;
+          }
+          &::placeholder {
+            font-family: PublicSansRoman;
+            font-weight: 400;
+            font-size: 19px;
+            color: #ae9aba;
           }
         }
         .num {

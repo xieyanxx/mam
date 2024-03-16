@@ -56,7 +56,7 @@ function WalletModal({
           <div className={styles.line}></div>
           <div className={styles.item_wrap}>
             {ChainToken.map((item) => (
-              <div className={styles.item} onClick={() => selectAddress(item)}>
+              <div key={item.address} className={styles.item} onClick={() => selectAddress(item)}>
                 <img src={item.src} alt="" className={styles.logo} />
                 <div className={styles.name_wrap}>
                   <div className={styles.name}>{item.name}</div>

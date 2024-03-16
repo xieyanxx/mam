@@ -8,13 +8,16 @@ import search from "@/assets/logo/search.png";
 import block1 from "@/assets/logo/block1.png";
 import share from "@/assets/logo/share.png";
 import coingecko from "@/assets/logo/coingecko.png";
+import { ChainToken } from "@/components/EthersContainer/address";
 
 function WalletModal({
   handleCancel,
   isModalOpen,
+  selectAddress,
 }: {
   handleCancel: () => void;
   isModalOpen: boolean;
+  selectAddress: (val: any) => void;
 }) {
   return (
     <div className={styles.wrap}>
@@ -40,68 +43,36 @@ function WalletModal({
             />
           </div>
           <div className={styles.common_wrap}>
-            <div className={styles.common_item}>
-              <img src={block1} alt="" />
-              MAMBA
-            </div>
+            {ChainToken.map((item) => (
+              <div
+                className={styles.common_item}
+                key={item.id}
+                onClick={() => selectAddress(item)}
+              >
+                <img src={item.src} alt="" />
+                {item.name}
+              </div>
+            ))}
           </div>
           <div className={styles.line}></div>
           <div className={styles.item_wrap}>
-            <div className={styles.item}>
-              <img src="" alt="" className={styles.logo} />
-              <div className={styles.name_wrap}>
-                <div className={styles.name}>ASTRO</div>
-                <div className={styles.sub_name}>Astroport</div>
+            {ChainToken.map((item) => (
+              <div
+                key={item.address}
+                className={styles.item}
+                onClick={() => selectAddress(item)}
+              >
+                <img src={item.src} alt="" className={styles.logo} />
+                <div className={styles.name_wrap}>
+                  <div className={styles.name}>{item.name}</div>
+                  <div className={styles.sub_name}>{item.name1}</div>
+                </div>
+                <div className={styles.icon_wrap}>
+                  <img src={share} alt="" />
+                  <img src={coingecko} alt="" />
+                </div>
               </div>
-              <div className={styles.icon_wrap}>
-                <img src={share} alt="" />
-                <img src={coingecko} alt="" />
-              </div>
-            </div>
-            <div className={styles.item}>
-              <img src="" alt="" className={styles.logo} />
-              <div className={styles.name_wrap}>
-                <div className={styles.name}>ASTRO</div>
-                <div className={styles.sub_name}>Astroport</div>
-              </div>
-              <div className={styles.icon_wrap}>
-                <img src={share} alt="" />
-                <img src={coingecko} alt="" />
-              </div>
-            </div>
-            <div className={styles.item}>
-              <img src="" alt="" className={styles.logo} />
-              <div className={styles.name_wrap}>
-                <div className={styles.name}>ASTRO</div>
-                <div className={styles.sub_name}>Astroport</div>
-              </div>
-              <div className={styles.icon_wrap}>
-                <img src={share} alt="" />
-                <img src={coingecko} alt="" />
-              </div>
-            </div>
-            <div className={styles.item}>
-              <img src="" alt="" className={styles.logo} />
-              <div className={styles.name_wrap}>
-                <div className={styles.name}>ASTRO</div>
-                <div className={styles.sub_name}>Astroport</div>
-              </div>
-              <div className={styles.icon_wrap}>
-                <img src={share} alt="" />
-                <img src={coingecko} alt="" />
-              </div>
-            </div>
-            <div className={styles.item}>
-              <img src="" alt="" className={styles.logo} />
-              <div className={styles.name_wrap}>
-                <div className={styles.name}>ASTRO</div>
-                <div className={styles.sub_name}>Astroport</div>
-              </div>
-              <div className={styles.icon_wrap}>
-                <img src={share} alt="" />
-                <img src={coingecko} alt="" />
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </Modal>
