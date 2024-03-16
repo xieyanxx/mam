@@ -1,11 +1,8 @@
 import React, { memo, useCallback, useEffect, useState } from "react";
 import styles from "./index.less";
-import cx from "classnames";
 import setting from "@/assets/logo/setting.png";
 import time from "@/assets/logo/time.png";
-import sei1 from "@/assets/logo/sei1.png";
 import down from "@/assets/logo/down.png";
-import usdt from "@/assets/logo/usdt.png";
 import change from "@/assets/logo/change.png";
 import refresh from "@/assets/logo/refresh.png";
 import { Button, Input, message } from "antd";
@@ -378,7 +375,6 @@ function Swap() {
               <Input
                 onChange={(e) => {
                   let value = e.target.value;
-                  setIsEnterForm(false);
                   if (!value.match(/^\d+(\.\d{0,16})?$/)) {
                     let newValue = value.slice(0, -1);
                     setToData({ ...toData, amount: newValue });
