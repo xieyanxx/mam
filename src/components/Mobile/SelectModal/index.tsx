@@ -53,7 +53,6 @@ function WalletModal({
           if (isExist.length) {
             setListData(isExist);
           } else {
-            console.log(111);
             let newObj = {
               id: ChainToken.length + 1,
               src: icon1,
@@ -65,10 +64,16 @@ function WalletModal({
             let storageData = JSON.parse(
               localStorage.getItem("storageList") || "[]"
             );
-            localStorage.setItem(
-              "storageList",
-              JSON.stringify(storageData.concat([newObj]))
+            //判断localStorage中是否存在，避免重复添加
+            let ishave = storageData.some(
+              (item: any) => item.name == addresData[0]
             );
+            if (!ishave) {
+              localStorage.setItem(
+                "storageList",
+                JSON.stringify(storageData.concat([newObj]))
+              );
+            }
             setListData([newObj]);
           }
         }
@@ -137,7 +142,7 @@ function WalletModal({
           </div>
           <div className={styles.line}></div>
           <div className={styles.item_wrap}>
-            {listData.map((item:any) => (
+            {listData.map((item: any) => (
               <div
                 key={item.address}
                 className={styles.item}

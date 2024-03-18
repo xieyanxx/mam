@@ -75,15 +75,28 @@ function AddLiquidity({
     }
     //普通代币与平台之间的添加
     if (type == 2) {
-      let tokenA = formData.address;
-      let amountADesired = toWei(formData.amount, formData.decimal);
+      let tokenA = "";
+      let amountADesired;
+      let carryCoin = "0";
+      //b是平台币
+      if (isplatformCoin(toData.address)) {
+        amountADesired = toWei(formData.amount, formData.decimal);
+        tokenA = formData.address;
+        carryCoin = toWei(toData.amount, 18);
+      } else {
+        amountADesired = toWei(toData.amount, toData.decimal);
+        tokenA = toData.address;
+        carryCoin = toWei(formData.amount, 18);
+      }
 
       let time = (
         Math.floor(Date.now() / 1000) +
         settingData.time * 60
       ).toString();
       let status = await contract
-        .addLiquidityETH(tokenA, amountADesired, 0, 0, address, time)
+        .addLiquidityETH(tokenA, amountADesired, 0, 0, address, time, {
+          value: carryCoin,
+        })
         .catch(() => {
           setLoading(false);
           message.error("fail");
@@ -94,10 +107,10 @@ function AddLiquidity({
     }
   };
   const submit = () => {
+    console.log(1111);
     if (!isplatformCoin(formData.address) && !isplatformCoin(toData.address)) {
       exchangeMethod(1);
-    }
-    if (!isplatformCoin(formData.address) && isplatformCoin(toData.address)) {
+    } else {
       exchangeMethod(2);
     }
   };

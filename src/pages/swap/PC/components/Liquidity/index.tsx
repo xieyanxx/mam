@@ -118,7 +118,7 @@ function Liquidity() {
         balance: 0,
         decimal: 18,
       });
-      setToData({ ...toData, amount: "" });
+      // setToData({ ...toData, amount: "" });
     } else {
       setToData({
         ...toData,
@@ -127,7 +127,7 @@ function Liquidity() {
         balance: 0,
         decimal: 18,
       });
-      setFormData({ ...formData, amount: "" });
+      // setFormData({ ...formData, amount: "" });
     }
     selectHandleCancel();
   };
@@ -216,7 +216,7 @@ function Liquidity() {
   };
 
   //输入获取值
-  const getEnterNum = useCallback( debounce(async (val: string, type: number) => {
+  const getEnterNum = debounce(async (val: string, type: number) => {
     const contract = await getContract(
       routeContractAddress,
       routeAbi,
@@ -261,6 +261,7 @@ function Liquidity() {
         toAddress,
         formAddress,
       ]);
+
       if (getFormNum) {
         setFormData({
           ...formData,
@@ -269,7 +270,7 @@ function Liquidity() {
         getApproveStatus();
       }
     }
-  }, 300),[]);
+  }, 300);
 
   const getTransactionData = async () => {
     const contract = await getContract(

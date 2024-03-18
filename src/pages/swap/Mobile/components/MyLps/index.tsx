@@ -124,11 +124,14 @@ function MyLps() {
       );
       let transaction = await status1.wait();
       if (transaction) setLoading(false);
-    }
-    if (!isplatformCoin(val.token1) && isplatformCoin(val.token2)) {
-      let tokenA = val.token1;
+    } else {
+      let tokenA = "";
+      if (isplatformCoin(val.token1)) {
+        tokenA = val.token2;
+      } else {
+        tokenA = val.token1;
+      }
       let uit = toWei(val.amount, 18);
-
       let time = (
         Math.floor(Date.now() / 1000) +
         settingData.time * 60

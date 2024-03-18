@@ -14,10 +14,11 @@ import {
   balanceOf,
   getBalance,
 } from "@/components/EthersContainer";
-import { farmAbi, tokenAbi } from "@/components/EthersContainer/abj";
+import { farmAbi, readyAbi, tokenAbi } from "@/components/EthersContainer/abj";
 import {
   ChainToken,
   farmContractAddress,
+  readyContractAddress,
 } from "@/components/EthersContainer/address";
 import { formatAmount, getTime, isplatformCoin, timeIsEnd } from "@/utils";
 
@@ -77,10 +78,17 @@ function PC() {
       farmAbi,
       walletType
     );
+    const readyContract = await getContract(
+      readyContractAddress,
+      readyAbi,
+      walletType
+    );
     let getPoolList = await contract.getpool();
     let newList = getPoolList.map(async (item: any, index: number) => {
       let userInfo = await contract.users(index, address);
       let pendingInfo = await contract.pending(index, address);
+      let apyData = await readyContract.getTVLandAPY1(index);
+      console.log(apyData);
       let decimals = 18;
       let stakeStatue = "0";
       let balance = "0";
