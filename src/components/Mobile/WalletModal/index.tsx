@@ -37,7 +37,7 @@ function WalletModal({ isbig }: { isbig?: boolean }) {
     try {
       const wallet = await getWallet();
       await ethersData?.initEthers(wallet, walletType1);
-      handleCancel()
+      handleCancel();
     } catch (error: any) {
       console.log("error", error);
       if (error?.code === -32002) {
@@ -48,6 +48,17 @@ function WalletModal({ isbig }: { isbig?: boolean }) {
     } finally {
       console.log("finally");
       setConnecting(false);
+    }
+  };
+  const handleConnect = () => {
+    console.log(window.ethereum?.isMetaMask);
+    if (!window.ethereum?.isMetaMask) {
+      window.open(
+        `https://metamask.app.link/dapp/${window.location.host}`,
+        "_blank"
+      );
+    } else {
+      connect(MetaMaskWallet, WalletType.MetaMaskWallet);
     }
   };
   return (
@@ -81,10 +92,7 @@ function WalletModal({ isbig }: { isbig?: boolean }) {
             <img src={close} alt="" onClick={handleCancel} />
           </div>
           <div className={styles.wallet_wrap}>
-            <div
-              className={styles.item}
-              onClick={() => connect(MetaMaskWallet, WalletType.MetaMaskWallet)}
-            >
+            <div className={styles.item} onClick={() => handleConnect()}>
               <img src={metamask} alt="" />
               <p>Metamask</p>
             </div>

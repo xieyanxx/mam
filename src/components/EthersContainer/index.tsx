@@ -124,6 +124,7 @@ const EthersContainer = React.memo((props: any) => {
   const initEthers = (wallet: any, walletType: WalletType) => {
     return new Promise(async (resolve) => {
       eventsCleanerRef.current = subscribeWallet(wallet);
+      console.log(wallet, "===>2222222");
       const provider = new ethers.providers.Web3Provider(wallet);
       const signer = provider.getSigner();
       const address = await signer.getAddress();

@@ -5,7 +5,7 @@ export function MetaMaskWallet() {
   return new Promise(async (resolve, reject) => {
     try {
       // @ts-ignore
-      if (!window.ethereum || IsMobile()) {
+      if (!window.ethereum && !IsMobile()) {
         message.error('Please install Metamask.');
         window.open('https://metamask.io/');
         reject('Please install Metamask.');
