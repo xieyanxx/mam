@@ -20,8 +20,9 @@ import {
 import {
   ChainToken,
   poolContractAddress,
+  readyContractAddress,
 } from "@/components/EthersContainer/address";
-import { poolAbi, tokenAbi } from "@/components/EthersContainer/abj";
+import { poolAbi, readyAbi, tokenAbi } from "@/components/EthersContainer/abj";
 import { formatAmount, getTime, isplatformCoin, timeIsEnd } from "@/utils";
 import Unstake from "./components/Unstake";
 
@@ -79,10 +80,17 @@ function Mobile() {
       poolAbi,
       walletType
     );
+    const readyContract = await getContract(
+      readyContractAddress,
+      readyAbi,
+      walletType
+    );
     let getPoolList = await contract.getpool();
     let newList = getPoolList.map(async (item: any, index: number) => {
       let userInfo = await contract.users(index, address);
       let pendingInfo = await contract.pending(index, address);
+      let apyData = await readyContract.getTVLandAPY1(index);
+      const { APY, TVL } = apyData;
       let decimals = 18;
       let stakeStatue = "0";
       let balance = "0";
@@ -110,6 +118,8 @@ function Mobile() {
       newInfo.name = item.name.split(",");
       newInfo.userReward = formWei(pendingInfo, decimals);
       newInfo.balance = balance;
+      newInfo.apy = (Number(APY) / Math.pow(10, 20)).toString();
+      newInfo.tvl = (Number(TVL) / Math.pow(10, 18)).toString();
       if (
         Number(stakeStatue) > Number(newInfo.amount) ||
         isplatformCoin(item.token)
@@ -232,7 +242,7 @@ function Mobile() {
           </div>
           <div className={styles.top_r}>
             <div className={styles.top_r_text}>APY</div>
-            <div>32.5%</div>
+            <div>{formatAmount(details.apy)}%</div>
           </div>
         </div>
       ),
@@ -241,10 +251,10 @@ function Mobile() {
           {active && (
             <div className={styles.text_num_wrap}>
               <div className={styles.num_item}>
-                My Stake: <span>225 SEI</span>
+                My Stake: <span>{formatAmount(details.amount)}{details.name[1]}</span>
               </div>
               <div className={styles.num_item}>
-                TVL: <span>1,216,245 SEI</span>
+                TVL: <span>{formatAmount(details.tvl)}USDT</span>
               </div>
             </div>
           )}

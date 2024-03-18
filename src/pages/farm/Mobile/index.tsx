@@ -17,8 +17,9 @@ import {
 import {
   ChainToken,
   farmContractAddress,
+  readyContractAddress,
 } from "@/components/EthersContainer/address";
-import { farmAbi, tokenAbi } from "@/components/EthersContainer/abj";
+import { farmAbi, readyAbi, tokenAbi } from "@/components/EthersContainer/abj";
 import { formatAmount, getTime, isplatformCoin, timeIsEnd } from "@/utils";
 
 import Unstake from "./components/Unstake";
@@ -73,10 +74,17 @@ function Mobile() {
       farmAbi,
       walletType
     );
+    const readyContract = await getContract(
+      readyContractAddress,
+      readyAbi,
+      walletType
+    );
     let getPoolList = await contract.getpool();
     let newList = getPoolList.map(async (item: any, index: number) => {
       let userInfo = await contract.users(index, address);
       let pendingInfo = await contract.pending(index, address);
+      let apyData = await readyContract.getTVLandAPY1(index);
+      const { APY, TVL } = apyData;
       let decimals = 18;
       let stakeStatue = "0";
       let balance = "0";
@@ -104,7 +112,9 @@ function Mobile() {
       newInfo.totalStake = formWei(item.totalStake, decimals);
       newInfo.name = item.name.split(",");
       newInfo.userReward = formWei(pendingInfo, decimals);
-      newInfo.balance=balance
+      newInfo.balance = balance;
+      newInfo.apy = (Number(APY) / Math.pow(10, 20)).toString();
+      newInfo.tvl = (Number(TVL) / Math.pow(10, 18)).toString();
       if (Number(stakeStatue) > Number(balance) || isplatformCoin(item.token)) {
         //判断授权状态  true:已授权，fasle:未授权 2.平台币不需要授权
         newInfo.stakeStatue = true;
@@ -218,7 +228,7 @@ function Mobile() {
           </div>
           <div className={styles.top_r}>
             <div className={styles.top_r_text}>APY</div>
-            <div>32.5%</div>
+            <div>{formatAmount(details.apy)}%</div>
           </div>
         </div>
       ),
@@ -230,7 +240,7 @@ function Mobile() {
                 My Stake: <span>225 SEI</span>
               </div>
               <div className={styles.num_item}>
-                TVL: <span>1,216,245 SEI</span>
+                TVL: <span>{formatAmount(details.tvl)}USDT</span>
               </div>
             </div>
           )}

@@ -20,7 +20,13 @@ import {
   farmContractAddress,
   readyContractAddress,
 } from "@/components/EthersContainer/address";
-import { formatAmount, getTime, isplatformCoin, timeIsEnd } from "@/utils";
+import {
+  formatAmount,
+  formatAmount1,
+  getTime,
+  isplatformCoin,
+  timeIsEnd,
+} from "@/utils";
 
 import Unstake from "./components/Unstake";
 const tabData = [
@@ -88,6 +94,7 @@ function PC() {
       let userInfo = await contract.users(index, address);
       let pendingInfo = await contract.pending(index, address);
       let apyData = await readyContract.getTVLandAPY1(index);
+      const { APY, TVL } = apyData;
       console.log(apyData);
       let decimals = 18;
       let stakeStatue = "0";
@@ -117,6 +124,8 @@ function PC() {
       newInfo.name = item.name.split(",");
       newInfo.userReward = formWei(pendingInfo, decimals);
       newInfo.balance = balance;
+      newInfo.apy = (Number(APY) / Math.pow(10, 20)).toString();
+      newInfo.tvl = (Number(TVL) / Math.pow(10, 18)).toString();
       if (Number(stakeStatue) > Number(balance) || isplatformCoin(item.token)) {
         //判断授权状态  true:已授权，fasle:未授权 2.平台币不需要授权
         newInfo.stakeStatue = true;
@@ -296,11 +305,11 @@ function PC() {
               <div className={styles.md_wrap}>
                 <div className={styles.md_text_wrap}>
                   <div className={styles.text_l}>APY:</div>
-                  <div className={styles.text_r}>37.2%</div>
+                  <div className={styles.text_r}>{formatAmount(item.apy)}%</div>
                 </div>
                 <div className={styles.md_text_wrap}>
                   <div className={styles.text_l}>TVL:</div>
-                  <div className={styles.text_r}>1,273,212 USDT</div>
+                  <div className={styles.text_r}>{formatAmount(item.tvl)}USDT</div>
                 </div>
                 <div className={styles.text_bt}>
                   <div className={styles.bt_l}>
