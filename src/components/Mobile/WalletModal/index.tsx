@@ -98,7 +98,10 @@ function WalletModal({ isbig }: { isbig?: boolean }) {
             </div>
             <div
               className={cx(styles.item, styles.item_m)}
-              onClick={() => connect(WalletConnect, WalletType.WalletConnect)}
+              onClick={() => {
+                connect(WalletConnect, WalletType.WalletConnect);
+                handleCancel();
+              }}
             >
               <img src={wallet} alt="" />
               <p>Wallet Connect</p>
