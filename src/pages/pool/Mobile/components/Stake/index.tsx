@@ -91,7 +91,7 @@ function Stake({
                   alt=""
                 />
               </div>
-              <p>Balance: {formatAmount1(poolInfo.amount)}</p>
+              <p>Balance: {formatAmount1(poolInfo.balance)}</p>
             </div>
             <div className={styles.input_wrap}>
               <Input
