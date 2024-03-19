@@ -11,7 +11,6 @@ type Props = {
 
 const Header: React.FC<Props> = () => {
   const getActiveClass = ({ isActive }: { isActive: any }) => {
-    console.log(isActive, "==>");
     return isActive ? "navActive" : "navItem";
   };
   const routeData = [

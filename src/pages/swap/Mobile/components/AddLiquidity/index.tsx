@@ -116,7 +116,6 @@ function AddLiquidity({
     }
   };
   const geTrate = async () => {
-    console.log(formData, toData);
     const contract = await getContract(
       readyContractAddress,
       readyAbi,
@@ -130,7 +129,6 @@ function AddLiquidity({
       : toData.address;
     let amount = toWei(formData.amount, formData.decimal);
     let amount1 = toWei(toData.amount, toData.decimal);
-    console.log(tokenA, tokenB, amount, amount1);
     let status = await contract.getrate(tokenA, tokenB, amount, amount1);
     let val = ((Number(status) / Math.pow(10, 20)) * 100).toString();
     setTrateData(val);

@@ -52,6 +52,8 @@ function Mobile() {
     setStakeModalOpen(true);
   };
   const handleStakeCancel = () => {
+    getPool();
+    getPoolList();
     setStakeModalOpen(false);
   };
   const unstakeShowModal = (pool: any, poolId: number) => {
@@ -60,6 +62,8 @@ function Mobile() {
     setUnstakeModalOpen(true);
   };
   const handleUnstakeCancel = () => {
+    getPool();
+    getPoolList();
     setUnstakeModalOpen(false);
   };
 

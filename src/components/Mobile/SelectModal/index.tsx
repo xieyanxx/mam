@@ -46,7 +46,6 @@ function WalletModal({
         const addresData = await contract.getContract(val).catch(() => {
           message.error("invalid address");
         });
-        console.log(addresData);
         if (addresData) {
           //表示默认值中存在，不需要存在storage中
           let isExist = ChainToken.filter((item) => item.name == addresData[0]);

@@ -90,7 +90,7 @@ const EthersContainer = React.memo((props: any) => {
       const onChainChanged = (chainId: string) => {
         console.log("钱包切换链", chainId, Number.parseInt(chainId, 16));
         setChainId(Number.parseInt(chainId, 16));
-        console.log(chainId, "===>");
+        console.log(chainId, "===>", chainId);
         sessionStorage.setItem(
           "chainId",
           Number.parseInt(chainId, 16).toString()
@@ -124,11 +124,11 @@ const EthersContainer = React.memo((props: any) => {
   const initEthers = (wallet: any, walletType: WalletType) => {
     return new Promise(async (resolve) => {
       eventsCleanerRef.current = subscribeWallet(wallet);
-      console.log(wallet, "===>2222222");
       const provider = new ethers.providers.Web3Provider(wallet);
       const signer = provider.getSigner();
       const address = await signer.getAddress();
       let res2: any = provider.getNetwork();
+      console.log(res2, "===>res2chainId");
       setChainId(res2.chainId);
       sessionStorage.setItem("chainId", res2.chainId);
       setSigner(signer);

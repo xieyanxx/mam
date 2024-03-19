@@ -167,7 +167,6 @@ function Swap() {
 
   //获取授权状态
   const getApproveStatus = async () => {
-    console.log(formData);
     if (!isplatformCoin(formData.address)) {
       let value = await getAllowance(
         formData.address,

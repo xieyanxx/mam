@@ -123,7 +123,6 @@ function AddLiquidity({
       let transaction = await status.wait();
       if (transaction) setLoading(false);
       handleCancel();
-      console.log(status);
     }
 
     // 普通代币之间的兑换 如果滑点大于百分之1
@@ -244,7 +243,6 @@ function AddLiquidity({
   };
   const getGas = async () => {
     let gasFree = (await getBalance(walletType, address)).gasFreeVal;
-    console.log(gasFree);
     setGas(gasFree);
   };
   return (

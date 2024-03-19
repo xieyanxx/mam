@@ -20,7 +20,6 @@ function WalletModal({ isbig }: { isbig?: boolean }) {
   const [connecting, setConnecting, getConnecting] =
     useGetState<boolean>(false);
   let ethersData = useContext(EthersContext);
-  console.log(ethersData, "==>");
   const [isModalOpen, setIsModalOpen] = useState(false);
   // 打开弹窗
   const showModal = () => {
@@ -39,14 +38,12 @@ function WalletModal({ isbig }: { isbig?: boolean }) {
       await ethersData?.initEthers(wallet, walletType1);
       handleCancel();
     } catch (error: any) {
-      console.log("error", error);
       if (error?.code === -32002) {
         message.error(error.message);
       } else {
         message.warning("pleaseConnectWallet");
       }
     } finally {
-      console.log("finally");
       setConnecting(false);
     }
   };

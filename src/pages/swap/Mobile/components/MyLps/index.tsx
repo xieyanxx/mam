@@ -46,7 +46,6 @@ function MyLps() {
     const newAddressList = getLpsAddress[0].map((item: any, index: number) => {
       return { address: item, value: getLpsAddress[1][index] };
     });
-    console.log(getLpsAddress, "====>getliquidyList");
     let effectiveAddress = newAddressList.filter(
       (item: any) => !isplatformCoin(item.address)
     ); //过滤掉0x000的无效地址

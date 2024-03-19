@@ -107,7 +107,6 @@ function PC() {
           poolContractAddress
         );
         balance = await balanceOf(item.token, tokenAbi, walletType, address);
-        console.log(balance, "====>");
       } else {
         balance = (await getBalance(walletType, address)).balanceVal;
       }

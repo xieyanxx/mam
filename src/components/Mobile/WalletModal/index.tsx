@@ -20,7 +20,6 @@ function WalletModal({ isbig }: { isbig?: boolean }) {
   const [connecting, setConnecting, getConnecting] =
     useGetState<boolean>(false);
   let ethersData = useContext(EthersContext);
-  console.log(ethersData, "ethersData==>");
   const [isModalOpen, setIsModalOpen] = useState(false);
   // 打开弹窗
   const showModal = () => {
@@ -36,23 +35,19 @@ function WalletModal({ isbig }: { isbig?: boolean }) {
     setConnecting(true);
     try {
       const wallet = await getWallet();
-      console.log(wallet, "wallet===>");
       await ethersData?.initEthers(wallet, walletType1);
       handleCancel();
     } catch (error: any) {
-      console.log("error", error);
       if (error?.code === -32002) {
         message.error(error.message);
       } else {
         message.warning("pleaseConnectWallet");
       }
     } finally {
-      console.log("finally");
       setConnecting(false);
     }
   };
   const handleConnect = () => {
-    console.log(window.ethereum?.isMetaMask);
     if (!window.ethereum?.isMetaMask) {
       window.open(
         `https://metamask.app.link/dapp/${window.location.host}`,
