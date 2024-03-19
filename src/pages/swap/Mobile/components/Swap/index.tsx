@@ -31,7 +31,7 @@ import {
   factoryContractAddress,
   routeContractAddress,
 } from "@/components/EthersContainer/address";
-import { debounce } from "lodash";
+import { debounce, throttle } from "lodash";
 import ConfirmSwap from "../ConfirmSwap";
 const statusType: any = {
   0: "Invalid pai", //地址无效，
@@ -53,6 +53,7 @@ function Swap() {
   const [toBalance, setTOBalance] = useState("0"); //兑换用户剩余币
   const [status, setStatus] = useState(1);
   const [isEnterForm, setIsEnterForm] = useState(false); //是否是先从form输入值
+  const [isChange, setIsChange] = useState(false); //是否点了切换
   const [formData, setFormData] = useState({
     ...ChainToken[3],
     amount: "", //输入金额
@@ -278,12 +279,52 @@ function Swap() {
       setLoading(false);
     }
   };
-
+  //切换按钮
+  const changeForm = useCallback(
+    throttle(async (formValue: any, toValue: any) => {
+      const contract = await getContract(
+        routeContractAddress,
+        routeAbi,
+        walletType
+      );
+      let formAddress = isplatformCoin(formValue.address)
+        ? formValue.address1
+        : formValue.address; //需要判断是否是平台币
+      let toAddress = isplatformCoin(toValue.address)
+        ? toValue.address1
+        : toValue.address;
+      if (Number(formValue.amount) == 0) {
+        return;
+      }
+      let amount = toWei(formValue.amount, formValue.decimal);
+      const getToNum = await contract
+        .getAmountsOut(amount, [formAddress, toAddress])
+        .catch((e: any) => {
+          message.error(e.message);
+        });
+      if (getToNum) {
+        setToData({
+          ...toValue,
+          amount: formWei(getToNum[1], toValue.decimal),
+        });
+        setFormData({
+          ...formValue,
+        });
+        getApproveStatus();
+      }
+    }, 500),
+    []
+  );
   //切换form-to
   const changeFormTo = () => {
-    setFormData(toData);
-    setToData(formData);
-    getApproveStatus();
+    setIsChange((val) => {
+      if (!val) {
+        changeForm(toData, formData);
+      } else {
+        changeForm(toData, formData);
+      }
+      return !val;
+    });
   };
   const handleSubmit = () => {
     if (status == 2) {
