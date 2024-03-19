@@ -36,7 +36,7 @@ function Mobile() {
     sessionStorage.getItem("walletType") || ""
   );
   const [current, setCurrent] = useState<number>(1);
-  const [hasListId, setHasListId] = useState<number[]>([0, 1]);
+  const [hasListId, setHasListId] = useState<number[]>([0, 1, 2]);
   const [active, setActive] = useState<boolean>(false);
   const [stakeModalOpen, setStakeModalOpen] = useState(false);
   const [unstakeModalOpen, setUnstakeModalOpen] = useState(false);
@@ -140,23 +140,23 @@ function Mobile() {
     if (current === 1) {
       if (isOnly) {
         //返回用户已经质押的池子
-        return setPoolList(
-          poolData.filter((item: any) => Number(item.amount) > 0)
-        );
+        let data = poolData.filter((item: any) => Number(item.amount) > 0);
+        setHasListId(data.map((item: any, index: number) => index));
+        return setPoolList(data);
       } else {
-        return setPoolList(
-          poolData.filter((item: any) => !timeIsEnd(item.endtime))
-        );
+        let data = poolData.filter((item: any) => !timeIsEnd(item.endtime));
+        setHasListId(data.map((item: any, index: number) => index));
+        return setPoolList(data);
       }
     } else {
       if (isOnly) {
-        return setPoolList(
-          poolData.filter((item: any) => Number(item.amount) > 0)
-        );
+        let data = poolData.filter((item: any) => Number(item.amount) > 0);
+        setHasListId(data.map((item: any, index: number) => index));
+        return setPoolList(data);
       } else {
-        return setPoolList(
-          poolData.filter((item: any) => timeIsEnd(item.endtime))
-        );
+        let data = poolData.filter((item: any) => timeIsEnd(item.endtime));
+        setHasListId(data.map((item: any, index: number) => index));
+        return setPoolList(data);
       }
     }
   }, [current, poolData, isOnly]);
@@ -385,7 +385,8 @@ function Mobile() {
                 <div className={styles.num_item}>
                   My Stake:{" "}
                   <span>
-                    {formatAmount(item.amount)}{item.name[0]}
+                    {formatAmount(item.amount)}
+                    {item.name[0]}
                   </span>
                 </div>
                 <div className={styles.num_item}>

@@ -109,7 +109,7 @@ function Unstake({
                 placeholder={"0.0"}
                 className={styles.input_inner}
               />
-              <div className={styles.num}>8.5 SEI</div>
+              {/* <div className={styles.num}>8.5 SEI</div> */}
             </div>
             <div className={styles.label_wrap}>
               {/* <div className={styles.item}>25%</div>
