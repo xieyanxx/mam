@@ -185,54 +185,57 @@ function Swap() {
   };
 
   //输入获取值
-  const getEnterNum = useCallback(debounce(async (val: string, type: number) => {
-    const contract = await getContract(
-      routeContractAddress,
-      routeAbi,
-      walletType
-    );
-    let formAddress = isplatformCoin(formData.address)
-      ? formData.address1
-      : formData.address; //需要判断是否是平台币
-    let toAddress = isplatformCoin(toData.address)
-      ? toData.address1
-      : toData.address;
-    if (type == 1) {
-      if (Number(val) == 0) {
-        return;
+  const getEnterNum = useCallback(
+    debounce(async (val: string, type: number) => {
+      const contract = await getContract(
+        routeContractAddress,
+        routeAbi,
+        walletType
+      );
+      let formAddress = isplatformCoin(formData.address)
+        ? formData.address1
+        : formData.address; //需要判断是否是平台币
+      let toAddress = isplatformCoin(toData.address)
+        ? toData.address1
+        : toData.address;
+      if (type == 1) {
+        if (Number(val) == 0) {
+          return;
+        }
+        let amount = toWei(val, formData.decimal);
+        const getToNum = await contract
+          .getAmountsOut(amount, [formAddress, toAddress])
+          .catch((e: any) => {
+            message.error(e.message);
+          });
+        if (getToNum) {
+          setToData({
+            ...toData,
+            amount: formWei(getToNum[1], toData.decimal),
+          });
+          getApproveStatus();
+        }
+      } else {
+        if (Number(val) == 0) {
+          return;
+        }
+        let amount = toWei(val, toData.decimal);
+        const getFormNum = await contract
+          .getAmountsIn(amount, [toAddress, formAddress])
+          .catch((err: any) => {
+            message.error(err.message);
+          });
+        if (getFormNum) {
+          setFormData({
+            ...formData,
+            amount: formWei(getFormNum[0], formData.decimal),
+          });
+          getApproveStatus();
+        }
       }
-      let amount = toWei(val, formData.decimal);
-      const getToNum = await contract
-        .getAmountsOut(amount, [formAddress, toAddress])
-        .catch((e: any) => {
-          message.error(e.message);
-        });
-      if (getToNum) {
-        setToData({
-          ...toData,
-          amount: formWei(getToNum[1], toData.decimal),
-        });
-        getApproveStatus();
-      }
-    } else {
-      if (Number(val) == 0) {
-        return;
-      }
-      let amount = toWei(val, toData.decimal);
-      const getFormNum = await contract
-        .getAmountsIn(amount, [toAddress, formAddress])
-        .catch((err: any) => {
-          message.error(err.message);
-        });
-      if (getFormNum) {
-        setFormData({
-          ...formData,
-          amount: formWei(getFormNum[0], formData.decimal),
-        });
-        getApproveStatus();
-      }
-    }
-  }, 300),[]);
+    }, 300),
+    []
+  );
 
   const getTransactionData = async () => {
     const contract = await getContract(
@@ -276,6 +279,12 @@ function Swap() {
     }
   };
 
+  //切换form-to
+  const changeFormTo = () => {
+    setFormData(toData);
+    setToData(formData);
+    getApproveStatus();
+  };
   const handleSubmit = () => {
     if (status == 2) {
       handleApprove();
@@ -349,7 +358,12 @@ function Swap() {
           </div>
           <div className={styles.change_wrap}>
             <div className={styles.line}></div>
-            <img className={styles.change_icon} src={change} alt="" />
+            <img
+              className={styles.change_icon}
+              src={change}
+              alt=""
+              onClick={changeFormTo}
+            />
           </div>
         </div>
         <div className={styles.from_wrap}>

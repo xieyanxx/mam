@@ -277,6 +277,12 @@ function Swap() {
     }
   };
 
+  //切换form-to
+  const changeFormTo = () => {
+    setFormData(toData);
+    setToData(formData);
+    getApproveStatus();
+  };
   const handleSubmit = () => {
     if (status == 2) {
       handleApprove();
@@ -353,7 +359,12 @@ function Swap() {
           </div>
           <div className={styles.change_wrap}>
             <div className={styles.line}></div>
-            <img className={styles.change_icon} src={change} alt="" />
+            <img
+              className={styles.change_icon}
+              src={change}
+              alt=""
+              onClick={() => changeFormTo()}
+            />
           </div>
         </div>
         <div className={styles.from_wrap}>

@@ -91,12 +91,11 @@ function PC() {
     let newList = getPoolList.map(async (item: any, index: number) => {
       let userInfo = await contract.users(index, address);
       let pendingInfo = await contract.pending(index, address);
-      let apyData = await readyContract.getTVLandAPY1(index);
+      let apyData = await readyContract.getTVLandAPY2(index);
       const { APY, TVL } = apyData;
       let decimals = 18;
       let stakeStatue = "0";
       let balance = "0";
-      console.log(item, "====>");
       if (!isplatformCoin(item.token)) {
         // 只有非平台币才需要授权
         decimals = await getDecimals(item.token, walletType, tokenAbi);
