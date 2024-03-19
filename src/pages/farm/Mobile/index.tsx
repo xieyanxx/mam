@@ -242,7 +242,7 @@ function Mobile() {
               <div className={styles.num_item}>
                 My Stake:{" "}
                 <span>
-                  {formatAmount(details.amount)} {details.name[1]}
+                  {formatAmount(details.amount)}{details.name[0]}
                 </span>
               </div>
               <div className={styles.num_item}>
@@ -253,7 +253,7 @@ function Mobile() {
 
           <div className={styles.claim_wrap}>
             <div className={styles.claim_l}>
-              <div className={styles.claim_name}>{details.name[0]} Earned</div>
+              <div className={styles.claim_name}>{details.name[1]} Earned</div>
               <div>{formatAmount(details.userReward)}</div>
             </div>
             <Button
@@ -374,11 +374,11 @@ function Mobile() {
                   My Stake:{" "}
                   <span>
                     {formatAmount(item.amount)}
-                    {item.name[1]}
+                    {item.name[0]}
                   </span>
                 </div>
                 <div className={styles.num_item}>
-                  TVL: <span>{formatAmount(item.tvl)} SEI</span>
+                  TVL: <span>{formatAmount(item.tvl)}USDT</span>
                 </div>
               </div>
             )}

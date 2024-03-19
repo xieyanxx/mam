@@ -316,7 +316,7 @@ function PC() {
               </div>
               <div className={styles.stake}>
                 <div>My Stake:</div>
-                <div className={styles.num}>{item.amount}</div>
+                <div className={styles.num}>{formatAmount(item.amount)}{item.name[0]}</div>
               </div>
               <div className={styles.md_wrap}>
                 <div className={styles.md_text_wrap}>

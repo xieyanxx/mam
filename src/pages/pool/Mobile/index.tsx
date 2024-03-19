@@ -109,7 +109,7 @@ function Mobile() {
         balance = (await getBalance(walletType, address)).balanceVal;
       }
       let newInfo: any = {};
-      newInfo.id=index;
+      newInfo.id = index;
       newInfo.amount = formWei(userInfo.amount, decimals);
       newInfo.token = item.token;
       newInfo.rewaredtoken = item.rewaredtoken;
@@ -251,7 +251,11 @@ function Mobile() {
           {active && (
             <div className={styles.text_num_wrap}>
               <div className={styles.num_item}>
-                My Stake: <span>{formatAmount(details.amount)}{details.name[1]}</span>
+                My Stake:{" "}
+                <span>
+                  {formatAmount(details.amount)}
+                  {details.name[0]}
+                </span>
               </div>
               <div className={styles.num_item}>
                 TVL: <span>{formatAmount(details.tvl)}USDT</span>
@@ -379,10 +383,13 @@ function Mobile() {
             {hasListId.some((i) => i == index) && (
               <div className={styles.down_bottom}>
                 <div className={styles.num_item}>
-                  My Stake: <span>{formatAmount(item.amount)} {item.name[1]}</span>
+                  My Stake:{" "}
+                  <span>
+                    {formatAmount(item.amount)}{item.name[0]}
+                  </span>
                 </div>
                 <div className={styles.num_item}>
-                  TVL: <span>{formatAmount(item.tvl)} SEI</span>
+                  TVL: <span>{formatAmount(item.tvl)}USDT</span>
                 </div>
               </div>
             )}
@@ -392,13 +399,11 @@ function Mobile() {
       <Stake
         isModalOpen={stakeModalOpen}
         handleCancel={handleStakeCancel}
-
         poolInfo={currenPoolInfo}
       ></Stake>
       <Unstake
         isModalOpen={unstakeModalOpen}
         handleCancel={handleUnstakeCancel}
-  
         poolInfo={currenPoolInfo}
       ></Unstake>
     </div>
