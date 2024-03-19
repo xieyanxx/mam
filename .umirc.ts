@@ -3,7 +3,7 @@ import { defineConfig } from "umi";
 import px2vw from "postcss-px-to-viewport";
 
 export default defineConfig({
-  title: "mam",
+  title: "MAMBA",
   links: [{ rel: "icon", href: "./logo.png" }],
   routes: [
     { path: "/", component: "@/pages/home" },

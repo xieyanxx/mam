@@ -96,6 +96,7 @@ function PC() {
       let decimals = 18;
       let stakeStatue = "0";
       let balance = "0";
+      console.log(item, "====>");
       if (!isplatformCoin(item.token)) {
         // 只有非平台币才需要授权
         decimals = await getDecimals(item.token, walletType, tokenAbi);
@@ -106,12 +107,13 @@ function PC() {
           tokenAbi,
           poolContractAddress
         );
+
         balance = await balanceOf(item.token, tokenAbi, walletType, address);
       } else {
         balance = (await getBalance(walletType, address)).balanceVal;
       }
       let newInfo: any = {};
-      newInfo.id=index
+      newInfo.id = index;
       newInfo.amount = formWei(userInfo.amount, decimals);
       newInfo.token = item.token;
       newInfo.rewaredtoken = item.rewaredtoken;
@@ -177,9 +179,10 @@ function PC() {
       });
     let status = await transaction.wait();
     if (status) {
-      message.success("success");
       getPool();
       getPoolList();
+      message.success("success");
+      console.log(11111);
       setLoading(false);
     }
   };
@@ -392,13 +395,11 @@ function PC() {
       <Stake
         isModalOpen={stakeModalOpen}
         handleCancel={handleStakeCancel}
-        
         poolInfo={currenPoolInfo}
       ></Stake>
       <Unstake
         isModalOpen={unstakeModalOpen}
         handleCancel={handleUnstakeCancel}
-        
         poolInfo={currenPoolInfo}
       ></Unstake>
       {/* <ImportPool
