@@ -242,7 +242,8 @@ function Mobile() {
               <div className={styles.num_item}>
                 My Stake:{" "}
                 <span>
-                  {formatAmount(details.amount)}{details.name[0]}
+                  {formatAmount(details.amount)}
+                  {details.name[0]}
                 </span>
               </div>
               <div className={styles.num_item}>
