@@ -240,7 +240,10 @@ function Mobile() {
           {active && (
             <div className={styles.text_num_wrap}>
               <div className={styles.num_item}>
-                My Stake: <span>225 SEI</span>
+                My Stake:{" "}
+                <span>
+                  {formatAmount(details.amount)} {details.name[1]}
+                </span>
               </div>
               <div className={styles.num_item}>
                 TVL: <span>{formatAmount(details.tvl)}USDT</span>
@@ -368,7 +371,11 @@ function Mobile() {
             {hasListId.some((i) => i == index) && (
               <div className={styles.down_bottom}>
                 <div className={styles.num_item}>
-                  My Stake: <span>{formatAmount(item.amount)}SEI</span>
+                  My Stake:{" "}
+                  <span>
+                    {formatAmount(item.amount)}
+                    {item.name[1]}
+                  </span>
                 </div>
                 <div className={styles.num_item}>
                   TVL: <span>{formatAmount(item.tvl)} SEI</span>

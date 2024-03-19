@@ -20,7 +20,7 @@ function Stake({
   isModalOpen: boolean;
   poolInfo: any;
 }) {
-  const [stakeAmount, setStakeAmount] = useState<string>("0");
+  const [stakeAmount, setStakeAmount] = useState<string>("");
   const [walletType] = useState<string>(
     sessionStorage.getItem("walletType") || ""
   );
