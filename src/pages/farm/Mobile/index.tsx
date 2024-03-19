@@ -85,7 +85,6 @@ function Mobile() {
       let pendingInfo = await contract.pending(index, address);
       let apyData = await readyContract.getTVLandAPY1(index);
       const { APY, TVL } = apyData;
-      console.log(apyData);
       let decimals = 18;
       let stakeStatue = "0";
       let balance = "0";
@@ -116,6 +115,7 @@ function Mobile() {
       newInfo.balance = balance;
       newInfo.apy = (Number(APY) / Math.pow(10, 20)).toString();
       newInfo.tvl = (Number(TVL) / Math.pow(10, 18)).toString();
+      newInfo.id = index;
       if (Number(stakeStatue) > Number(balance) || isplatformCoin(item.token)) {
         //判断授权状态  true:已授权，fasle:未授权 2.平台币不需要授权
         newInfo.stakeStatue = true;
@@ -167,7 +167,6 @@ function Mobile() {
         message.error("fail");
         setLoading(false);
       });
-    console.log(transaction, "======>1111");
     let status = transaction.wait();
     if (status) {
       message.success("success");
@@ -365,10 +364,10 @@ function Mobile() {
             {hasListId.some((i) => i == index) && (
               <div className={styles.down_bottom}>
                 <div className={styles.num_item}>
-                  My Stake: <span>225 SEI</span>
+                  My Stake: <span>{formatAmount(item.amount)}SEI</span>
                 </div>
                 <div className={styles.num_item}>
-                  TVL: <span>1,216,245 SEI</span>
+                  TVL: <span>{formatAmount(item.tvl)} SEI</span>
                 </div>
               </div>
             )}
@@ -378,13 +377,11 @@ function Mobile() {
       <Stake
         isModalOpen={stakeModalOpen}
         handleCancel={handleStakeCancel}
-        poolId={poolId}
         poolInfo={currenPoolInfo}
       ></Stake>
       <Unstake
         isModalOpen={unstakeModalOpen}
         handleCancel={handleUnstakeCancel}
-        poolId={poolId}
         poolInfo={currenPoolInfo}
       ></Unstake>
     </div>

@@ -7,22 +7,20 @@ import {
   ChainToken,
   farmContractAddress,
 } from "@/components/EthersContainer/address";
-import { farmAbi, tokenAbi } from "@/components/EthersContainer/abj";
-import { balanceOf, getContract, toWei } from "@/components/EthersContainer";
-import { formatAmount, formatAmount1, isplatformCoin } from "@/utils";
+import { farmAbi } from "@/components/EthersContainer/abj";
+import { getContract, toWei } from "@/components/EthersContainer";
+import { formatAmount1, isplatformCoin } from "@/utils";
 
 function Stake({
   handleCancel,
   isModalOpen,
-  poolId,
   poolInfo,
 }: {
   handleCancel: () => void;
   isModalOpen: boolean;
-  poolId: number;
   poolInfo: any;
 }) {
-  const [stakeAmount, setStakeAmount] = useState<string>("0");
+  const [stakeAmount, setStakeAmount] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [walletType] = useState<string>(
     sessionStorage.getItem("walletType") || ""
@@ -39,7 +37,7 @@ function Stake({
     if (isplatformCoin(poolInfo.token)) {
       //主网币的质押
       status = await contract
-        .deposit(poolId, toWei(stakeAmount, poolInfo.decimals), {
+        .deposit(poolInfo.id, toWei(stakeAmount, poolInfo.decimals), {
           //这个value 就是用户质押的bnb数量
           value: toWei(stakeAmount, poolInfo.decimals),
         })
@@ -50,7 +48,7 @@ function Stake({
     } else {
       //正常情况的deposit
       status = await contract
-        .deposit(poolId, toWei(stakeAmount, poolInfo.decimals))
+        .deposit(poolInfo.id, toWei(stakeAmount, poolInfo.decimals))
         .catch((err: any) => {
           message.error("fail");
           setLoading(false);

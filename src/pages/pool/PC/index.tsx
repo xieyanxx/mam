@@ -112,6 +112,7 @@ function PC() {
         balance = (await getBalance(walletType, address)).balanceVal;
       }
       let newInfo: any = {};
+      newInfo.id=index
       newInfo.amount = formWei(userInfo.amount, decimals);
       newInfo.token = item.token;
       newInfo.rewaredtoken = item.rewaredtoken;
@@ -334,7 +335,7 @@ function PC() {
                   </div>
                   <Button
                     className={styles.btn}
-                    onClick={() => handleClaim(index)}
+                    onClick={() => handleClaim(item.id)}
                     loading={claimLoading}
                   >
                     Claim
@@ -392,13 +393,13 @@ function PC() {
       <Stake
         isModalOpen={stakeModalOpen}
         handleCancel={handleStakeCancel}
-        poolId={poolId}
+        
         poolInfo={currenPoolInfo}
       ></Stake>
       <Unstake
         isModalOpen={unstakeModalOpen}
         handleCancel={handleUnstakeCancel}
-        poolId={poolId}
+        
         poolInfo={currenPoolInfo}
       ></Unstake>
       {/* <ImportPool

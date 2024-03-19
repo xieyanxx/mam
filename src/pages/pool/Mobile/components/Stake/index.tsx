@@ -15,15 +15,13 @@ import { formatAmount1 } from "@/utils";
 function Stake({
   handleCancel,
   isModalOpen,
-  poolId,
   poolInfo,
 }: {
   handleCancel: () => void;
   isModalOpen: boolean;
-  poolId: number;
   poolInfo: any;
 }) {
-  const [stakeAmount, setStakeAmount] = useState<string>("0");
+  const [stakeAmount, setStakeAmount] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [walletType] = useState<string>(
     sessionStorage.getItem("walletType") || ""
@@ -36,7 +34,7 @@ function Stake({
       walletType
     );
     let transaction = await contract
-      .deposit(poolId, toWei(stakeAmount, poolInfo.decimals))
+      .deposit(poolInfo.id, toWei(stakeAmount, poolInfo.decimals))
       .catch((err: any) => {
         message.error("fail");
         setLoading(false);

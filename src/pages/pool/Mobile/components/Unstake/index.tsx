@@ -15,12 +15,10 @@ import { formatAmount1 } from "@/utils";
 function Unstake({
   handleCancel,
   isModalOpen,
-  poolId,
   poolInfo,
 }: {
   handleCancel: () => void;
   isModalOpen: boolean;
-  poolId: number;
   poolInfo: any;
 }) {
   const [stakeAmount, setStakeAmount] = useState<string>("0");
@@ -36,7 +34,7 @@ function Unstake({
       walletType
     );
     let transaction = await contract
-      .withdraw(poolId, toWei(stakeAmount, poolInfo.decimals))
+      .withdraw(poolInfo.id, toWei(stakeAmount, poolInfo.decimals))
       .catch((err: any) => {
         message.error("fail");
         setLoading(false);
@@ -111,7 +109,7 @@ function Unstake({
                 placeholder={"0.0"}
                 className={styles.input_inner}
               />
-              <div className={styles.num}>8.5 SEI</div>
+              {/* <div className={styles.num}>8.5 SEI</div> */}
             </div>
             <div className={styles.label_wrap}>
               {/* <div className={styles.item}>25%</div>

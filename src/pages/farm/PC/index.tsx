@@ -95,7 +95,6 @@ function PC() {
       let pendingInfo = await contract.pending(index, address);
       let apyData = await readyContract.getTVLandAPY1(index);
       const { APY, TVL } = apyData;
-      console.log(apyData);
       let decimals = 18;
       let stakeStatue = "0";
       let balance = "0";
@@ -115,6 +114,7 @@ function PC() {
       }
 
       let newInfo: any = {};
+
       newInfo.amount = formWei(userInfo.amount, decimals);
       newInfo.token = item.token;
       newInfo.rewaredtoken = item.rewaredtoken;
@@ -126,6 +126,7 @@ function PC() {
       newInfo.balance = balance;
       newInfo.apy = (Number(APY) / Math.pow(10, 20)).toString();
       newInfo.tvl = (Number(TVL) / Math.pow(10, 18)).toString();
+      newInfo.id = index;
       if (Number(stakeStatue) > Number(balance) || isplatformCoin(item.token)) {
         //判断授权状态  true:已授权，fasle:未授权 2.平台币不需要授权
         newInfo.stakeStatue = true;
@@ -309,7 +310,9 @@ function PC() {
                 </div>
                 <div className={styles.md_text_wrap}>
                   <div className={styles.text_l}>TVL:</div>
-                  <div className={styles.text_r}>{formatAmount(item.tvl)}USDT</div>
+                  <div className={styles.text_r}>
+                    {formatAmount(item.tvl)}USDT
+                  </div>
                 </div>
                 <div className={styles.text_bt}>
                   <div className={styles.bt_l}>
@@ -318,7 +321,7 @@ function PC() {
                   </div>
                   <Button
                     className={styles.btn}
-                    onClick={() => handleClaim(index)}
+                    onClick={() => handleClaim(item.id)}
                     loading={claimLoading}
                   >
                     Claim
@@ -376,13 +379,11 @@ function PC() {
       <Stake
         isModalOpen={stakeModalOpen}
         handleCancel={handleStakeCancel}
-        poolId={poolId}
         poolInfo={currenPoolInfo}
       ></Stake>
       <Unstake
         isModalOpen={unstakeModalOpen}
         handleCancel={handleUnstakeCancel}
-        poolId={poolId}
         poolInfo={currenPoolInfo}
       ></Unstake>
     </div>

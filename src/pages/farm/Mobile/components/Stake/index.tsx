@@ -3,23 +3,21 @@ import styles from "./index.less";
 import cx from "classnames";
 import { Button, Input, Modal, Radio, message } from "antd";
 import close from "@/assets/logo/close.png";
-import {  getContract, toWei } from "@/components/EthersContainer";
+import { getContract, toWei } from "@/components/EthersContainer";
 import {
   ChainToken,
   farmContractAddress,
 } from "@/components/EthersContainer/address";
 import { farmAbi } from "@/components/EthersContainer/abj";
-import {  formatAmount1, isplatformCoin } from "@/utils";
+import { formatAmount1, isplatformCoin } from "@/utils";
 
 function Stake({
   handleCancel,
   isModalOpen,
-  poolId,
   poolInfo,
 }: {
   handleCancel: () => void;
   isModalOpen: boolean;
-  poolId: number;
   poolInfo: any;
 }) {
   const [stakeAmount, setStakeAmount] = useState<string>("0");
@@ -39,7 +37,7 @@ function Stake({
     if (isplatformCoin(poolInfo.token)) {
       //主网币的质押
       status = await contract
-        .deposit(poolId, toWei(stakeAmount, poolInfo.decimals), {
+        .deposit(poolInfo.id, toWei(stakeAmount, poolInfo.decimals), {
           //这个value 就是用户质押的bnb数量
           value: toWei(stakeAmount, poolInfo.decimals),
         })
@@ -50,15 +48,13 @@ function Stake({
     } else {
       //正常情况的deposit
       status = await contract
-        .deposit(poolId, toWei(stakeAmount, poolInfo.decimals))
+        .deposit(poolInfo.id, toWei(stakeAmount, poolInfo.decimals))
         .catch((err: any) => {
           message.error("fail");
           setLoading(false);
         });
     }
-    console.log(status, "--->status");
     let transaction = await status.wait();
-    console.log(transaction, "--->transaction");
     if (transaction) {
       message.success("success");
       setLoading(false);

@@ -109,6 +109,7 @@ function Mobile() {
         balance = (await getBalance(walletType, address)).balanceVal;
       }
       let newInfo: any = {};
+      newInfo.id=index;
       newInfo.amount = formWei(userInfo.amount, decimals);
       newInfo.token = item.token;
       newInfo.rewaredtoken = item.rewaredtoken;
@@ -138,7 +139,6 @@ function Mobile() {
   const getPoolList = useCallback(() => {
     if (current === 1) {
       if (isOnly) {
-        console.log(isOnly, "==>isOnly");
         //返回用户已经质押的池子
         return setPoolList(
           poolData.filter((item: any) => Number(item.amount) > 0)
@@ -267,7 +267,7 @@ function Mobile() {
             <Button
               className={styles.btn}
               loading={claimLoading}
-              onClick={() => handleClaim(current)}
+              onClick={() => handleClaim(details.id)}
             >
               Claim
             </Button>
@@ -379,10 +379,10 @@ function Mobile() {
             {hasListId.some((i) => i == index) && (
               <div className={styles.down_bottom}>
                 <div className={styles.num_item}>
-                  My Stake: <span>225 SEI</span>
+                  My Stake: <span>{formatAmount(item.amount)} SEI</span>
                 </div>
                 <div className={styles.num_item}>
-                  TVL: <span>1,216,245 SEI</span>
+                  TVL: <span>{formatAmount(item.tvl)} SEI</span>
                 </div>
               </div>
             )}
@@ -392,13 +392,13 @@ function Mobile() {
       <Stake
         isModalOpen={stakeModalOpen}
         handleCancel={handleStakeCancel}
-        poolId={poolId}
+
         poolInfo={currenPoolInfo}
       ></Stake>
       <Unstake
         isModalOpen={unstakeModalOpen}
         handleCancel={handleUnstakeCancel}
-        poolId={poolId}
+  
         poolInfo={currenPoolInfo}
       ></Unstake>
     </div>
