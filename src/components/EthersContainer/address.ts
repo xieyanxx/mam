@@ -17,8 +17,8 @@ export const ChainToken = [
   {
     id: 1,
     src: block1,
-    name: "MAMABA",
-    name1: "Mamaba",
+    name: "MAMBA",
+    name1: "Mamba",
     address: "0x61b040e9630873138329E706f20ef534Bb77cB5E",
     address1: "",
   },

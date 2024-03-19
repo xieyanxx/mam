@@ -10,7 +10,9 @@ export default () => {
   return (
     <>
       {isMobile ? (
-        <Nav />
+        <EthersContainer>
+          <Nav />
+        </EthersContainer>
       ) : (
         <EthersContainer>
           <Header />

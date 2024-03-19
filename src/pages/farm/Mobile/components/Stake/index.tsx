@@ -3,14 +3,13 @@ import styles from "./index.less";
 import cx from "classnames";
 import { Button, Input, Modal, Radio, message } from "antd";
 import close from "@/assets/logo/close.png";
-import icon1 from "@/assets/logo/icon1.png";
-import { balanceOf, getContract, toWei } from "@/components/EthersContainer";
+import {  getContract, toWei } from "@/components/EthersContainer";
 import {
   ChainToken,
   farmContractAddress,
 } from "@/components/EthersContainer/address";
-import { farmAbi, tokenAbi } from "@/components/EthersContainer/abj";
-import { formatAmount, formatAmount1, isplatformCoin } from "@/utils";
+import { farmAbi } from "@/components/EthersContainer/abj";
+import {  formatAmount1, isplatformCoin } from "@/utils";
 
 function Stake({
   handleCancel,
@@ -57,7 +56,9 @@ function Stake({
           setLoading(false);
         });
     }
+    console.log(status, "--->status");
     let transaction = await status.wait();
+    console.log(transaction, "--->transaction");
     if (transaction) {
       message.success("success");
       setLoading(false);
@@ -114,7 +115,7 @@ function Stake({
                 placeholder={"0.0"}
                 className={styles.input_inner}
               />
-              <div className={styles.num}>$8.67</div>
+              {/* <div className={styles.num}>$8.67</div> */}
             </div>
             <div className={styles.label_wrap}>
               {/* <div className={styles.item}>25%</div>

@@ -85,6 +85,7 @@ function Mobile() {
       let pendingInfo = await contract.pending(index, address);
       let apyData = await readyContract.getTVLandAPY1(index);
       const { APY, TVL } = apyData;
+      console.log(apyData);
       let decimals = 18;
       let stakeStatue = "0";
       let balance = "0";
@@ -154,19 +155,21 @@ function Mobile() {
     }
   }, [current, poolData, isoOnly]);
   //授权
-  const handleApprove = async (tokenAddress: string) => {
+  const handleApprove = async (tokenAddress: string, poolId: number) => {
+    setPoolId(poolId);
+    setLoading(true);
     var amount =
       "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
     const contract = await getContract(tokenAddress, tokenAbi, walletType);
     var transaction = await contract
       .approve(farmContractAddress, amount)
-      .wait()
       .catch((err: any) => {
         message.error("fail");
         setLoading(false);
       });
-
-    if (transaction) {
+    console.log(transaction, "======>1111");
+    let status = transaction.wait();
+    if (status) {
       message.success("success");
       getPool();
       getPoolList();
@@ -181,15 +184,12 @@ function Mobile() {
       farmAbi,
       walletType
     );
-    var transaction = await contract
-      .reclaimReward(poolId)
-      .wait()
-      .catch((err: any) => {
-        message.error("fail");
-        setClaimLoading(false);
-      });
-
-    if (transaction) {
+    var transaction = await contract.reclaimReward(poolId).catch((err: any) => {
+      message.error("fail");
+      setClaimLoading(false);
+    });
+    let status = await transaction.wait();
+    if (status) {
       message.success("success");
       getPool();
       getPoolList();
@@ -258,34 +258,37 @@ function Mobile() {
               Claim
             </Button>
           </div>
-          <div className={styles.btn_wrap}>
-            <Button
-              className={styles.stake_btn}
-              loading={current == poolId ? loading : false}
-              onClick={
-                !details.stakeStatue
-                  ? () => handleApprove(details.token)
-                  : () => stakeShowModal(details, current)
-              }
-            >
-              {details.stakeStatue ? "Stake" : "approve"}
-            </Button>
-          </div>
+          {!Number(details.amount) ? (
+            <div className={styles.btn_wrap}>
+              <Button
+                className={styles.stake_btn}
+                loading={current == poolId ? loading : false}
+                onClick={
+                  !details.stakeStatue
+                    ? () => handleApprove(details.token, current)
+                    : () => stakeShowModal(details, current)
+                }
+              >
+                {details.stakeStatue ? "Stake" : "approve"}
+              </Button>
+            </div>
+          ) : (
+            <div className={styles.stake_wrap}>
+              <Button
+                className={cx(styles.stake_btn, styles.stake_btn1)}
+                onClick={() => stakeShowModal(details, current)}
+              >
+                Stake +
+              </Button>
+              <Button
+                className={cx(styles.stake_btn, styles.stake_btn2)}
+                onClick={() => unstakeShowModal(details, current)}
+              >
+                Unstake
+              </Button>
+            </div>
+          )}
 
-          <div className={styles.stake_wrap}>
-            <Button
-              className={cx(styles.stake_btn, styles.stake_btn1)}
-              onClick={() => stakeShowModal(details, current)}
-            >
-              Stake +
-            </Button>
-            <Button
-              className={cx(styles.stake_btn, styles.stake_btn2)}
-              onClick={() => unstakeShowModal(details, current)}
-            >
-              Unstake
-            </Button>
-          </div>
           <div className={styles.bottom_wrap}>
             <div className={styles.left}>
               <div className={styles.left_item}>
