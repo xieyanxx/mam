@@ -20,7 +20,13 @@ import {
   readyContractAddress,
 } from "@/components/EthersContainer/address";
 import { farmAbi, readyAbi, tokenAbi } from "@/components/EthersContainer/abj";
-import { formatAmount, getTime, isplatformCoin, timeDiff, timeIsEnd } from "@/utils";
+import {
+  formatAmount,
+  getTime,
+  isplatformCoin,
+  timeDiff,
+  timeIsEnd,
+} from "@/utils";
 
 import Unstake from "./components/Unstake";
 
@@ -229,10 +235,10 @@ function Mobile() {
               alt=""
             />
           </div>
-          <div className={styles.top_r}>
+          {/* <div className={styles.top_r}>
             <div className={styles.top_r_text}>APY</div>
             <div>{formatAmount(details.apy)}%</div>
-          </div>
+          </div> */}
         </div>
       ),
       children: (
@@ -242,13 +248,20 @@ function Mobile() {
               <div className={styles.num_item}>
                 My Stake:{" "}
                 <span>
-                  {formatAmount(details.amount)}
-                  {details.name[0]}
+                  <p>{formatAmount(details.amount)}</p>
+                  <p>({details.name[0]})</p>
                 </span>
+              </div>
+              <div className={styles.num_item}>
+                APY
+                <span>{formatAmount(details.apy)}%</span>
               </div>
               <div className={styles.num_item}>
                 TVL: <span>{formatAmount(details.tvl)}USDT</span>
               </div>
+              {/* <div className={styles.num_item}>
+              TVL: <span>{formatAmount(details.tvl)}USDT</span>
+            </div> */}
             </div>
           )}
 
@@ -312,9 +325,9 @@ function Mobile() {
               <div className={styles.share_wrap}>
                 <p>Farm Contract</p> <img src={share} alt="" />
               </div>
-              <div className={styles.share_wrap}>
+              {/* <div className={styles.share_wrap}>
                 <p>Add to Wallet</p> <img src={metamask} alt="" />
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -372,11 +385,14 @@ function Mobile() {
             {hasListId.some((i) => i == index) && (
               <div className={styles.down_bottom}>
                 <div className={styles.num_item}>
-                  My Stake:{" "}
+                  <p>My Stake:</p>
                   <span>
-                    {formatAmount(item.amount)}
-                    {item.name[0]}
+                    <p>{formatAmount(item.amount)}</p>
+                    <p>({item.name[0]})</p>
                   </span>
+                </div>
+                <div className={styles.num_item}>
+                  APY: <span>{formatAmount(item.apy)}%</span>
                 </div>
                 <div className={styles.num_item}>
                   TVL: <span>{formatAmount(item.tvl)}USDT</span>

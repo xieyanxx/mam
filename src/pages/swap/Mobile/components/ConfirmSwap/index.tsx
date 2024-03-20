@@ -298,15 +298,13 @@ function AddLiquidity({
                   {toData.name}
                 </p>
               </div>
-              <div className={styles.price_item}>
+              {/* <div className={styles.price_item}>
                 <p className={styles.name}>Price impact:</p>
                 <p>0.00 MAMBA</p>
-              </div>
+              </div> */}
               <div className={styles.price_item}>
                 <p className={styles.name}>Trading fee:</p>
-                <p>
-                  {formatAmount1(gas)} {toData.name}
-                </p>
+                <p>{formatAmount1(gas)} SEI</p>
               </div>
             </div>
             <div className={styles.btn_wrap}>

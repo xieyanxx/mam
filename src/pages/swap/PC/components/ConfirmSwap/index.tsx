@@ -243,6 +243,7 @@ function AddLiquidity({
   };
   const getGas = async () => {
     let gasFree = (await getBalance(walletType, address)).gasFreeVal;
+    console.log(gasFree, "====?");
     setGas(gasFree);
   };
   return (
