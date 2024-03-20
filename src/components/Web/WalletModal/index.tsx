@@ -1,4 +1,4 @@
-import React, { memo, useContext, useState } from "react";
+import React, { memo, useContext, useEffect, useState } from "react";
 import styles from "./index.less";
 import cx from "classnames";
 import { Button, Modal, message } from "antd";
@@ -46,7 +46,14 @@ function WalletModal({ isbig }: { isbig?: boolean }) {
     } finally {
       setConnecting(false);
     }
-  };
+  }; 
+  useEffect(() => {
+    if (ethersData.chainId !== 97 && ethersData.chainId !== null) {
+      message.warning(
+        "For trade items,please change to the Ethereum chain in your wallet"
+      );
+    }
+  }, [ethersData.chainId]);
   return (
     <div className={styles.wrap}>
       {ethersData?.address ? (

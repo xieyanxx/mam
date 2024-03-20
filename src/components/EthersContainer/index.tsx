@@ -127,8 +127,7 @@ const EthersContainer = React.memo((props: any) => {
       const provider = new ethers.providers.Web3Provider(wallet);
       const signer = provider.getSigner();
       const address = await signer.getAddress();
-      let res2: any = provider.getNetwork();
-      console.log(res2, "===>res2chainId");
+      let res2: any = await provider.getNetwork();
       setChainId(res2.chainId);
       sessionStorage.setItem("chainId", res2.chainId);
       setSigner(signer);
