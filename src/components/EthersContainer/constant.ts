@@ -16,6 +16,7 @@ export const WALLETCONNECT_RPC_NODE = {
   5: "https://rpc.ankr.com/eth_goerli",
   666: "http://172.16.2.6:8087",
   97: "wss://bsc-testnet-rpc.publicnode.com",
+  713715:"https://evm-rpc-arctic-1.sei-apis.com"
 };
 
 /**
