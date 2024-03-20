@@ -22,7 +22,7 @@ import {
   poolContractAddress,
   readyContractAddress,
 } from "@/components/EthersContainer/address";
-import { formatAmount, getTime, isplatformCoin, timeIsEnd } from "@/utils";
+import { formatAmount, getTime, isplatformCoin, timeDiff, timeIsEnd } from "@/utils";
 import Stake from "./components/Stake";
 import Unstake from "./components/Unstake";
 import { poolAbi, readyAbi, tokenAbi } from "@/components/EthersContainer/abj";
@@ -230,7 +230,7 @@ function PC() {
           </div>
           <div className={styles.text_item}>
             <div className={styles.time_title}>Days Left:</div>
-            <div>120 days</div>
+            <div>{timeDiff(details.endtime)} days </div>
           </div>
           <div className={styles.share_wrap}>
             <p>USDT Token Info</p> <img src={share} alt="" />
@@ -238,9 +238,9 @@ function PC() {
           <div className={styles.share_wrap}>
             <p>Farm Contract</p> <img src={share} alt="" />
           </div>
-          <div className={styles.share_wrap}>
+          {/* <div className={styles.share_wrap}>
             <p>Add to Wallet</p> <img src={metamask} alt="" />
-          </div>
+          </div> */}
         </div>
       ),
     },
@@ -318,7 +318,7 @@ function PC() {
                 <div>My Stake:</div>
                 <div className={styles.num}>
                   {formatAmount(item.amount)}
-                  {item.name[0]}
+                  <p>({item.name[0]})</p>
                 </div>
               </div>
               <div className={styles.md_wrap}>

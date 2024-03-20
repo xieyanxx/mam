@@ -25,6 +25,7 @@ import {
   formatAmount1,
   getTime,
   isplatformCoin,
+  timeDiff,
   timeIsEnd,
 } from "@/utils";
 
@@ -226,7 +227,7 @@ function PC() {
             </div>
             <div className={styles.text_item}>
               <div className={styles.time_title}>Days Left:</div>
-              <div>120 days</div>
+              <div>{timeDiff(details.endtime)} days</div>
             </div>
             <div className={styles.share_wrap}>
               <p>USDT Token Info</p> <img src={share} alt="" />

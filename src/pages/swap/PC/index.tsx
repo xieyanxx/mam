@@ -1,4 +1,4 @@
-import React, { memo, useRef, useState } from "react";
+import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import styles from "./index.less";
 import cx from "classnames";
 import Swap from "./components/Swap";
@@ -12,6 +12,16 @@ const tabData = [
 ];
 function PC() {
   const [current, setCurrent] = useState<number>(1);
+  const onChangeTab = useCallback((val:number) => {
+    setCurrent(val)
+  }, []);
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const id = params.get("id");
+    if (id) {
+      setCurrent(Number(id));
+    }
+  }, []);
   return (
     <div className={styles.wrap}>
       <div className={styles.tab_wrap}>
@@ -26,8 +36,8 @@ function PC() {
         ))}
       </div>
       {current == 1 && <Swap></Swap>}
-      {current == 2 && <Liquidity  />}
-      {current == 3 && <MyLps />}
+      {current == 2 && <Liquidity />}
+      {current == 3 && <MyLps onchangTab={(val:number)=>onChangeTab(val)} />}
     </div>
   );
 }

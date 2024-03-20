@@ -20,7 +20,7 @@ import {
   readyContractAddress,
 } from "@/components/EthersContainer/address";
 import { farmAbi, readyAbi, tokenAbi } from "@/components/EthersContainer/abj";
-import { formatAmount, getTime, isplatformCoin, timeIsEnd } from "@/utils";
+import { formatAmount, getTime, isplatformCoin, timeDiff, timeIsEnd } from "@/utils";
 
 import Unstake from "./components/Unstake";
 
@@ -302,7 +302,7 @@ function Mobile() {
                 End Time:<span>{getTime(details.endtime)}</span>
               </div>
               <div className={styles.left_item}>
-                Days Left: <span>120 days</span>
+                Days Left: <span>{timeDiff(details.endtime)} days</span>
               </div>
             </div>
             <div className={styles.right}>

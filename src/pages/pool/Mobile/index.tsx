@@ -23,7 +23,13 @@ import {
   readyContractAddress,
 } from "@/components/EthersContainer/address";
 import { poolAbi, readyAbi, tokenAbi } from "@/components/EthersContainer/abj";
-import { formatAmount, getTime, isplatformCoin, timeIsEnd } from "@/utils";
+import {
+  formatAmount,
+  getTime,
+  isplatformCoin,
+  timeDiff,
+  timeIsEnd,
+} from "@/utils";
 import Unstake from "./components/Unstake";
 
 const tabData = [
@@ -89,7 +95,7 @@ function Mobile() {
     let newList = getPoolList.map(async (item: any, index: number) => {
       let userInfo = await contract.users(index, address);
       let pendingInfo = await contract.pending(index, address);
-      let apyData = await readyContract.getTVLandAPY1(index);
+      let apyData = await readyContract.getTVLandAPY2(index);
       const { APY, TVL } = apyData;
       let decimals = 18;
       let stakeStatue = "0";
@@ -240,10 +246,10 @@ function Mobile() {
               alt=""
             />
           </div>
-          <div className={styles.top_r}>
+          {/* <div className={styles.top_r}>
             <div className={styles.top_r_text}>APY</div>
             <div>{formatAmount(details.apy)}%</div>
-          </div>
+          </div> */}
         </div>
       ),
       children: (
@@ -258,8 +264,15 @@ function Mobile() {
                 </span>
               </div>
               <div className={styles.num_item}>
+                APY
+                <span>{formatAmount(details.apy)}%</span>
+              </div>
+              <div className={styles.num_item}>
                 TVL: <span>{formatAmount(details.tvl)}USDT</span>
               </div>
+              {/* <div className={styles.num_item}>
+                TVL: <span>{formatAmount(details.tvl)}USDT</span>
+              </div> */}
             </div>
           )}
 
@@ -313,7 +326,7 @@ function Mobile() {
                 End Time:<span>{getTime(details.endtime)}</span>
               </div>
               <div className={styles.left_item}>
-                Days Left: <span>120 days</span>
+                Days Left: <span>{timeDiff(details.endtime)} days</span>
               </div>
             </div>
             <div className={styles.right}>
@@ -322,9 +335,6 @@ function Mobile() {
               </div>
               <div className={styles.share_wrap}>
                 <p>Farm Contract</p> <img src={share} alt="" />
-              </div>
-              <div className={styles.share_wrap}>
-                <p>Add to Wallet</p> <img src={metamask} alt="" />
               </div>
             </div>
           </div>
@@ -381,18 +391,35 @@ function Mobile() {
               />
             </div>
             {hasListId.some((i) => i == index) && (
-              <div className={styles.down_bottom}>
-                <div className={styles.num_item}>
-                  My Stake:{" "}
-                  <span>
-                    {formatAmount(item.amount)}
-                    {item.name[0]}
-                  </span>
+              <>
+                <div className={styles.down_bottom}>
+                  <div className={styles.num_item}>
+                    <p>My Stake:</p>
+                    <span>
+                      {formatAmount(item.amount)}
+                      {item.name[0]}
+                    </span>
+                  </div>
+                  <div className={styles.num_item}>
+                    APY: <span>{formatAmount(item.apy)}%</span>
+                  </div>
+                  <div className={styles.num_item}>
+                    TVL: <span>{formatAmount(item.tvl)}USDT</span>
+                  </div>
                 </div>
-                <div className={styles.num_item}>
-                  TVL: <span>{formatAmount(item.tvl)}USDT</span>
-                </div>
-              </div>
+                {/* <div className={styles.down_bottom}>
+                  <div className={styles.num_item}>
+                    My Stake:{" "}
+                    <span>
+                      {formatAmount(item.amount)}
+                      {item.name[0]}
+                    </span>
+                  </div>
+                  <div className={styles.num_item}>
+                    TVL: <span>{formatAmount(item.tvl)}USDT</span>
+                  </div>
+                </div> */}
+              </>
             )}
           </div>
         ))}

@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import { history } from "umi";
 import styles from "./index.less";
 import cx from "classnames";
@@ -12,6 +12,16 @@ const tabData = [
 ];
 function Mobile() {
   const [current, setCurrent] = useState<number>(1);
+  const onChangeTab = useCallback((val: number) => {
+    setCurrent(val);
+  }, []);
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const id = params.get("id");
+    if (id) {
+      setCurrent(Number(id));
+    }
+  }, []);
   return (
     <div className={styles.wrap}>
       <div className={styles.tab_wrap}>
@@ -27,7 +37,7 @@ function Mobile() {
       </div>
       {current == 1 && <Swap></Swap>}
       {current == 2 && <Liquidity />}
-      {current == 3 && <MyLps />}
+      {current == 3 && <MyLps onchangTab={(val: number) => onChangeTab(val)} />}
     </div>
   );
 }

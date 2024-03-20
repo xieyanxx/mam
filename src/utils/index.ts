@@ -100,6 +100,13 @@ export function formatAmount1(num: string, sub?: number) {
 export function getTime(time: string | number) {
   return dayjs(Number(time) * 1000).format("MMM DD,YYYY,HH:mm A");
 }
+//计算两个时间相差多少天
+export function timeDiff(time: any) {
+  const date1 = dayjs(new Date());
+  const date2 = dayjs(time * 1000);
+  return date2.diff(date1, "day");
+}
+
 // 判断是否结束
 export function timeIsEnd(time: string | number) {
   return new Date().getTime() > Number(time) * 1000;

@@ -11,6 +11,7 @@ import {
 } from "@/components/EthersContainer/address";
 import { poolAbi } from "@/components/EthersContainer/abj";
 import { formatAmount1 } from "@/utils";
+import { history } from "umi";
 
 function Stake({
   handleCancel,
@@ -129,7 +130,10 @@ function Stake({
               >
                 Confirm
               </Button>
-              <div className={cx(styles.btn, styles.sei_btn)}>
+              <div
+                className={cx(styles.btn, styles.sei_btn)}
+                onClick={() => history.push("/Swap?id=2")}
+              >
                 Add Liquidity
               </div>
             </div>

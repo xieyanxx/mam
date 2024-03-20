@@ -17,7 +17,9 @@ function Mobile() {
         </div>
         <img src={sei} alt="" />
       </div>
-      <div className={styles.btn}>Trade Now</div>
+      <div className={styles.btn} onClick={() => history.push("/Swap")}>
+        Trade Now
+      </div>
       <div className={styles.item_wrap}>
         <div className={styles.item}>
           <img src={block1} alt="" />

@@ -145,18 +145,22 @@
       .details_wrap {
         .text_num_wrap {
           display: flex;
-          align-items: center;
-          justify-content: space-between;
-          height: 44px;
+          flex-direction: column;
+          // align-items: center;
+          // justify-content: space-between;
+          // height: 44px;
           background: #3e1d70;
-          padding: 0 28px;
+          padding: 5px 28px 0;
           .num_item {
+            flex: 1;
             display: flex;
             align-items: center;
+            justify-content: space-between;
             font-family: PublicSansRoman;
             font-weight: 900;
             font-size: 15px;
             color: #ffffff;
+            margin-bottom: 5px;
             & > span {
               font-family: PublicSansRoman;
               font-weight: 400;
@@ -170,9 +174,9 @@
           display: flex;
           align-items: center;
           padding: 6px 28px;
-          height: 44px;
+          height: 50px;
           background: #ffffff;
-          justify-content: space-around;
+          justify-content: space-between;
           .claim_l {
             font-family: PublicSansRoman;
             font-weight: 400;
@@ -303,20 +307,23 @@
         }
       }
       .down_bottom {
-        height: 44px;
+        // height: 44px;
         background: #3e1d70;
         border-radius: 0 0 25px 25px;
-        padding: 0 24px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        padding: 10px 24px;
+        // display: flex;
+        // align-items: center;
+        // justify-content: space-between;
         .num_item {
+          width: 100%;
           display: flex;
           align-items: center;
+          justify-content: space-between;
           font-family: PublicSansRoman;
           font-weight: 900;
           font-size: 15px;
           color: #ffffff;
+          margin-bottom: 10px;
           & > span {
             font-family: PublicSansRoman;
             font-weight: 400;

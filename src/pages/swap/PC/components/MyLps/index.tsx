@@ -20,8 +20,9 @@ import { formatAmount1, isplatformCoin } from "@/utils";
 import RemoveLiquidity from "../RemoveLiquidity";
 import { Button, message } from "antd";
 import SettingModal from "@/components/Web/SettingModal";
+import { history } from "umi";
 
-function MyLps() {
+function MyLps({ onchangTab }: { onchangTab: (val: number) => void }) {
   const [walletType] = useState<string>(
     sessionStorage.getItem("walletType") || ""
   );
@@ -235,7 +236,9 @@ function MyLps() {
           Don’t see a pool you joined?<span>Import it.</span>
         </div>
       </div>
-      <div className={styles.refresh_wrap}>Add Liquidity</div>
+      <div className={styles.refresh_wrap} onClick={() => onchangTab(2)}>
+        Add Liquidity
+      </div>
       <RemoveLiquidity
         handleCancel={handleCancel}
         isModalOpen={removeModalOpen}
