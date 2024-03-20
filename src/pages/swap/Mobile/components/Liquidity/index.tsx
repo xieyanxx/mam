@@ -55,7 +55,7 @@ function Liquidity() {
   const [isEnterForm, setIsEnterForm] = useState(false); //是否是先从form输入值
   const [isEffective, setEffective] = useState(true); //判断地址是否有效
   const [isApptove, setIsApptove] = useState(false); //判断token1是否授权
-  const [isApptove1, setIsApptove1] = useState(true); //判断token2是否授权
+  const [isApptove1, setIsApptove1] = useState(false); //判断token2是否授权
   const [status, setStatus] = useState(1);
   const [formData, setFormData] = useState({
     ...ChainToken[3],
@@ -215,60 +215,63 @@ function Liquidity() {
   };
 
   //输入获取值
-  const getEnterNum = useCallback(debounce(async (val: string, type: number) => {
-    const contract = await getContract(
-      routeContractAddress,
-      routeAbi,
-      walletType
-    );
-    let formAddress = isplatformCoin(formData.address)
-      ? formData.address1
-      : formData.address; //需要判断是否是平台币
-    let toAddress = isplatformCoin(toData.address)
-      ? toData.address1
-      : toData.address;
-    //无效数据需要自己输入值
-    if (!isEffective) {
-      if (Number(val)) {
-        getApproveStatus();
-      }
-      return;
-    }
-    if (type == 1) {
-      if (Number(val) == 0) {
+  const getEnterNum = useCallback(
+    debounce(async (val: string, type: number) => {
+      const contract = await getContract(
+        routeContractAddress,
+        routeAbi,
+        walletType
+      );
+      let formAddress = isplatformCoin(formData.address)
+        ? formData.address1
+        : formData.address; //需要判断是否是平台币
+      let toAddress = isplatformCoin(toData.address)
+        ? toData.address1
+        : toData.address;
+      //无效数据需要自己输入值
+      if (!isEffective) {
+        if (Number(val)) {
+          getApproveStatus();
+        }
         return;
       }
-      let amount = toWei(val, formData.decimal);
-      const getToNum = await contract.getAmountsOut(amount, [
-        formAddress,
-        toAddress,
-      ]);
-      if (getToNum) {
-        setToData({
-          ...toData,
-          amount: formWei(getToNum[1], toData.decimal),
-        });
-        getApproveStatus();
+      if (type == 1) {
+        if (Number(val) == 0) {
+          return;
+        }
+        let amount = toWei(val, formData.decimal);
+        const getToNum = await contract.getAmountsOut(amount, [
+          formAddress,
+          toAddress,
+        ]);
+        if (getToNum) {
+          setToData({
+            ...toData,
+            amount: formWei(getToNum[1], toData.decimal),
+          });
+          getApproveStatus();
+        }
+      } else {
+        if (Number(val) == 0) {
+          // message.error("Please enter a number greater than zero");
+          return;
+        }
+        let amount = toWei(val, toData.decimal);
+        const getFormNum = await contract.getAmountsIn(amount, [
+          toAddress,
+          formAddress,
+        ]);
+        if (getFormNum) {
+          setFormData({
+            ...formData,
+            amount: formWei(getFormNum[0], formData.decimal),
+          });
+          getApproveStatus();
+        }
       }
-    } else {
-      if (Number(val) == 0) {
-        // message.error("Please enter a number greater than zero");
-        return;
-      }
-      let amount = toWei(val, toData.decimal);
-      const getFormNum = await contract.getAmountsIn(amount, [
-        toAddress,
-        formAddress,
-      ]);
-      if (getFormNum) {
-        setFormData({
-          ...formData,
-          amount: formWei(getFormNum[0], formData.decimal),
-        });
-        getApproveStatus();
-      }
-    }
-  }, 300),[]);
+    }, 300),
+    []
+  );
 
   const getTransactionData = async () => {
     const contract = await getContract(

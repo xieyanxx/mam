@@ -124,7 +124,7 @@ function WalletModal({
             />
           </div>
           <div className={styles.common_wrap}>
-            {ChainToken.map((item) => (
+            {ChainToken.slice(0, 4).map((item) => (
               <div
                 className={styles.common_item}
                 key={item.address}

@@ -91,6 +91,7 @@ function PC() {
       walletType
     );
     let getPoolList = await contract.getpool();
+    console.log(getPoolList, "==>");
     let newList = getPoolList.map(async (item: any, index: number) => {
       let userInfo = await contract.users(index, address);
       let pendingInfo = await contract.pending(index, address);

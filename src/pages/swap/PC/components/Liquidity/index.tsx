@@ -56,7 +56,7 @@ function Liquidity() {
   const [isEnterForm, setIsEnterForm] = useState(false); //是否是先从form输入值
   const [isEffective, setEffective] = useState(true); //判断地址是否有效
   const [isApptove, setIsApptove] = useState(false); //判断token1是否授权
-  const [isApptove1, setIsApptove1] = useState(true); //判断token2是否授权
+  const [isApptove1, setIsApptove1] = useState(false); //判断token2是否授权
   const [status, setStatus] = useState(1);
   const [formData, setFormData] = useState({
     ...ChainToken[3],
@@ -174,6 +174,7 @@ function Liquidity() {
   const getApproveStatus = async () => {
     let isformApprove = false;
     let istoApprove = false;
+    console.log(formData, toData);
     if (!isplatformCoin(formData.address)) {
       let value = await getAllowance(
         formData.address,
@@ -206,12 +207,62 @@ function Liquidity() {
     } else {
       istoApprove = true;
     }
+    console.log(isformApprove, istoApprove, "===>");
     if (isformApprove && istoApprove) {
       setStatus(3);
       setIsApptove(true);
       setIsApptove1(true);
     } else {
       setStatus(2);
+    }
+  };
+  //授权
+  const handleApprove = async () => {
+    setLoading(true);
+    console.log(1111, isApptove, isApptove1);
+    let formApprove = isApptove;
+    let toApprove = isApptove1;
+    var amount =
+      "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
+    let status = null;
+    let toStatus = null;
+    if (!formApprove) {
+      const contract = await getContract(
+        formData.address,
+        tokenAbi,
+        walletType
+      );
+      var transaction = await contract
+        .approve(routeContractAddress, amount)
+        .catch((err: any) => {
+          message.error("fail");
+          setLoading(false);
+        });
+
+      status = await transaction?.wait();
+      console.log(2222);
+    } else {
+      status = true;
+    }
+    console.log(3333);
+    if (!toApprove) {
+      console.log(4444);
+      const contract = await getContract(toData.address, tokenAbi, walletType);
+      var transaction1 = await contract
+        .approve(routeContractAddress, amount)
+        .catch((err: any) => {
+          message.error("fail");
+          setLoading(false);
+        });
+      toStatus = await transaction1?.wait();
+      console.log(5555);
+    } else {
+      toStatus = true;
+    }
+    if (status && toStatus) {
+      setStatus(3);
+      message.success("success");
+      setLoading(false);
     }
   };
 
@@ -296,51 +347,6 @@ function Liquidity() {
     } else {
       setEffective(true);
       setStatus(1);
-    }
-  };
-
-  //授权
-  const handleApprove = async () => {
-    setLoading(true);
-    let formApprove = isApptove;
-    let toApprove = isApptove1;
-    var amount =
-      "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
-    let status = null;
-    let toStatus = null;
-    if (!formApprove) {
-      const contract = await getContract(
-        formData.address,
-        tokenAbi,
-        walletType
-      );
-      var transaction = await contract
-        .approve(routeContractAddress, amount)
-        .catch((err: any) => {
-          message.error("fail");
-          setLoading(false);
-        });
-
-      status = await transaction.wait();
-    } else {
-      status = true;
-    }
-    if (!toApprove) {
-      const contract = await getContract(toData.address, tokenAbi, walletType);
-      var transaction1 = await contract
-        .approve(routeContractAddress, amount)
-        .catch((err: any) => {
-          message.error("fail");
-          setLoading(false);
-        });
-      toStatus = await transaction1.wait();
-    } else {
-      toStatus = true;
-    }
-    if (status && toStatus) {
-      setStatus(3);
-      message.success("success");
-      setLoading(false);
     }
   };
 
