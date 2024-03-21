@@ -14,6 +14,7 @@ import RemoveLiquidity from "../RemoveLiquidity";
 import {
   ChainToken,
   factoryContractAddress,
+  readyContractAddress,
   routeContractAddress,
 } from "@/components/EthersContainer/address";
 import SettingModal from "@/components/Web/SettingModal";
@@ -30,6 +31,7 @@ import {
 import { formatAmount1, isplatformCoin } from "@/utils";
 import {
   factoryAbi,
+  readyAbi,
   routeAbi,
   tokenAbi,
 } from "@/components/EthersContainer/abj";
@@ -270,8 +272,8 @@ function Liquidity() {
   const getEnterNum = useCallback(
     debounce(async (val: string, type: number) => {
       const contract = await getContract(
-        routeContractAddress,
-        routeAbi,
+        readyContractAddress,
+        readyAbi,
         walletType
       );
       let formAddress = isplatformCoin(formData.address)
@@ -301,7 +303,7 @@ function Liquidity() {
         if (getToNum) {
           setToData({
             ...toData,
-            amount: formWei(getToNum[1], toData.decimal),
+            amount: formWei(getToNum, toData.decimal),
           });
           getApproveStatus();
         }
@@ -320,7 +322,7 @@ function Liquidity() {
         if (getFormNum) {
           setFormData({
             ...formData,
-            amount: formWei(getFormNum[0], formData.decimal),
+            amount: formWei(getFormNum, formData.decimal),
           });
           getApproveStatus();
         }
