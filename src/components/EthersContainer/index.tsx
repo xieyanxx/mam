@@ -87,7 +87,7 @@ const EthersContainer = React.memo((props: any) => {
         setAddress(accounts[0] ?? "");
       };
       // 钱包切换链
-      const onChainChanged = (chainId: string) => {
+      const onChainChanged = async (chainId: string) => {
         console.log("钱包切换链", chainId, Number.parseInt(chainId, 16));
         setChainId(Number.parseInt(chainId, 16));
         console.log(chainId, "===>", chainId);
@@ -95,6 +95,12 @@ const EthersContainer = React.memo((props: any) => {
           "chainId",
           Number.parseInt(chainId, 16).toString()
         );
+        if (chainId !== "0xae3f3") {
+           await window.ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: "0xae3f3" }],
+          });
+        }
       };
       // 钱包推送消息
       const onMessage = (...params: any[]) => {
@@ -237,6 +243,8 @@ export const getContract = async (
   const signer = _ethers.getSigner();
   return new ethers.Contract(address, abi, signer);
 };
+
+// export
 
 //获取代币未转换的余额
 export const balanceOf = async (

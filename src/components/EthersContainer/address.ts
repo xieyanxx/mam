@@ -12,7 +12,7 @@ export const routeContractAddress =
 export const factoryContractAddress =
   "0x74dB217b86341b8515b842775930f2b7D7Ac1b6A";
 export const readyContractAddress =
-  "0x4AF89146f057Bc09bF2829366353dcc75751F4c2";
+  "0xd66F738Fb55c88A6992D4E477e033bC51650a779";
 export const ChainToken = [
   {
     id: 1,

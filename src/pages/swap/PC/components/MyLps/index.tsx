@@ -97,60 +97,73 @@ function MyLps({ onchangTab }: { onchangTab: (val: number) => void }) {
     }
   };
 
-  const removeSubmit = async (val: any) => {
-    setLoading(true);
-    const contract = await getContract(
-      routeContractAddress,
-      routeAbi,
-      walletType
-    );
-    if (!isplatformCoin(val.token1) && !isplatformCoin(val.token2)) {
-      let tokenA = val.token1;
-      let tokenB = val.token2;
-      let uit = toWei(val.amount, 18);
+  // const removeSubmit = async (val: any) => {
+  //   setLoading(true);
+  //   const contract = await getContract(
+  //     routeContractAddress,
+  //     routeAbi,
+  //     walletType
+  //   );
+  //   if (!isplatformCoin(val.token1) && !isplatformCoin(val.token2)) {
+  //     let tokenA = val.token1;
+  //     let tokenB = val.token2;
+  //     let uit = toWei(val.amount, 18);
 
-      let time = (
-        Math.floor(Date.now() / 1000) +
-        settingData.time * 60
-      ).toString();
-      let status1 = await contract.removeLiquidity(
-        tokenA,
-        tokenB,
-        uit,
-        0,
-        0,
-        address,
-        time
-      );
-      let transaction = await status1.wait();
-      if (transaction) setLoading(false);
-    } else {
-      let tokenA = "";
-      if (isplatformCoin(val.token1)) {
-        tokenA = val.token2;
-      } else {
-        tokenA = val.token1;
-      }
-      let uit = toWei(val.amount, 18);
-      let time = (
-        Math.floor(Date.now() / 1000) +
-        settingData.time * 60
-      ).toString();
-      let status1 = await contract.removeLiquidityETH(
-        tokenA,
-        uit,
-        0,
-        0,
-        address,
-        time
-      );
-      let transaction = await status1.wait();
-      if (transaction) {
-        setLoading(false);
-        getLpsList();
-      }
-    }
+  //     let time = (
+  //       Math.floor(Date.now() / 1000) +
+  //       settingData.time * 60
+  //     ).toString();
+  //     let status1 = await contract.removeLiquidity(
+  //       tokenA,
+  //       tokenB,
+  //       uit,
+  //       0,
+  //       0,
+  //       address,
+  //       time
+  //     );
+  //     let transaction = await status1.wait();
+  //     if (transaction) setLoading(false);
+  //   } else {
+  //     let tokenA = "";
+  //     if (isplatformCoin(val.token1)) {
+  //       tokenA = val.token2;
+  //     } else {
+  //       tokenA = val.token1;
+  //     }
+  //     let uit = toWei(val.amount, 18);
+  //     let time = (
+  //       Math.floor(Date.now() / 1000) +
+  //       settingData.time * 60
+  //     ).toString();
+  //     let status1 = await contract.removeLiquidityETH(
+  //       tokenA,
+  //       uit,
+  //       0,
+  //       0,
+  //       address,
+  //       time
+  //     );
+  //     let transaction = await status1.wait();
+  //     if (transaction) {
+  //       setLoading(false);
+  //       getLpsList();
+  //     }
+  //   }
+  // };
+  const removeSubmit = async (val: any) => {
+    setRemoveData(val);
+    handleRemoveModalOpen();
   };
+  //remove弹窗
+  const handleRemoveModalOpen = () => {
+    setRemoveModalOpen(true);
+  };
+  const handleRemoveModalClose = () => {
+    setRemoveModalOpen(false);
+    getLpsList();
+  };
+
   //setting弹窗
   const showModal = () => {
     setIsModalOpen(true);
@@ -240,9 +253,10 @@ function MyLps({ onchangTab }: { onchangTab: (val: number) => void }) {
         Add Liquidity
       </div>
       <RemoveLiquidity
-        handleCancel={handleCancel}
+        handleCancel={handleRemoveModalClose}
         isModalOpen={removeModalOpen}
         removeData={removeData}
+        settingData={settingData}
       ></RemoveLiquidity>
       <SettingModal
         settingData={settingData}
