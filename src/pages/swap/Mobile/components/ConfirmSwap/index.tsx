@@ -302,10 +302,10 @@ function AddLiquidity({
                 <p className={styles.name}>Price impact:</p>
                 <p>0.00 MAMBA</p>
               </div> */}
-              <div className={styles.price_item}>
+              {/* <div className={styles.price_item}>
                 <p className={styles.name}>Trading fee:</p>
                 <p>{formatAmount1(gas)} SEI</p>
-              </div>
+              </div> */}
             </div>
             <div className={styles.btn_wrap}>
               <Button loading={loading} onClick={submit} className={styles.btn}>

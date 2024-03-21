@@ -114,7 +114,7 @@ function Stake({
                 placeholder={"0.0"}
                 className={styles.input_inner}
               />
-              <div className={styles.num}>$8.67</div>
+              {/* <div className={styles.num}>$8.67</div> */}
             </div>
             <div className={styles.label_wrap}>
               {/* <div className={styles.item}>25%</div>

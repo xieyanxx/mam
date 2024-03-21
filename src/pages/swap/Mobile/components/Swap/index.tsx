@@ -201,6 +201,10 @@ function Swap() {
         : toData.address;
       if (type == 1) {
         if (Number(val) == 0) {
+          setToData({
+            ...toData,
+            amount: "",
+          });
           return;
         }
         let amount = toWei(val, formData.decimal);
@@ -218,6 +222,10 @@ function Swap() {
         }
       } else {
         if (Number(val) == 0) {
+          setFormData({
+            ...formData,
+            amount: "",
+          });
           return;
         }
         let amount = toWei(val, toData.decimal);
@@ -370,13 +378,23 @@ function Swap() {
               onChange={(e) => {
                 let value = e.target.value;
                 if (!value.match(/^\d+(\.\d{0,16})?$/)) {
-                  let newValue = value.slice(0, -1);
-                  setFormData({ ...formData, amount: newValue });
-                  getEnterNum(newValue, 1);
+                  value = value.slice(0, -1);
+                }
+                if (Number(value) > Number(formBalance)) {
+                  setFormData({ ...formData, amount: formBalance });
+                  getEnterNum(value, 1);
                 } else {
                   setFormData({ ...formData, amount: value });
                   getEnterNum(value, 1);
                 }
+                // if (!value.match(/^\d+(\.\d{0,16})?$/)) {
+                //    value = value.slice(0, -1);
+                //   setFormData({ ...formData, amount: newValue });
+                //   getEnterNum(newValue, 1);
+                // } else {
+                //   setFormData({ ...formData, amount: value });
+                //   getEnterNum(value, 1);
+                // }
               }}
               value={formData.amount}
               type="text"
@@ -424,13 +442,23 @@ function Swap() {
               onChange={(e) => {
                 let value = e.target.value;
                 if (!value.match(/^\d+(\.\d{0,16})?$/)) {
-                  let newValue = value.slice(0, -1);
-                  setToData({ ...toData, amount: newValue });
-                  getEnterNum(newValue, 2);
+                  value = value.slice(0, -1);
+                }
+                if (Number(value) > Number(toBalance)) {
+                  setToData({ ...toData, amount: toBalance });
+                  getEnterNum(value, 2);
                 } else {
                   setToData({ ...toData, amount: value });
                   getEnterNum(value, 2);
                 }
+                // if (!value.match(/^\d+(\.\d{0,16})?$/)) {
+                //   let newValue = value.slice(0, -1);
+                //   setToData({ ...toData, amount: newValue });
+                //   getEnterNum(newValue, 2);
+                // } else {
+                //   setToData({ ...toData, amount: value });
+                //   getEnterNum(value, 2);
+                // }
               }}
               value={toData.amount}
               type="text"

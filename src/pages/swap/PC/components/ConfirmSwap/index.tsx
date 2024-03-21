@@ -299,7 +299,7 @@ function AddLiquidity({
                   {toData.name}
                 </p>
               </div>
-              <div className={styles.price_item}>
+              {/* <div className={styles.price_item}>
                 <p className={styles.name}>Price impact:</p>
                 <p>0.00 MAMBA</p>
               </div>
@@ -308,7 +308,7 @@ function AddLiquidity({
                 <p>
                   {formatAmount1(gas)} {toData.name}
                 </p>
-              </div>
+              </div> */}
             </div>
             <div className={styles.btn_wrap}>
               <Button loading={loading} className={styles.btn} onClick={submit}>

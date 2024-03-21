@@ -201,13 +201,18 @@ function Swap() {
       : toData.address;
     if (type == 1) {
       if (Number(val) == 0) {
+        setToData({
+          ...toData,
+          amount: "",
+        });
         return;
       }
       let amount = toWei(val, formData.decimal);
       const getToNum = await contract
         .getAmountsOut(amount, [formAddress, toAddress])
         .catch((e: any) => {
-          message.error(e.message);
+          console.log(e);
+          // message.error(e.message);
         });
       if (getToNum) {
         setToData({
@@ -218,13 +223,18 @@ function Swap() {
       }
     } else {
       if (Number(val) == 0) {
+        setFormData({
+          ...formData,
+          amount: "",
+        });
         return;
       }
       let amount = toWei(val, toData.decimal);
       const getFormNum = await contract
         .getAmountsIn(amount, [toAddress, formAddress])
         .catch((err: any) => {
-          message.error(err.message);
+          console.log(err);
+          // message.error('')
         });
       if (getFormNum) {
         setFormData({
@@ -239,7 +249,6 @@ function Swap() {
   //切换按钮
   const changeForm = useCallback(
     throttle(async (formValue: any, toValue: any) => {
-      console.log(formValue, toValue, "===<>");
       const contract = await getContract(
         routeContractAddress,
         routeAbi,
@@ -370,15 +379,24 @@ function Swap() {
               <Input
                 onChange={(e) => {
                   let value = e.target.value;
-
                   if (!value.match(/^\d+(\.\d{0,16})?$/)) {
-                    let newValue = value.slice(0, -1);
-                    setFormData({ ...formData, amount: newValue });
-                    getEnterNum(newValue, 1);
+                    value = value.slice(0, -1);
+                  }
+                  if (Number(value) > Number(formBalance)) {
+                    setFormData({ ...formData, amount: formBalance });
+                    getEnterNum(value, 1);
                   } else {
                     setFormData({ ...formData, amount: value });
                     getEnterNum(value, 1);
                   }
+                  // if (!value.match(/^\d+(\.\d{0,16})?$/)) {
+                  //   let newValue = value.slice(0, -1);
+                  //   setFormData({ ...formData, amount: newValue });
+                  //   getEnterNum(newValue, 1);
+                  // } else {
+                  //   setFormData({ ...formData, amount: value });
+                  //   getEnterNum(value, 1);
+                  // }
                 }}
                 // onBlur={getEnterNum}
                 type="text"
@@ -432,13 +450,23 @@ function Swap() {
                 onChange={(e) => {
                   let value = e.target.value;
                   if (!value.match(/^\d+(\.\d{0,16})?$/)) {
-                    let newValue = value.slice(0, -1);
-                    setToData({ ...toData, amount: newValue });
-                    getEnterNum(newValue, 2);
+                    value = value.slice(0, -1);
+                  }
+                  if (Number(value) > Number(formBalance)) {
+                    setToData({ ...toData, amount: toBalance });
+                    getEnterNum(value, 2);
                   } else {
                     setToData({ ...toData, amount: value });
                     getEnterNum(value, 2);
                   }
+                  // if (!value.match(/^\d+(\.\d{0,16})?$/)) {
+                  //   let newValue = value.slice(0, -1);
+                  //   setToData({ ...toData, amount: newValue });
+                  //   getEnterNum(newValue, 2);
+                  // } else {
+                  //   setToData({ ...toData, amount: value });
+                  //   getEnterNum(value, 2);
+                  // }
                 }}
                 // onBlur={getEnterNum}
                 type="text"
