@@ -1,16 +1,11 @@
 import React, { memo, useCallback, useEffect, useState } from "react";
 import styles from "./index.less";
-import cx from "classnames";
 import setting from "@/assets/logo/setting.png";
 import time from "@/assets/logo/time.png";
-import sei1 from "@/assets/logo/sei1.png";
 import down from "@/assets/logo/down.png";
-import usdt from "@/assets/logo/usdt.png";
 import add from "@/assets/logo/add.png";
 import { Button, Input, message } from "antd";
 import AddLiquidity from "../AddLiquidity";
-import ConfirmSwap from "../ConfirmSwap";
-import RemoveLiquidity from "../RemoveLiquidity";
 import {
   ChainToken,
   factoryContractAddress,
@@ -240,10 +235,12 @@ function Liquidity() {
           return;
         }
         let amount = toWei(val, formData.decimal);
-        const getToNum = await contract.getAmountsOut(amount, [
+        const getToNum = await contract.quote(
+          amount,
+          0,
           formAddress,
-          toAddress,
-        ]);
+          toAddress
+        );
         if (getToNum) {
           setToData({
             ...toData,
@@ -257,10 +254,12 @@ function Liquidity() {
           return;
         }
         let amount = toWei(val, toData.decimal);
-        const getFormNum = await contract.getAmountsIn(amount, [
-          toAddress,
+        const getFormNum = await contract.quote(
+          0,
+          amount,
           formAddress,
-        ]);
+          toAddress
+        );
         if (getFormNum) {
           setFormData({
             ...formData,

@@ -85,8 +85,10 @@ function Unstake({
                 onChange={(e) => {
                   let value = e.target.value;
                   if (!value.match(/^\d+(\.\d{0,16})?$/)) {
-                    let newValue = value.slice(0, stakeAmount.length - 1);
-                    setStakeAmount(newValue);
+                    value = value.slice(0, stakeAmount.length - 1);
+                  }
+                  if (Number(value) > Number(poolInfo.balance)) {
+                    setStakeAmount(poolInfo.balance);
                   } else {
                     setStakeAmount(value);
                   }

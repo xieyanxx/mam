@@ -27,7 +27,6 @@ function Stake({
   const [address] = useState<string>(sessionStorage.getItem("address") || "");
   const [loading, setLoading] = useState<boolean>(false);
   const deposit = useCallback(async () => {
- 
     setLoading(true);
     const contract = await getContract(
       farmContractAddress,
@@ -60,9 +59,9 @@ function Stake({
       message.success("success");
       setLoading(false);
       handleCancel();
-      setStakeAmount('');
+      setStakeAmount("");
     }
-  }, [stakeAmount,poolInfo]);
+  }, [stakeAmount, poolInfo]);
 
   return (
     <div className={styles.wrap}>
@@ -102,8 +101,10 @@ function Stake({
                 onChange={(e) => {
                   let value = e.target.value;
                   if (!value.match(/^\d+(\.\d{0,16})?$/)) {
-                    let newValue = value.slice(0, stakeAmount.length - 1);
-                    setStakeAmount(newValue);
+                    value = value.slice(0, stakeAmount.length - 1);
+                  }
+                  if (Number(value) > Number(poolInfo.balance)) {
+                    setStakeAmount(poolInfo.balance);
                   } else {
                     setStakeAmount(value);
                   }

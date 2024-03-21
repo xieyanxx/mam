@@ -2770,6 +2770,54 @@ export const readyAbi = [
   {
     inputs: [
       {
+        internalType: "uint256",
+        name: "_pid",
+        type: "uint256",
+      },
+    ],
+    name: "getTVLandAPY1",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "TVL",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "APY",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_pid",
+        type: "uint256",
+      },
+    ],
+    name: "getTVLandAPY2",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "TVL",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "APY",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "address",
         name: "_account",
         type: "address",
@@ -2860,54 +2908,6 @@ export const readyAbi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_pid",
-        type: "uint256",
-      },
-    ],
-    name: "getTVLandAPY1",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "TVL",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "APY",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_pid",
-        type: "uint256",
-      },
-    ],
-    name: "getTVLandAPY2",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "TVL",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "APY",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [],
     name: "pool",
     outputs: [
@@ -2915,6 +2915,40 @@ export const readyAbi = [
         internalType: "contract Pool",
         name: "",
         type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "amountA",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "amountB",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "tokenA",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "tokenB",
+        type: "address",
+      },
+    ],
+    name: "quote",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
