@@ -81,34 +81,41 @@ function AddLiquidity({
     }
     //平台代币与普通代币的兑换
     if (type == 2) {
-      let amountOutMin = (
-        Number(toData.amount) -
-        Number(toData.amount) * (settingData.num / 100)
-      ).toString();
+      let amountOutMin = toWei(
+        (
+          Number(toData.amount) -
+          Number(toData.amount) * (settingData.num / 100)
+        ).toString(),
+        toData.decimal
+      );
       let dataPath = [formData.address1, toData.address];
       let time = (
         Math.floor(Date.now() / 1000) +
         settingData.time * 60
       ).toString();
       let status = await contract
-        .swapExactTokensForTokens(amountOutMin, dataPath, address, time, {
+        .swapExactETHForTokens(amountOutMin, dataPath, address, time, {
           value: toWei(formData.amount, formData.decimal),
         })
         .catch(() => {
           setLoading(false);
           message.error("fail");
         });
-      let transaction = await status.wait();
+      console.log(status, "===>");
+      let transaction = await status?.wait();
       if (transaction) setLoading(false);
       handleCancel();
     }
     // 普通币与平台币之间的兑换
     if (type == 3) {
       let amountIn = toWei(formData.amount, formData.decimal);
-      let amountOutMin = (
-        Number(toData.amount) -
-        Number(toData.amount) * (settingData.num / 100)
-      ).toString();
+      let amountOutMin = toWei(
+        (
+          Number(toData.amount) -
+          Number(toData.amount) * (settingData.num / 100)
+        ).toString(),
+        toData.decimal
+      );
       let dataPath = [formData.address, toData.address1];
       let time = (
         Math.floor(Date.now() / 1000) +
@@ -128,10 +135,13 @@ function AddLiquidity({
     // 普通代币之间的兑换 如果滑点大于百分之1
     if (type == 4) {
       let amountIn = toWei(formData.amount, formData.decimal);
-      let amountOutMin = (
-        Number(toData.amount) -
-        Number(toData.amount) * (settingData.num / 100)
-      ).toString();
+      let amountOutMin = toWei(
+        (
+          Number(toData.amount) -
+          Number(toData.amount) * (settingData.num / 100)
+        ).toString(),
+        toData.decimal
+      );
       let dataPath = [formData.address, toData.address1];
       let time = (
         Math.floor(Date.now() / 1000) +
@@ -155,10 +165,13 @@ function AddLiquidity({
     }
     //平台代币与普通代币的兑换 如果滑点大于百分之1
     if (type == 5) {
-      let amountOutMin = (
-        Number(toData.amount) -
-        Number(toData.amount) * (settingData.num / 100)
-      ).toString();
+      let amountOutMin = toWei(
+        (
+          Number(toData.amount) -
+          Number(toData.amount) * (settingData.num / 100)
+        ).toString(),
+        toData.decimal
+      );
       let dataPath = [formData.address1, toData.address];
       let time = (
         Math.floor(Date.now() / 1000) +
@@ -185,10 +198,13 @@ function AddLiquidity({
     // 普通币与平台币之间的兑换如果滑点大于百分之1
     if (type == 6) {
       let amountIn = toWei(formData.amount, formData.decimal);
-      let amountOutMin = (
-        Number(toData.amount) -
-        Number(toData.amount) * (settingData.num / 100)
-      ).toString();
+      let amountOutMin = toWei(
+        (
+          Number(toData.amount) -
+          Number(toData.amount) * (settingData.num / 100)
+        ).toString(),
+        toData.decimal
+      );
       let dataPath = [formData.address, toData.address1];
       let time = (
         Math.floor(Date.now() / 1000) +
