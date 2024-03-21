@@ -47,16 +47,16 @@ function WalletModal({ isbig }: { isbig?: boolean }) {
       setConnecting(false);
     }
   };
-  // useEffect(() => {
-  //   if (ethersData?.address) {
-  //     if (ethersData?.chainId !== 713715 && ethersData?.chainId !== null) {
-  //       message.warning(
-  //         "For trade items,please change to the Ethereum chain in your wallet"
-  //       );
-  //       return;
-  //     }
-  //   }
-  // }, [ethersData?.chainId]);
+  useEffect(() => {
+    if (ethersData?.address) {
+      if (ethersData?.chainId !== 713715 && ethersData?.chainId !== null) {
+        window.ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: "0xae3f3" }],
+        });
+      }
+    }
+  }, [ethersData?.chainId]);
   return (
     <div className={styles.wrap}>
       {ethersData?.address ? (
