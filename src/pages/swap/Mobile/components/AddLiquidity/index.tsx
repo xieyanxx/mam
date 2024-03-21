@@ -50,13 +50,7 @@ function AddLiquidity({
       let tokenA = formData.address;
       let tokenB = toData.address;
       let amountADesired = toWei(formData.amount, formData.decimal);
-      let amountOutMin = toWei(
-        (
-          Number(toData.amount) -
-          Number(toData.amount) * (settingData.num / 100)
-        ).toString(),
-        toData.decimal
-      );
+      let amountOutMin = toWei(toData.amount, toData.decimal);
       let time = (
         Math.floor(Date.now() / 1000) +
         settingData.time * 60

@@ -28,6 +28,7 @@ function Stake({
     sessionStorage.getItem("walletType") || ""
   );
   const deposit = useCallback(async () => {
+
     setLoading(true);
     const contract = await getContract(
       poolContractAddress,
@@ -40,13 +41,14 @@ function Stake({
         message.error("fail");
         setLoading(false);
       });
-    let status = await transaction.wait();
+    let status = await transaction?.wait();
     if (status) {
       message.success("success");
       setLoading(false);
       handleCancel();
+      setStakeAmount('')
     }
-  }, [stakeAmount]);
+  }, [stakeAmount, poolInfo]);
   return (
     <div className={styles.wrap}>
       <Modal
@@ -130,7 +132,10 @@ function Stake({
               >
                 Confirm
               </Button>
-              <div className={cx(styles.btn, styles.sei_btn)}  onClick={() => history.push("/Swap?id=2")}>
+              <div
+                className={cx(styles.btn, styles.sei_btn)}
+                onClick={() => history.push("/Swap?id=2")}
+              >
                 Add Liquidity
               </div>
             </div>

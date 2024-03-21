@@ -44,8 +44,9 @@ function Unstake({
       message.success("success");
       setLoading(false);
       handleCancel();
+      setStakeAmount("");
     }
-  }, [stakeAmount]);
+  }, [stakeAmount, poolInfo]);
   return (
     <div className={styles.wrap}>
       <Modal

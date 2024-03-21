@@ -27,6 +27,7 @@ function Stake({
   );
   const [address] = useState<string>(sessionStorage.getItem("address") || "");
   const deposit = useCallback(async () => {
+   
     setLoading(true);
     const contract = await getContract(
       farmContractAddress,
@@ -59,8 +60,9 @@ function Stake({
       message.success("success");
       setLoading(false);
       handleCancel();
+      setStakeAmount('')
     }
-  }, [stakeAmount]);
+  }, [stakeAmount,poolInfo]);
 
   return (
     <div className={styles.wrap}>
