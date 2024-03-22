@@ -87,8 +87,8 @@ function Unstake({
                   if (!value.match(/^\d+(\.\d{0,16})?$/)) {
                     value = value.slice(0, stakeAmount.length - 1);
                   }
-                  if (Number(value) > Number(poolInfo.balance)) {
-                    setStakeAmount(poolInfo.balance);
+                  if (Number(value) > Number(poolInfo.amount)) {
+                    setStakeAmount(poolInfo.amount);
                   } else {
                     setStakeAmount(value);
                   }

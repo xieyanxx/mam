@@ -61,7 +61,14 @@ function Unstake({
         <div className={styles.content_warp}>
           <div className={styles.title_wrap}>
             <p>Stake LP in Pools</p>
-            <img src={close} alt="" onClick={handleCancel} />
+            <img
+              src={close}
+              alt=""
+              onClick={() => {
+                setStakeAmount("");
+                handleCancel();
+              }}
+            />
           </div>
           <div className={styles.content}>
             <div className={styles.title}>
@@ -101,8 +108,8 @@ function Unstake({
                   if (!value.match(/^\d+(\.\d{0,16})?$/)) {
                     value = value.slice(0, stakeAmount.length - 1);
                   }
-                  if (Number(value) > Number(poolInfo.balance)) {
-                    setStakeAmount(poolInfo.balance);
+                  if (Number(value) > Number(poolInfo.amount)) {
+                    setStakeAmount(poolInfo.amount);
                   } else {
                     setStakeAmount(value);
                   }

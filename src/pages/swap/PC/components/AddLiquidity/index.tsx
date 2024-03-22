@@ -3,7 +3,7 @@ import styles from "./index.less";
 import { Button, Input, Modal, Radio, message } from "antd";
 import close from "@/assets/logo/close.png";
 import { formatAmount1, isplatformCoin } from "@/utils";
-import { getContract, toWei } from "@/components/EthersContainer";
+import { formWei, getContract, toWei } from "@/components/EthersContainer";
 import {
   readyContractAddress,
   routeContractAddress,
@@ -49,11 +49,12 @@ function AddLiquidity({
       let tokenB = toData.address;
       let amountADesired = toWei(formData.amount, formData.decimal);
       let amountOutMin = toWei(toData.amount, toData.decimal);
+
       let time = (
         Math.floor(Date.now() / 1000) +
         settingData.time * 60
       ).toString();
-      let status1 = await contract.addLiquidity(
+      console.log(
         tokenA,
         tokenB,
         amountADesired,
@@ -63,9 +64,25 @@ function AddLiquidity({
         address,
         time
       );
+      let status1 = await contract
+        .addLiquidity(
+          tokenA,
+          tokenB,
+          amountADesired,
+          amountOutMin,
+          0,
+          0,
+          address,
+          time
+        )
+        .catch(() => {
+          setLoading(false);
+        });
       let transaction = await status1?.wait();
-      if (transaction) setLoading(false);
-      handleCancel();
+      if (transaction) {
+        setLoading(false);
+        handleCancel();
+      }
     }
     //普通代币与平台之间的添加
     if (type == 2) {
@@ -95,9 +112,12 @@ function AddLiquidity({
           setLoading(false);
           message.error("fail");
         });
+
       let transaction = await status?.wait();
-      if (transaction) setLoading(false);
-      handleCancel();
+      if (transaction) {
+        setLoading(false);
+        handleCancel();
+      }
     }
   };
   const submit = () => {
@@ -107,7 +127,8 @@ function AddLiquidity({
       exchangeMethod(2);
     }
   };
-  const geTrate = async () => {
+  const geTrate = useCallback(async () => {
+    console.log(formData, toData);
     const contract = await getContract(
       readyContractAddress,
       readyAbi,
@@ -122,13 +143,13 @@ function AddLiquidity({
     let amount = toWei(formData.amount, formData.decimal);
     let amount1 = toWei(toData.amount, toData.decimal);
     let status = await contract.getrate(tokenA, tokenB, amount, amount1);
-    let val = ((Number(status) / Math.pow(10, 20)) * 100).toString();
+    let val = (Number(formWei(status)) / 100).toString();
     setTrateData(val);
-  };
+  }, [formData, toData]);
 
   useEffect(() => {
     if (isModalOpen) geTrate();
-  }, [isModalOpen]);
+  }, [isModalOpen, formData, toData]);
   return (
     <div className={styles.wrap}>
       <Modal

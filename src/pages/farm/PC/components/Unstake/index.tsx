@@ -33,9 +33,11 @@ function Unstake({
       farmAbi,
       walletType
     );
+    console.log(poolInfo.id, toWei(stakeAmount, poolInfo.decimals));
     let transaction = await contract
       .withdraw(poolInfo.id, toWei(stakeAmount, poolInfo.decimals))
       .catch((err: any) => {
+        console.log(err);
         message.error("fail");
         setLoading(false);
       });
@@ -87,8 +89,8 @@ function Unstake({
                   if (!value.match(/^\d+(\.\d{0,16})?$/)) {
                     value = value.slice(0, stakeAmount.length - 1);
                   }
-                  if (Number(value) > Number(poolInfo.balance)) {
-                    setStakeAmount(poolInfo.balance);
+                  if (Number(value) > Number(poolInfo.amount)) {
+                    setStakeAmount(poolInfo.amount);
                   } else {
                     setStakeAmount(value);
                   }

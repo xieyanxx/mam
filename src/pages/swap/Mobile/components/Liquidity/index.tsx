@@ -248,10 +248,19 @@ function Liquidity() {
           toAddress
         );
         if (getToNum) {
-          setToData({
-            ...toData,
-            amount: formWei(getToNum, toData.decimal),
-          });
+          console.log(Number(formWei(getToNum, 18)) > Number(toBalance));
+          if (Number(formWei(getToNum, 18)) > Number(toBalance)) {
+            setToData({
+              ...toData,
+              amount: formWei(toWei(toBalance, 18), toData.decimal),
+            });
+          } else {
+            setToData({
+              ...toData,
+              amount: formWei(getToNum, toData.decimal),
+            });
+          }
+
           getApproveStatus();
         }
       } else {
@@ -270,10 +279,18 @@ function Liquidity() {
           toAddress
         );
         if (getFormNum) {
-          setFormData({
-            ...formData,
-            amount: formWei(getFormNum, formData.decimal),
-          });
+          if (Number(formWei(getFormNum, 18)) > Number(formBalance)) {
+            setFormData({
+              ...formData,
+              amount: formWei(toWei(formBalance, 18), formData.decimal),
+            });
+          } else {
+            setFormData({
+              ...formData,
+              amount: formWei(getFormNum, formData.decimal),
+            });
+          }
+
           getApproveStatus();
         }
       }
