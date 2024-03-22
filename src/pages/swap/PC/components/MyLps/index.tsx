@@ -89,7 +89,7 @@ function MyLps({ onchangTab }: { onchangTab: (val: number) => void }) {
         message.error("fail");
         setLoading(false);
       });
-    let status = await transaction.wait();
+    let status = await transaction?.wait();
     if (status) {
       message.success("success");
       getLpsList();
@@ -122,7 +122,7 @@ function MyLps({ onchangTab }: { onchangTab: (val: number) => void }) {
   //       address,
   //       time
   //     );
-  //     let transaction = await status1.wait();
+  //     let transaction = await status1?.wait();
   //     if (transaction) setLoading(false);
   //   } else {
   //     let tokenA = "";
@@ -144,7 +144,7 @@ function MyLps({ onchangTab }: { onchangTab: (val: number) => void }) {
   //       address,
   //       time
   //     );
-  //     let transaction = await status1.wait();
+  //     let transaction = await status1?.wait();
   //     if (transaction) {
   //       setLoading(false);
   //       getLpsList();

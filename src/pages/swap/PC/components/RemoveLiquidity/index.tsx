@@ -61,7 +61,7 @@ function RemoveLiquidity({
         address,
         time
       );
-      let transaction = await status1.wait();
+      let transaction = await status1?.wait();
       if (transaction) setLoading(false);
       setSelectNum(50);
       handleCancel();
@@ -86,7 +86,7 @@ function RemoveLiquidity({
         address,
         time
       );
-      let transaction = await status1.wait();
+      let transaction = await status1?.wait();
       if (transaction) {
         setLoading(false);
         setSelectNum(50);

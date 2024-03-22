@@ -28,7 +28,6 @@ function Stake({
     sessionStorage.getItem("walletType") || ""
   );
   const deposit = useCallback(async () => {
-
     setLoading(true);
     const contract = await getContract(
       poolContractAddress,
@@ -46,7 +45,7 @@ function Stake({
       message.success("success");
       setLoading(false);
       handleCancel();
-      setStakeAmount('')
+      setStakeAmount("");
     }
   }, [stakeAmount, poolInfo]);
   return (

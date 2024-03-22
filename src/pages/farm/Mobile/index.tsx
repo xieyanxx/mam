@@ -40,9 +40,9 @@ function Mobile() {
     sessionStorage.getItem("walletType") || ""
   );
   const [current, setCurrent] = useState<number>(1);
-  const [hasListId, setHasListId] = useState<number[]>([0, 1]);
+  const [hasListId, setHasListId] = useState<number[]>([0, 1, 2]);
   const [active, setActive] = useState<boolean>(false);
-  const [isoOnly, setIsoOnly] = useState<boolean>(false);
+  const [isOnly, setIsOnly] = useState<boolean>(false);
   const [stakeModalOpen, setStakeModalOpen] = useState(false);
   const [unstakeModalOpen, setUnstakeModalOpen] = useState(false);
   const [poolData, setPoolData] = useState<any>([]);
@@ -51,6 +51,7 @@ function Mobile() {
   const [poolId, setPoolId] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [claimLoading, setClaimLoading] = useState<boolean>(false);
+  const [activeCurrent, setActiveCurrent] = useState<number>(0);
 
   const stakeShowModal = (pool: any, poolId: number) => {
     setCurrenPoolInfo(pool);
@@ -74,7 +75,7 @@ function Mobile() {
   };
 
   const onChange = (checked: boolean) => {
-    setIsoOnly(checked);
+    setIsOnly(checked);
   };
 
   //获取pool数组
@@ -140,30 +141,28 @@ function Mobile() {
   //获取pool卡片数据
   const getPoolList = useCallback(() => {
     if (current === 1) {
-      if (isoOnly) {
+      if (isOnly) {
         //返回用户已经质押的池子
-        return setPoolList(
-          poolData.filter((item: any) => {
-            Number(item.amount) > 0;
-          })
-        );
+        let data = poolData.filter((item: any) => Number(item.amount) > 0);
+        setHasListId(data.map((item: any, index: number) => index));
+        return setPoolList(data);
       } else {
-        return setPoolList(
-          poolData.filter((item: any) => !timeIsEnd(item.endtime))
-        );
+        let data = poolData.filter((item: any) => !timeIsEnd(item.endtime));
+        setHasListId(data.map((item: any, index: number) => index));
+        return setPoolList(data);
       }
     } else {
-      if (isoOnly) {
-        return setPoolList(
-          poolData.filter((item: any) => Number(item.amount) > 0)
-        );
+      if (isOnly) {
+        let data = poolData.filter((item: any) => Number(item.amount) > 0);
+        setHasListId(data.map((item: any, index: number) => index));
+        return setPoolList(data);
       } else {
-        return setPoolList(
-          poolData.filter((item: any) => timeIsEnd(item.endtime))
-        );
+        let data = poolData.filter((item: any) => timeIsEnd(item.endtime));
+        setHasListId(data.map((item: any, index: number) => index));
+        return setPoolList(data);
       }
     }
-  }, [current, poolData, isoOnly]);
+  }, [current, poolData, isOnly]);
   //授权
   const handleApprove = async (tokenAddress: string, poolId: number) => {
     setPoolId(poolId);
@@ -177,7 +176,7 @@ function Mobile() {
         message.error("fail");
         setLoading(false);
       });
-    let status = transaction.wait();
+    let status = transaction?.wait();
     if (status) {
       message.success("success");
       getPool();
@@ -187,7 +186,9 @@ function Mobile() {
   };
 
   //领取奖励
-  const handleClaim = async (poolId: number) => {
+  const handleClaim = async (poolId: number, index: number) => {
+    setActiveCurrent(index);
+    setClaimLoading(true);
     const contract = await getContract(
       farmContractAddress,
       farmAbi,
@@ -197,7 +198,7 @@ function Mobile() {
       message.error("fail");
       setClaimLoading(false);
     });
-    let status = await transaction.wait();
+    let status = await transaction?.wait();
     if (status) {
       message.success("success");
       getPool();
@@ -207,7 +208,7 @@ function Mobile() {
   };
   useEffect(() => {
     getPoolList();
-  }, [current, poolData, isoOnly]);
+  }, [current, poolData, isOnly]);
   useEffect(() => {
     getPool();
   }, [walletType]);
@@ -271,9 +272,9 @@ function Mobile() {
               <div>{formatAmount(details.userReward)}</div>
             </div>
             <Button
-              loading={claimLoading}
               className={styles.btn}
-              onClick={() => handleClaim(current)}
+              onClick={() => handleClaim(details.id, current)}
+              loading={activeCurrent == current && claimLoading}
             >
               Claim
             </Button>

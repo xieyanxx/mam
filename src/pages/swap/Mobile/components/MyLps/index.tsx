@@ -89,7 +89,7 @@ function MyLps({ onchangTab }: { onchangTab: (val: number) => void }) {
         message.error("fail");
         setLoading(false);
       });
-    let status = await transaction.wait();
+    let status = await transaction?.wait();
     if (status) {
       message.success("success");
       getLpsList();

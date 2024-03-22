@@ -53,6 +53,7 @@ function Mobile() {
   const [loading, setLoading] = useState<boolean>(false);
   const [claimLoading, setClaimLoading] = useState<boolean>(false);
   const [isOnly, setisOnly] = useState<boolean>(false);
+  const [activeCurrent, setActiveCurrent] = useState<number>(0);
 
   const stakeShowModal = (pool: any, poolId: number) => {
     setCurrenPoolInfo(pool);
@@ -179,7 +180,7 @@ function Mobile() {
         message.error("fail");
         setLoading(false);
       });
-    let status = await transaction.wait();
+    let status = await transaction?.wait();
     if (status) {
       message.success("success");
       getPool();
@@ -189,7 +190,8 @@ function Mobile() {
   };
 
   //领取奖励
-  const handleClaim = async (poolId: number) => {
+  const handleClaim = async (poolId: number, index: number) => {
+    setActiveCurrent(index);
     setClaimLoading(true);
     const contract = await getContract(
       poolContractAddress,
@@ -200,7 +202,7 @@ function Mobile() {
       message.error("fail");
       setClaimLoading(false);
     });
-    let status = await transaction.wait();
+    let status = await transaction?.wait();
     if (status) {
       message.success("success");
       getPool();
@@ -283,8 +285,8 @@ function Mobile() {
             </div>
             <Button
               className={styles.btn}
-              loading={claimLoading}
-              onClick={() => handleClaim(details.id)}
+              onClick={() => handleClaim(details.id, current)}
+              loading={activeCurrent == current && claimLoading}
             >
               Claim
             </Button>

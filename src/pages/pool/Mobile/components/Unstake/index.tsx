@@ -39,7 +39,7 @@ function Unstake({
         message.error("fail");
         setLoading(false);
       });
-    let status = await transaction.wait();
+    let status = await transaction?.wait();
     if (status) {
       message.success("success");
       setLoading(false);

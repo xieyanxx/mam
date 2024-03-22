@@ -54,7 +54,7 @@ function Stake({
           setLoading(false);
         });
     }
-    let transaction = await status.wait();
+    let transaction = await status?.wait();
     if (transaction) {
       message.success("success");
       setLoading(false);

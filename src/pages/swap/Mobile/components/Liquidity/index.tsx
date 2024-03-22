@@ -330,7 +330,7 @@ function Liquidity() {
           setLoading(false);
         });
 
-      status = await transaction.wait();
+      status = await transaction?.wait();
     } else {
       status = true;
     }
@@ -342,7 +342,7 @@ function Liquidity() {
           message.error("fail");
           setLoading(false);
         });
-      toStatus = await transaction1.wait();
+      toStatus = await transaction1?.wait();
     } else {
       toStatus = true;
     }

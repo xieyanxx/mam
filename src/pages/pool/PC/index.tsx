@@ -182,7 +182,7 @@ function PC() {
         message.error("fail");
         setLoading(false);
       });
-    let status = await transaction.wait();
+    let status = await transaction?.wait();
     if (status) {
       getPool();
       getPoolList();
@@ -192,21 +192,19 @@ function PC() {
   };
 
   //领取奖励
-  const handleClaim = async (poolId: number) => {
+  const handleClaim = async (poolId: number, index: number) => {
+    setActiveCurrent(index);
     setClaimLoading(true);
     const contract = await getContract(
       poolContractAddress,
       poolAbi,
       walletType
     );
-    var transaction = await contract
-      .reclaimReward(poolId)
-
-      .catch((err: any) => {
-        message.error("fail");
-        setClaimLoading(false);
-      });
-    let status = await transaction.wait();
+    var transaction = await contract.reclaimReward(poolId).catch((err: any) => {
+      message.error("fail");
+      setClaimLoading(false);
+    });
+    let status = await transaction?.wait();
     if (status) {
       message.success("success");
       getPool();
@@ -344,8 +342,8 @@ function PC() {
                   </div>
                   <Button
                     className={styles.btn}
-                    onClick={() => handleClaim(item.id)}
-                    loading={claimLoading}
+                    onClick={() => handleClaim(item.id, index)}
+                    loading={activeCurrent == index && claimLoading}
                   >
                     Claim
                   </Button>

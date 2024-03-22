@@ -75,7 +75,7 @@ function AddLiquidity({
           setLoading(false);
           message.error("fail");
         });
-      let transaction = await status.wait();
+      let transaction = await status?.wait();
       if (transaction) setLoading(false);
       handleCancel();
     }
@@ -126,7 +126,7 @@ function AddLiquidity({
           setLoading(false);
           message.error("fail");
         });
-      let transaction = await status.wait();
+      let transaction = await status?.wait();
       if (transaction) setLoading(false);
       handleCancel();
     }
@@ -158,7 +158,7 @@ function AddLiquidity({
           setLoading(false);
           message.error("fail");
         });
-      let transaction = await status.wait();
+      let transaction = await status?.wait();
       if (transaction) setLoading(false);
       handleCancel();
     }
