@@ -90,7 +90,6 @@ const EthersContainer = React.memo((props: any) => {
       const onChainChanged = async (chainId: string) => {
         console.log("钱包切换链", chainId, Number.parseInt(chainId, 16));
         setChainId(Number.parseInt(chainId, 16));
-        console.log(chainId, "===>", chainId);
         sessionStorage.setItem(
           "chainId",
           Number.parseInt(chainId, 16).toString()

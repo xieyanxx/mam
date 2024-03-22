@@ -99,7 +99,6 @@ function PC() {
       let pendingInfo = await contract.pending(index, address);
       let apyData = await readyContract.getTVLandAPY2(index);
       const { APY, TVL } = apyData;
-      console.log(Number(APY), Number(TVL), "===>");
       let decimals = 18;
       let stakeStatue = "0";
       let balance = "0";
@@ -188,7 +187,6 @@ function PC() {
       getPool();
       getPoolList();
       message.success("success");
-      console.log(11111);
       setLoading(false);
     }
   };

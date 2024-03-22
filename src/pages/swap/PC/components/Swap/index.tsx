@@ -188,7 +188,6 @@ function Swap() {
         // message.error(e.message);
       });
     setMaxValue(formWei(getMaxValue));
-    console.log(getMaxValue);
   };
 
   //获取授权状态

@@ -176,7 +176,6 @@ function Liquidity() {
   const getApproveStatus = async () => {
     let isformApprove = false;
     let istoApprove = false;
-    console.log(formData, toData);
     if (!isplatformCoin(formData.address)) {
       let value = await getAllowance(
         formData.address,
@@ -209,7 +208,6 @@ function Liquidity() {
     } else {
       istoApprove = true;
     }
-    console.log(isformApprove, istoApprove, "===>");
     if (isformApprove && istoApprove) {
       setStatus(3);
       setIsApptove(true);
@@ -221,7 +219,6 @@ function Liquidity() {
   //授权
   const handleApprove = async () => {
     setLoading(true);
-    console.log(1111, isApptove, isApptove1);
     let formApprove = isApptove;
     let toApprove = isApptove1;
     var amount =
@@ -242,13 +239,10 @@ function Liquidity() {
         });
 
       status = await transaction?.wait();
-      console.log(2222);
     } else {
       status = true;
     }
-    console.log(3333);
     if (!toApprove) {
-      console.log(4444);
       const contract = await getContract(toData.address, tokenAbi, walletType);
       var transaction1 = await contract
         .approve(routeContractAddress, amount)
@@ -257,7 +251,6 @@ function Liquidity() {
           setLoading(false);
         });
       toStatus = await transaction1?.wait();
-      console.log(5555);
     } else {
       toStatus = true;
     }

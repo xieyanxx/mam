@@ -101,7 +101,6 @@ function AddLiquidity({
           setLoading(false);
           message.error("fail");
         });
-      console.log(status, "===>");
       let transaction = await status?.wait();
       if (transaction) setLoading(false);
       handleCancel();
