@@ -2747,6 +2747,30 @@ export const readyAbi = [
     inputs: [
       {
         internalType: "address",
+        name: "tokenA",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "tokenB",
+        type: "address",
+      },
+    ],
+    name: "getBalance",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
         name: "_token",
         type: "address",
       },

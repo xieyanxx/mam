@@ -22,6 +22,7 @@ import {
 } from "@/components/EthersContainer";
 import {
   factoryAbi,
+  readyAbi,
   routeAbi,
   tokenAbi,
 } from "@/components/EthersContainer/abj";
@@ -29,6 +30,7 @@ import { formatAmount, formatAmount1, isplatformCoin } from "@/utils";
 import {
   ChainToken,
   factoryContractAddress,
+  readyContractAddress,
   routeContractAddress,
 } from "@/components/EthersContainer/address";
 import { debounce, throttle } from "lodash";
@@ -54,6 +56,7 @@ function Swap() {
   const [status, setStatus] = useState(1);
   const [isEnterForm, setIsEnterForm] = useState(false); //是否是先从form输入值
   const [isChange, setIsChange] = useState(false); //是否点了切换
+  const [maxValue, setMaxValue] = useState<string>("0");
   const [formData, setFormData] = useState({
     ...ChainToken[3],
     amount: "", //输入金额
@@ -164,7 +167,25 @@ function Swap() {
       setTOBalance(toBalance);
     }
   };
-
+  const getInputMaxValue = async () => {
+    const contract = await getContract(
+      readyContractAddress,
+      readyAbi,
+      walletType
+    );
+    let formAddress = isplatformCoin(formData.address)
+      ? formData.address1
+      : formData.address; //需要判断是否是平台币
+    let toAddress = isplatformCoin(toData.address)
+      ? toData.address1
+      : toData.address;
+    const getMaxValue = await contract
+      .getBalance(formAddress, toAddress)
+      .catch((e: any) => {
+        console.log(e);
+      });
+    setMaxValue(formWei(getMaxValue));
+  };
   //获取授权状态
   const getApproveStatus = async () => {
     if (!isplatformCoin(formData.address)) {
@@ -344,6 +365,7 @@ function Swap() {
   };
 
   useEffect(() => {
+    getInputMaxValue();
     getTransactionData();
     getBalanceData();
   }, [formData.address, toData.address]);
@@ -444,10 +466,31 @@ function Swap() {
                 if (!value.match(/^\d+(\.\d{0,16})?$/)) {
                   value = value.slice(0, -1);
                 }
-                if (Number(value) > Number(toBalance)) {
+                if (
+                  Number(value) > Number(toBalance) &&
+                  Number(toBalance) < Number(maxValue)
+                ) {
                   setToData({ ...toData, amount: toBalance });
-                  getEnterNum(value, 2);
-                } else {
+                  getEnterNum(toBalance, 2);
+                }
+                if (
+                  Number(value) > Number(maxValue) &&
+                  Number(toBalance) > Number(maxValue)
+                ) {
+                  let val = (
+                    Number(maxValue) -
+                    Number(maxValue) * 0.1
+                  ).toString();
+                  setToData({
+                    ...toData,
+                    amount: val,
+                  });
+                  getEnterNum(val, 2);
+                }
+                if (
+                  Number(value) < Number(maxValue) &&
+                  Number(value) < Number(toBalance)
+                ) {
                   setToData({ ...toData, amount: value });
                   getEnterNum(value, 2);
                 }
@@ -471,8 +514,27 @@ function Swap() {
             <div
               className={styles.item}
               onClick={() => {
-                setToData({ ...toData, amount: toBalance });
-                getEnterNum(toBalance, 2);
+                if (
+                  Number(toData.amount) > Number(toBalance) &&
+                  Number(toBalance) < Number(maxValue)
+                ) {
+                  setToData({ ...toData, amount: toBalance });
+                  getEnterNum(toBalance, 2);
+                }
+                if (
+                  Number(toData.amount) > Number(maxValue) &&
+                  Number(toBalance) > Number(maxValue)
+                ) {
+                  let val = (
+                    Number(maxValue) -
+                    Number(maxValue) * 0.1
+                  ).toString();
+                  setToData({
+                    ...toData,
+                    amount: val,
+                  });
+                  getEnterNum(val, 2);
+                }
               }}
             >
               MAX

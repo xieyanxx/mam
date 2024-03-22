@@ -123,8 +123,8 @@ function Mobile() {
       newInfo.name = item.name.split(",");
       newInfo.userReward = formWei(pendingInfo, decimals);
       newInfo.balance = balance;
-      newInfo.apy = (Number(APY) / Math.pow(10, 20)).toString();
-      newInfo.tvl = (Number(TVL) / Math.pow(10, 18)).toString();
+      newInfo.apy = (Number(formWei(APY)) / 100).toString();
+      newInfo.tvl = formWei(TVL);
       newInfo.id = index;
       if (Number(stakeStatue) > Number(balance) || isplatformCoin(item.token)) {
         //判断授权状态  true:已授权，fasle:未授权 2.平台币不需要授权

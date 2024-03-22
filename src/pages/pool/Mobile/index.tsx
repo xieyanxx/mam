@@ -125,8 +125,8 @@ function Mobile() {
       newInfo.name = item.name.split(",");
       newInfo.userReward = formWei(pendingInfo, decimals);
       newInfo.balance = balance;
-      newInfo.apy = (Number(APY) / Math.pow(10, 20)).toString();
-      newInfo.tvl = (Number(TVL) / Math.pow(10, 18)).toString();
+      newInfo.apy = (Number(formWei(APY)) / 100).toString();
+      newInfo.tvl = formWei(TVL);
       if (
         Number(stakeStatue) > Number(newInfo.amount) ||
         isplatformCoin(item.token)

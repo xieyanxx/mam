@@ -22,7 +22,13 @@ import {
   poolContractAddress,
   readyContractAddress,
 } from "@/components/EthersContainer/address";
-import { formatAmount, getTime, isplatformCoin, timeDiff, timeIsEnd } from "@/utils";
+import {
+  formatAmount,
+  getTime,
+  isplatformCoin,
+  timeDiff,
+  timeIsEnd,
+} from "@/utils";
 import Stake from "./components/Stake";
 import Unstake from "./components/Unstake";
 import { poolAbi, readyAbi, tokenAbi } from "@/components/EthersContainer/abj";
@@ -93,6 +99,7 @@ function PC() {
       let pendingInfo = await contract.pending(index, address);
       let apyData = await readyContract.getTVLandAPY2(index);
       const { APY, TVL } = apyData;
+      console.log(Number(APY), Number(TVL), "===>");
       let decimals = 18;
       let stakeStatue = "0";
       let balance = "0";
@@ -122,8 +129,8 @@ function PC() {
       newInfo.name = item.name.split(",");
       newInfo.userReward = formWei(pendingInfo, decimals);
       newInfo.balance = balance;
-      newInfo.apy = (Number(APY) / Math.pow(10, 20)).toString();
-      newInfo.tvl = (Number(TVL) / Math.pow(10, 18)).toString();
+      newInfo.apy = (Number(formWei(APY)) / 100).toString();
+      newInfo.tvl = formWei(TVL);
       if (
         Number(stakeStatue) > Number(newInfo.amount) ||
         isplatformCoin(item.token)

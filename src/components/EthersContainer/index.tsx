@@ -96,7 +96,7 @@ const EthersContainer = React.memo((props: any) => {
           Number.parseInt(chainId, 16).toString()
         );
         if (chainId !== "0xae3f3") {
-           await window.ethereum.request({
+          await window.ethereum.request({
             method: "wallet_switchEthereumChain",
             params: [{ chainId: "0xae3f3" }],
           });
@@ -321,7 +321,12 @@ export const formWei = (val: any, num?: number) => {
   return ethers.utils.formatUnits(val, num);
 };
 export const toWei = (val: any, num: number | string) => {
-  return ethers.utils.parseUnits(val, num).toString();
+  let value = val.split(".");
+  let data = val;
+  if (value[1]?.length > 18) {
+    data = value[0] + "." + value[1].substring(0, 18);
+  }
+  return ethers.utils.parseUnits(data, num).toString();
 };
 
 export const formTo = (val: any) => {
