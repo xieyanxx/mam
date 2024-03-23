@@ -52,19 +52,17 @@ function RemoveLiquidity({
         Math.floor(Date.now() / 1000) +
         settingData.time * 60
       ).toString();
-      let status1 = await contract.removeLiquidity(
-        tokenA,
-        tokenB,
-        uit,
-        0,
-        0,
-        address,
-        time
-      );
+      let status1 = await contract
+        .removeLiquidity(tokenA, tokenB, uit, 0, 0, address, time)
+        .catch(() => {
+          setLoading(false);
+        });
       let transaction = await status1?.wait();
-      if (transaction) setLoading(false);
-      setSelectNum(50);
-      handleCancel();
+      if (transaction) {
+        setLoading(false);
+        setSelectNum(50);
+        handleCancel();
+      }
     } else {
       let tokenA = "";
       if (isplatformCoin(removeData.token1)) {
@@ -78,14 +76,11 @@ function RemoveLiquidity({
         Math.floor(Date.now() / 1000) +
         settingData.time * 60
       ).toString();
-      let status1 = await contract.removeLiquidityETH(
-        tokenA,
-        uit,
-        0,
-        0,
-        address,
-        time
-      );
+      let status1 = await contract
+        .removeLiquidityETH(tokenA, uit, 0, 0, address, time)
+        .catch(() => {
+          setLoading(false);
+        });
       let transaction = await status1?.wait();
       if (transaction) {
         setLoading(false);
