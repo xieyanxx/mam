@@ -41,13 +41,8 @@ const Header: React.FC<Props> = () => {
 
   return (
     <div className={styles.header_warp}>
-      <div className={styles.header_left}>
-        <img
-          src={logo}
-          alt="#"
-          className={styles.logo}
-          onClick={() => onMenuClick("/")}
-        />
+      <div className={styles.header_left} onClick={() => onMenuClick("/")}>
+        <img src={logo} alt="#" className={styles.logo} />
         <span>MAMBA</span>
       </div>
       <div className={styles.header_middle}>

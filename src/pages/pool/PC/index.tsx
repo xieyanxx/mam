@@ -236,11 +236,40 @@ function PC() {
             <div className={styles.time_title}>Days Left:</div>
             <div>{timeDiff(details.endtime)} days </div>
           </div>
-          <div className={styles.share_wrap}>
-            <p>USDT Token Info</p> <img src={share} alt="" />
+          <div
+            className={styles.share_wrap}
+            onClick={() => {
+              if (details.name[0].split(" ")[0] == "MAMBA-SEI") {
+                window.open(
+                  "https://seitrace.com/address/0xb6d13606Fb138ADF5CF524F306B47dFAbD42E732",
+                  "_blank"
+                );
+              } else if (details.name[0].split(" ")[0] == "MAMBA-USDC") {
+                window.open(
+                  "https://seitrace.com/address/0xeEf6036a85BE2b9A5204467A4433Bd14e44e43F6",
+                  "_blank"
+                );
+              } else {
+                window.open(
+                  "https://seitrace.com/address/0x1d5cb658C1724F4b3235319350F884Bc24cc5001",
+                  "_blank"
+                );
+              }
+            }}
+          >
+            <p>{details.name[0].split(" ")[0]} Token Info</p>{" "}
+            <img src={share} alt="" />
           </div>
-          <div className={styles.share_wrap}>
-            <p>Farm Contract</p> <img src={share} alt="" />
+          <div
+            className={styles.share_wrap}
+            onClick={() =>
+              window.open(
+                "https://seitrace.com/address/0x4864e451aFA91ddCE8a2c7870186Ff994e4b5007",
+                "_blank"
+              )
+            }
+          >
+            <p>pool Contract</p> <img src={share} alt="" />
           </div>
           {/* <div className={styles.share_wrap}>
             <p>Add to Wallet</p> <img src={metamask} alt="" />

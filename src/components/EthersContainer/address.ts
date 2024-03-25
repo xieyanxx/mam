@@ -5,14 +5,14 @@ import usdc from "@/assets/logo/usdc.png";
 
 // 测试
 export const network = "bsc";
-export const farmContractAddress = "0xF55f6528316c8FDaf47C531721f459733cC25055"; //farm合约地址
-export const poolContractAddress = "0x5fdEAA3073dea7b0bB20c3E18BF285dF1A97649A"; //pool合约地址
+export const farmContractAddress = "0x0F005666480aF784f12446Ed6835B35308EDEC0e"; //farm合约地址
+export const poolContractAddress = "0x4864e451aFA91ddCE8a2c7870186Ff994e4b5007"; //pool合约地址
 export const routeContractAddress =
   "0x5975863B45c2cF941BF232029944a981975Ea439";
 export const factoryContractAddress =
   "0x74dB217b86341b8515b842775930f2b7D7Ac1b6A";
 export const readyContractAddress =
-  "0x149f9234B8327C7Bb279E9Fd100919fc0a3e2Abd";
+  "0x2CF737fbCae290db246F7eCB71152910Bedb8Dfc";
 export const ChainToken = [
   {
     id: 1,

@@ -321,10 +321,35 @@ function Mobile() {
               </div>
             </div>
             <div className={styles.right}>
-              <div className={styles.share_wrap}>
-                <p>USDT Token Info</p> <img src={share} alt="" />
-              </div>
-              <div className={styles.share_wrap}>
+              {details.name[0] !== "SEI" && (
+                <div
+                  className={styles.share_wrap}
+                  onClick={() => {
+                    if (details.name[0] === "USDT") {
+                      window.open(
+                        "https://seitrace.com/address/0xaBBEd9873127e3d41d2C3dA17C5f6Ef4D60a788B",
+                        "_blank"
+                      );
+                    } else {
+                      window.open(
+                        "https://seitrace.com/address/0xAb2f5A0E23FF19e3630C2eA0fE98382949995209",
+                        "_blank"
+                      );
+                    }
+                  }}
+                >
+                  <p>{details.name[0]} Token Info</p> <img src={share} alt="" />
+                </div>
+              )}
+              <div
+                className={styles.share_wrap}
+                onClick={() =>
+                  window.open(
+                    "https://seitrace.com/address/0x0F005666480aF784f12446Ed6835B35308EDEC0e",
+                    "_blank"
+                  )
+                }
+              >
                 <p>Farm Contract</p> <img src={share} alt="" />
               </div>
               {/* <div className={styles.share_wrap}>
