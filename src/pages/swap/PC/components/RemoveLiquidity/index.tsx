@@ -108,6 +108,7 @@ function RemoveLiquidity({
               src={close}
               alt=""
               onClick={() => {
+                setLoading(false)
                 setSelectNum(50);
                 handleCancel();
               }}

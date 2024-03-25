@@ -128,7 +128,6 @@ function AddLiquidity({
     }
   };
   const geTrate = useCallback(async () => {
-    console.log(formData, toData);
     const contract = await getContract(
       readyContractAddress,
       readyAbi,
@@ -164,7 +163,14 @@ function AddLiquidity({
         <div className={styles.content_warp}>
           <div className={styles.title_wrap}>
             <p>Add Liquidity</p>
-            <img src={close} alt="" onClick={handleCancel} />
+            <img
+              src={close}
+              alt=""
+              onClick={() => {
+                setLoading(false);
+                handleCancel();
+              }}
+            />
           </div>
           <div className={styles.content}>
             <div className={styles.title}>

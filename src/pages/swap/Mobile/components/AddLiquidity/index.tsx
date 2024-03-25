@@ -51,7 +51,7 @@ function AddLiquidity({
       let tokenB = toData.address;
       let amountADesired = toWei(formData.amount, formData.decimal);
       let amountOutMin = toWei(toData.amount, toData.decimal);
-      
+
       let time = (
         Math.floor(Date.now() / 1000) +
         settingData.time * 60
@@ -155,7 +155,14 @@ function AddLiquidity({
         <div className={styles.content_warp}>
           <div className={styles.title_wrap}>
             <p>Add Liquidity</p>
-            <img src={close} alt="" onClick={handleCancel} />
+            <img
+              src={close}
+              alt=""
+              onClick={() => {
+                setLoading(false);
+                handleCancel();
+              }}
+            />
           </div>
           <div className={styles.content}>
             <div className={styles.title}>

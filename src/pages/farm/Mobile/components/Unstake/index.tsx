@@ -61,7 +61,14 @@ function Unstake({
         <div className={styles.content_warp}>
           <div className={styles.title_wrap}>
             <p>Unstake in Farm</p>
-            <img src={close} alt="" onClick={handleCancel} />
+            <img
+              src={close}
+              alt=""
+              onClick={() => {
+                setLoading(false);
+                handleCancel();
+              }}
+            />
           </div>
           <div className={styles.content}>
             <div className={styles.title}>

@@ -65,6 +65,7 @@ function Unstake({
               src={close}
               alt=""
               onClick={() => {
+                setLoading(false)
                 setStakeAmount("");
                 handleCancel();
               }}
