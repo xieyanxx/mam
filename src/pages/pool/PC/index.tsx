@@ -216,6 +216,7 @@ function PC() {
     getPoolList();
   }, [current, poolData, isOnly]);
   useEffect(() => {
+    if (!address) return;
     getPool();
   }, [walletType]);
   const getItems: (current: number, details: any) => CollapseProps["items"] = (

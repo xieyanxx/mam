@@ -34,7 +34,17 @@ function Mobile() {
           <p>DEFI ZONE</p>
         </div>
       </div>
-      <div className={styles.link_text}>About the MAMBA Mentality</div>
+      <div
+        onClick={() => {
+          window.open(
+            "https://medium.com/@mambadefi/about-the-mamba-mentality-22f4217d8b7a",
+            "_blank"
+          );
+        }}
+        className={styles.link_text}
+      >
+        About the MAMBA Mentality
+      </div>
     </div>
   );
 }

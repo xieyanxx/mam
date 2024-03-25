@@ -365,6 +365,7 @@ function Swap() {
   };
 
   useEffect(() => {
+    if (!address) return;
     getInputMaxValue();
     getTransactionData();
     getBalanceData();

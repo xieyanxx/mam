@@ -32,6 +32,7 @@ function MyLps({ onchangTab }: { onchangTab: (val: number) => void }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [removeData, setRemoveData] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(false);
+  const [current, setCurrent] = useState<number>(0);
   const [settingData, setSetingData] = useState({
     time: Number(localStorage.getItem("removeTime")) || 20, //默认时间
     num: Number(localStorage.getItem("removeNum")) || 1, //默认选择1%
@@ -97,60 +98,6 @@ function MyLps({ onchangTab }: { onchangTab: (val: number) => void }) {
     }
   };
 
-  // const removeSubmit = async (val: any) => {
-  //   setLoading(true);
-  //   const contract = await getContract(
-  //     routeContractAddress,
-  //     routeAbi,
-  //     walletType
-  //   );
-  //   if (!isplatformCoin(val.token1) && !isplatformCoin(val.token2)) {
-  //     let tokenA = val.token1;
-  //     let tokenB = val.token2;
-  //     let uit = toWei(val.amount, 18);
-
-  //     let time = (
-  //       Math.floor(Date.now() / 1000) +
-  //       settingData.time * 60
-  //     ).toString();
-  //     let status1 = await contract.removeLiquidity(
-  //       tokenA,
-  //       tokenB,
-  //       uit,
-  //       0,
-  //       0,
-  //       address,
-  //       time
-  //     );
-  //     let transaction = await status1?.wait();
-  //     if (transaction) setLoading(false);
-  //   } else {
-  //     let tokenA = "";
-  //     if (isplatformCoin(val.token1)) {
-  //       tokenA = val.token2;
-  //     } else {
-  //       tokenA = val.token1;
-  //     }
-  //     let uit = toWei(val.amount, 18);
-  //     let time = (
-  //       Math.floor(Date.now() / 1000) +
-  //       settingData.time * 60
-  //     ).toString();
-  //     let status1 = await contract.removeLiquidityETH(
-  //       tokenA,
-  //       uit,
-  //       0,
-  //       0,
-  //       address,
-  //       time
-  //     );
-  //     let transaction = await status1?.wait();
-  //     if (transaction) {
-  //       setLoading(false);
-  //       getLpsList();
-  //     }
-  //   }
-  // };
   const removeSubmit = async (val: any) => {
     setRemoveData(val);
     handleRemoveModalOpen();
@@ -181,6 +128,7 @@ function MyLps({ onchangTab }: { onchangTab: (val: number) => void }) {
     });
   };
   useEffect(() => {
+    if (!address) return;
     getLpsList();
   }, []);
   return (
@@ -235,11 +183,16 @@ function MyLps({ onchangTab }: { onchangTab: (val: number) => void }) {
               <div className={styles.type_num}>0 LP</div> */}
             </div>
             <Button
-              loading={loading}
+              loading={current == index && loading}
               className={styles.remove_btn}
-              onClick={() =>
-                item.approve ? removeSubmit(item) : handleApprove(item.address)
-              }
+              onClick={() => {
+                setCurrent(index);
+                if (item.approve) {
+                  removeSubmit(item);
+                } else {
+                  handleApprove(item.address);
+                }
+              }}
             >
               {item.approve ? "remove" : "approve"}
             </Button>

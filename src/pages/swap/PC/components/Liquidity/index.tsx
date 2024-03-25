@@ -385,6 +385,7 @@ function Liquidity() {
   };
 
   useEffect(() => {
+    if (!address) return;
     getTransactionData();
     getBalanceData();
   }, [formData.address, toData.address]);
