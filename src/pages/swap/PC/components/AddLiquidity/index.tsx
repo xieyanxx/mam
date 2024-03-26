@@ -1,14 +1,14 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
-import styles from "./index.less";
-import { Button, Input, Modal, Radio, message } from "antd";
 import close from "@/assets/logo/close.png";
-import { formatAmount1, isplatformCoin } from "@/utils";
 import { formWei, getContract, toWei } from "@/components/EthersContainer";
+import { readyAbi, routeAbi } from "@/components/EthersContainer/abj";
 import {
   readyContractAddress,
   routeContractAddress,
 } from "@/components/EthersContainer/address";
-import { readyAbi, routeAbi } from "@/components/EthersContainer/abj";
+import { formatAmount1, isplatformCoin } from "@/utils";
+import { Button, Modal, message } from "antd";
+import { memo, useCallback, useEffect, useState } from "react";
+import styles from "./index.less";
 
 function AddLiquidity({
   handleCancel,
@@ -54,16 +54,6 @@ function AddLiquidity({
         Math.floor(Date.now() / 1000) +
         settingData.time * 60
       ).toString();
-      console.log(
-        tokenA,
-        tokenB,
-        amountADesired,
-        amountOutMin,
-        0,
-        0,
-        address,
-        time
-      );
       let status1 = await contract
         .addLiquidity(
           tokenA,

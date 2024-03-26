@@ -1,20 +1,20 @@
-import React, { memo, useContext, useEffect, useState } from "react";
-import styles from "./index.less";
-import cx from "classnames";
-import { Button, Modal, message } from "antd";
 import close from "@/assets/logo/close.png";
-import metamask from "@/assets/logo/metamask1.png";
 import coinbase from "@/assets/logo/coinbase.png";
 import math from "@/assets/logo/math.png";
+import metamask from "@/assets/logo/metamask1.png";
 import token from "@/assets/logo/token.png";
-import wallet from "@/assets/logo/wallet.png";
 import trust from "@/assets/logo/trust.png";
-import { useGetState } from "ahooks";
+import wallet from "@/assets/logo/wallet.png";
 import { EthersContext, WalletType } from "@/components/EthersContainer";
-import { MetaMaskWallet } from "@/components/EthersContainer/wallet/metamask";
 import { CoinbaseWallet } from "@/components/EthersContainer/wallet/coinbase";
+import { MetaMaskWallet } from "@/components/EthersContainer/wallet/metamask";
 import { WalletConnect } from "@/components/EthersContainer/wallet/walletconnect";
 import { getSubStr } from "@/utils";
+import { useGetState } from "ahooks";
+import { Button, Modal, message } from "antd";
+import cx from "classnames";
+import { memo, useContext, useEffect, useState } from "react";
+import styles from "./index.less";
 
 function WalletModal({ isbig }: { isbig?: boolean }) {
   const [connecting, setConnecting, getConnecting] =

@@ -1,16 +1,14 @@
-import React, { memo, useCallback, useState } from "react";
-import styles from "./index.less";
-import cx from "classnames";
-import { Button, Input, Modal, Progress, Radio, Slider } from "antd";
 import close from "@/assets/logo/close.png";
-import icon1 from "@/assets/logo/icon1.png";
+import { getContract, toWei } from "@/components/EthersContainer";
+import { routeAbi } from "@/components/EthersContainer/abj";
 import {
   ChainToken,
   routeContractAddress,
 } from "@/components/EthersContainer/address";
 import { formatAmount1, isplatformCoin } from "@/utils";
-import { getContract, toWei } from "@/components/EthersContainer";
-import { routeAbi } from "@/components/EthersContainer/abj";
+import { Button, Modal, Radio, Slider } from "antd";
+import { memo, useCallback, useState } from "react";
+import styles from "./index.less";
 
 function RemoveLiquidity({
   handleCancel,
@@ -108,7 +106,7 @@ function RemoveLiquidity({
               src={close}
               alt=""
               onClick={() => {
-                setLoading(false)
+                setLoading(false);
                 setSelectNum(50);
                 handleCancel();
               }}

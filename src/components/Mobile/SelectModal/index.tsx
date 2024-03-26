@@ -1,11 +1,9 @@
 import React, { memo, useCallback, useState } from "react";
 import styles from "./index.less";
-import cx from "classnames";
-import { Button, Input, Modal, message } from "antd";
+import { Input, Modal, message } from "antd";
 import close from "@/assets/logo/close.png";
 
 import search from "@/assets/logo/search.png";
-import block1 from "@/assets/logo/block1.png";
 import share from "@/assets/logo/share.png";
 import coingecko from "@/assets/logo/coingecko.png";
 import icon1 from "@/assets/logo/icon1.png";

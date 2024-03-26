@@ -1,20 +1,18 @@
-import React, { memo, useCallback, useState } from "react";
-import styles from "./index.less";
-import cx from "classnames";
-import { Button, Input, Modal, message } from "antd";
 import close from "@/assets/logo/close.png";
-
-import search from "@/assets/logo/search.png";
-import share from "@/assets/logo/share.png";
 import coingecko from "@/assets/logo/coingecko.png";
 import icon1 from "@/assets/logo/icon1.png";
+import search from "@/assets/logo/search.png";
+import share from "@/assets/logo/share.png";
+import { getContract } from "@/components/EthersContainer";
+import { readyAbi } from "@/components/EthersContainer/abj";
 import {
   ChainToken,
   readyContractAddress,
 } from "@/components/EthersContainer/address";
-import { getContract } from "@/components/EthersContainer";
-import { readyAbi } from "@/components/EthersContainer/abj";
-import { debounce, slice } from "lodash";
+import { Input, Modal, message } from "antd";
+import { debounce } from "lodash";
+import { memo, useCallback, useState } from "react";
+import styles from "./index.less";
 
 function WalletModal({
   handleCancel,

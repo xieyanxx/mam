@@ -1,12 +1,11 @@
-import React, { memo, useRef } from "react";
-import styles from "./index.less";
-import cx from "classnames";
-import sei from "@/assets/logo/sei.png";
 import block1 from "@/assets/logo/block1.png";
 import block2 from "@/assets/logo/block2.png";
 import block3 from "@/assets/logo/block3.png";
+import sei from "@/assets/logo/sei.png";
 import WalletModal from "@/components/Web/WalletModal";
+import { memo } from "react";
 import { history } from "umi";
+import styles from "./index.less";
 
 function PC() {
   return (
@@ -32,7 +31,6 @@ function PC() {
           </div>
         </div>
         <div className={styles.btn_wrap}>
-          {/* <div className={cx(styles.btn, styles.connect_btn)}>Connect Wallet</div> */}
           <WalletModal isbig></WalletModal>
           <div className={styles.btn} onClick={() => history.push("/Swap")}>
             Trade Now

@@ -1,10 +1,9 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
-import { history } from "umi";
-import styles from "./index.less";
 import cx from "classnames";
-import Swap from "./components/Swap";
+import { memo, useCallback, useEffect, useState } from "react";
 import Liquidity from "./components/Liquidity";
 import MyLps from "./components/MyLps";
+import Swap from "./components/Swap";
+import styles from "./index.less";
 const tabData = [
   { id: 1, name: "Swap" },
   { id: 2, name: "Liquidity" },

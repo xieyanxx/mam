@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { history, Link, NavLink } from "umi";
+import React from "react";
+import { history, NavLink } from "umi";
 
 import styles from "./index.less";
 import logo from "@/assets/logo/logo.png";
 import English from "@/assets/logo/English.png";
-import cx from "classnames";
 import WalletModal from "../WalletModal";
 type Props = {
   isIndex?: boolean;
@@ -52,7 +51,6 @@ const Header: React.FC<Props> = () => {
             <img src={English} alt="" />
           </div>
           <WalletModal></WalletModal>
-          {/* <div className={styles.connect_btn}>Connect</div> */}
         </div>
       </div>
       <div className={styles.header_middle}>
@@ -68,8 +66,6 @@ const Header: React.FC<Props> = () => {
           );
         })}
       </div>
-      {/* <WalletModal></WalletModal> */}
-      {/* <div className={styles.connect_btn}>Connect Wallet</div> */}
     </div>
   );
 };

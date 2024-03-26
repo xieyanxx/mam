@@ -1,25 +1,19 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
-import cx from "classnames";
-import styles from "./index.less";
-import { Button, Collapse, CollapseProps, Switch, message } from "antd";
 import down from "@/assets/logo/down.png";
 import share from "@/assets/logo/share.png";
-import metamask from "@/assets/logo/metamask.png";
-import Stake from "./components/Stake";
 import {
-  formWei,
-  getContract,
-  getAllowance,
-  getDecimals,
   balanceOf,
+  formWei,
+  getAllowance,
   getBalance,
+  getContract,
+  getDecimals,
 } from "@/components/EthersContainer";
+import { farmAbi, readyAbi, tokenAbi } from "@/components/EthersContainer/abj";
 import {
   ChainToken,
   farmContractAddress,
   readyContractAddress,
 } from "@/components/EthersContainer/address";
-import { farmAbi, readyAbi, tokenAbi } from "@/components/EthersContainer/abj";
 import {
   formatAmount,
   getTime,
@@ -27,6 +21,11 @@ import {
   timeDiff,
   timeIsEnd,
 } from "@/utils";
+import { Button, Collapse, CollapseProps, Switch, message } from "antd";
+import cx from "classnames";
+import { memo, useCallback, useEffect, useState } from "react";
+import Stake from "./components/Stake";
+import styles from "./index.less";
 
 import Unstake from "./components/Unstake";
 
@@ -237,10 +236,6 @@ function Mobile() {
               alt=""
             />
           </div>
-          {/* <div className={styles.top_r}>
-            <div className={styles.top_r_text}>APY</div>
-            <div>{formatAmount(details.apy)}%</div>
-          </div> */}
         </div>
       ),
       children: (
@@ -261,9 +256,6 @@ function Mobile() {
               <div className={styles.num_item}>
                 TVL: <span>{formatAmount(details.tvl)}USDT</span>
               </div>
-              {/* <div className={styles.num_item}>
-              TVL: <span>{formatAmount(details.tvl)}USDT</span>
-            </div> */}
             </div>
           )}
 

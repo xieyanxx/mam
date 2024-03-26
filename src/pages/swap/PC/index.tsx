@@ -1,9 +1,9 @@
-import React, { memo, useCallback, useEffect, useRef, useState } from "react";
-import styles from "./index.less";
 import cx from "classnames";
-import Swap from "./components/Swap";
+import { memo, useCallback, useEffect, useState } from "react";
 import Liquidity from "./components/Liquidity";
 import MyLps from "./components/MyLps";
+import Swap from "./components/Swap";
+import styles from "./index.less";
 
 const tabData = [
   { id: 1, name: "Swap" },
@@ -12,8 +12,8 @@ const tabData = [
 ];
 function PC() {
   const [current, setCurrent] = useState<number>(1);
-  const onChangeTab = useCallback((val:number) => {
-    setCurrent(val)
+  const onChangeTab = useCallback((val: number) => {
+    setCurrent(val);
   }, []);
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -37,7 +37,7 @@ function PC() {
       </div>
       {current == 1 && <Swap></Swap>}
       {current == 2 && <Liquidity />}
-      {current == 3 && <MyLps onchangTab={(val:number)=>onChangeTab(val)} />}
+      {current == 3 && <MyLps onchangTab={(val: number) => onChangeTab(val)} />}
     </div>
   );
 }

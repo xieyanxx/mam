@@ -1,17 +1,16 @@
-import React, { memo, useCallback, useState } from "react";
-import styles from "./index.less";
-import cx from "classnames";
-import { Button, Input, Modal, Radio, message } from "antd";
 import close from "@/assets/logo/close.png";
-import icon1 from "@/assets/logo/icon1.png";
 import { getContract, toWei } from "@/components/EthersContainer";
+import { poolAbi } from "@/components/EthersContainer/abj";
 import {
   ChainToken,
   poolContractAddress,
 } from "@/components/EthersContainer/address";
-import { poolAbi } from "@/components/EthersContainer/abj";
 import { formatAmount1 } from "@/utils";
+import { Button, Input, Modal, message } from "antd";
+import cx from "classnames";
+import { memo, useCallback, useState } from "react";
 import { history } from "umi";
+import styles from "./index.less";
 
 function Stake({
   handleCancel,

@@ -1,16 +1,14 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
-import styles from "./index.less";
-import cx from "classnames";
-import { Button, Input, Modal, Radio, message } from "antd";
 import close from "@/assets/logo/close.png";
-import icon1 from "@/assets/logo/icon1.png";
-import { formatAmount1, isplatformCoin } from "@/utils";
 import { formWei, getContract, toWei } from "@/components/EthersContainer";
+import { readyAbi, routeAbi } from "@/components/EthersContainer/abj";
 import {
   readyContractAddress,
   routeContractAddress,
 } from "@/components/EthersContainer/address";
-import { readyAbi, routeAbi } from "@/components/EthersContainer/abj";
+import { formatAmount1, isplatformCoin } from "@/utils";
+import { Button, Modal, message } from "antd";
+import { memo, useCallback, useEffect, useState } from "react";
+import styles from "./index.less";
 
 function AddLiquidity({
   handleCancel,
@@ -119,7 +117,6 @@ function AddLiquidity({
     }
   };
   const geTrate = useCallback(async () => {
-    console.log(formData, toData);
     const contract = await getContract(
       readyContractAddress,
       readyAbi,

@@ -1,7 +1,7 @@
-import React, { memo } from "react";
 import { useMobileToggle } from "@/hooks/useMobileToggle";
-import PC from "./PC";
+import { memo } from "react";
 import Mobile from "./Mobile";
+import PC from "./PC";
 
 function IndexPage() {
   const isMobile = useMobileToggle();

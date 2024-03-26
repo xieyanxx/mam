@@ -1,8 +1,7 @@
-import React, { memo, useState } from "react";
-import { history } from "umi";
-import styles from "./index.less";
 import sei from "@/assets/logo/sei.png";
 import snake from "@/assets/logo/snake.png";
+import { memo } from "react";
+import styles from "./index.less";
 
 function Mobile() {
   return (

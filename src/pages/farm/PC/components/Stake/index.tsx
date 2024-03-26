@@ -1,15 +1,15 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
-import styles from "./index.less";
-import cx from "classnames";
-import { Button, Input, Modal, Radio, message } from "antd";
 import close from "@/assets/logo/close.png";
+import { getContract, toWei } from "@/components/EthersContainer";
+import { farmAbi } from "@/components/EthersContainer/abj";
 import {
   ChainToken,
   farmContractAddress,
 } from "@/components/EthersContainer/address";
-import { farmAbi } from "@/components/EthersContainer/abj";
-import { getContract, toWei } from "@/components/EthersContainer";
 import { formatAmount1, isplatformCoin } from "@/utils";
+import { Button, Input, Modal, message } from "antd";
+import cx from "classnames";
+import { memo, useCallback, useState } from "react";
+import styles from "./index.less";
 
 function Stake({
   handleCancel,

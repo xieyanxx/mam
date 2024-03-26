@@ -1,18 +1,13 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
-import styles from "./index.less";
-import venom from "@/assets/logo/venom city logo.png";
-import cx from "classnames";
-import { Button, Collapse, CollapseProps, Switch, message } from "antd";
 import down from "@/assets/logo/down.png";
 import share from "@/assets/logo/share.png";
-import Stake from "./components/Stake";
+import venom from "@/assets/logo/venom city logo.png";
 import {
-  formWei,
-  getContract,
-  getAllowance,
-  getDecimals,
   balanceOf,
+  formWei,
+  getAllowance,
   getBalance,
+  getContract,
+  getDecimals,
 } from "@/components/EthersContainer";
 import { farmAbi, readyAbi, tokenAbi } from "@/components/EthersContainer/abj";
 import {
@@ -22,12 +17,16 @@ import {
 } from "@/components/EthersContainer/address";
 import {
   formatAmount,
-  formatAmount1,
   getTime,
   isplatformCoin,
   timeDiff,
   timeIsEnd,
 } from "@/utils";
+import { Button, Collapse, CollapseProps, Switch, message } from "antd";
+import cx from "classnames";
+import { memo, useCallback, useEffect, useState } from "react";
+import Stake from "./components/Stake";
+import styles from "./index.less";
 
 import Unstake from "./components/Unstake";
 const tabData = [

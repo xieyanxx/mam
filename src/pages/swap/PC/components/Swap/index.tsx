@@ -1,20 +1,8 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
-import styles from "./index.less";
+import change from "@/assets/logo/change.png";
+import down from "@/assets/logo/down.png";
+import refresh from "@/assets/logo/refresh.png";
 import setting from "@/assets/logo/setting.png";
 import time from "@/assets/logo/time.png";
-import down from "@/assets/logo/down.png";
-import change from "@/assets/logo/change.png";
-import refresh from "@/assets/logo/refresh.png";
-import { Button, Input, message } from "antd";
-import SettingModal from "@/components/Web/SettingModal";
-import SelectModal from "@/components/Web/SelectModal";
-import {
-  ChainToken,
-  factoryContractAddress,
-  farmContractAddress,
-  readyContractAddress,
-  routeContractAddress,
-} from "@/components/EthersContainer/address";
 import {
   balanceOf,
   formWei,
@@ -26,14 +14,24 @@ import {
 } from "@/components/EthersContainer";
 import {
   factoryAbi,
-  farmAbi,
   readyAbi,
   routeAbi,
   tokenAbi,
 } from "@/components/EthersContainer/abj";
-import { formatAmount, formatAmount1, isplatformCoin } from "@/utils";
-import ConfirmSwap from "../ConfirmSwap";
+import {
+  ChainToken,
+  factoryContractAddress,
+  readyContractAddress,
+  routeContractAddress,
+} from "@/components/EthersContainer/address";
+import SelectModal from "@/components/Web/SelectModal";
+import SettingModal from "@/components/Web/SettingModal";
+import { formatAmount1, isplatformCoin } from "@/utils";
+import { Button, Input, message } from "antd";
 import { debounce, throttle } from "lodash";
+import { memo, useCallback, useEffect, useState } from "react";
+import ConfirmSwap from "../ConfirmSwap";
+import styles from "./index.less";
 
 const statusType: any = {
   0: "Invalid pai", //地址无效，

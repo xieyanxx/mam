@@ -1,7 +1,6 @@
 import React, { memo, useCallback, useEffect, useState } from "react";
 import styles from "./index.less";
-import cx from "classnames";
-import { Button, Input, Modal, Radio, message } from "antd";
+import {  Input, Modal, Radio, message } from "antd";
 import close from "@/assets/logo/close.png";
 import icon1 from "@/assets/logo/icon1.png";
 
@@ -110,7 +109,6 @@ function SettingModal({
               <p>Transaction Deadline</p>
               <img src={icon1} alt="" />
               <Input
-                // placeholder="Basic usage"
                 onChange={(e) => {
                   let value = e.target.value;
                   if (!value.match(/^\d*$/)) {

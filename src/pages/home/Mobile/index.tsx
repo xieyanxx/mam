@@ -1,11 +1,10 @@
-import React, { memo, useState } from "react";
-import { history } from "umi";
-import styles from "./index.less";
-import cx from "classnames";
-import sei from "@/assets/logo/sei.png";
 import block1 from "@/assets/logo/block1.png";
 import block2 from "@/assets/logo/block2.png";
 import block3 from "@/assets/logo/block3.png";
+import sei from "@/assets/logo/sei.png";
+import { memo } from "react";
+import { history } from "umi";
+import styles from "./index.less";
 
 function Mobile() {
   return (

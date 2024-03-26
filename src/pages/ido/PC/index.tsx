@@ -1,8 +1,7 @@
-import React, { memo, useRef } from "react";
-import styles from "./index.less";
-import cx from "classnames";
 import sei from "@/assets/logo/sei.png";
 import snake from "@/assets/logo/snake.png";
+import { memo } from "react";
+import styles from "./index.less";
 
 function PC() {
   return (

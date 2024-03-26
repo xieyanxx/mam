@@ -1,26 +1,23 @@
-import React, { memo, useEffect, useState } from "react";
-import styles from "./index.less";
-import cx from "classnames";
-import setting from "@/assets/logo/setting.png";
 import icon1 from "@/assets/logo/icon1.png";
+import setting from "@/assets/logo/setting.png";
 import time from "@/assets/logo/time.png";
 import {
   formWei,
   getAllowance,
   getContract,
-  toWei,
 } from "@/components/EthersContainer";
+import { readyAbi, tokenAbi } from "@/components/EthersContainer/abj";
 import {
   ChainToken,
   readyContractAddress,
   routeContractAddress,
 } from "@/components/EthersContainer/address";
-import { readyAbi, routeAbi, tokenAbi } from "@/components/EthersContainer/abj";
-import { formatAmount1, isplatformCoin } from "@/utils";
-import RemoveLiquidity from "../RemoveLiquidity";
-import { Button, message } from "antd";
 import SettingModal from "@/components/Web/SettingModal";
-import { history } from "umi";
+import { formatAmount1, isplatformCoin } from "@/utils";
+import { Button, message } from "antd";
+import { memo, useEffect, useState } from "react";
+import RemoveLiquidity from "../RemoveLiquidity";
+import styles from "./index.less";
 
 function MyLps({ onchangTab }: { onchangTab: (val: number) => void }) {
   const [walletType] = useState<string>(

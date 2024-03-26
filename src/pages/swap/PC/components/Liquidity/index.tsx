@@ -1,24 +1,7 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
-import styles from "./index.less";
-import cx from "classnames";
+import add from "@/assets/logo/add.png";
+import down from "@/assets/logo/down.png";
 import setting from "@/assets/logo/setting.png";
 import time from "@/assets/logo/time.png";
-import sei1 from "@/assets/logo/sei1.png";
-import down from "@/assets/logo/down.png";
-import usdt from "@/assets/logo/usdt.png";
-import add from "@/assets/logo/add.png";
-import { Button, Input, message } from "antd";
-import AddLiquidity from "../AddLiquidity";
-import ConfirmSwap from "../ConfirmSwap";
-import RemoveLiquidity from "../RemoveLiquidity";
-import {
-  ChainToken,
-  factoryContractAddress,
-  readyContractAddress,
-  routeContractAddress,
-} from "@/components/EthersContainer/address";
-import SettingModal from "@/components/Web/SettingModal";
-import SelectModal from "@/components/Web/SelectModal";
 import {
   balanceOf,
   formWei,
@@ -28,14 +11,25 @@ import {
   getDecimals,
   toWei,
 } from "@/components/EthersContainer";
-import { formatAmount1, isplatformCoin } from "@/utils";
 import {
   factoryAbi,
   readyAbi,
-  routeAbi,
   tokenAbi,
 } from "@/components/EthersContainer/abj";
+import {
+  ChainToken,
+  factoryContractAddress,
+  readyContractAddress,
+  routeContractAddress,
+} from "@/components/EthersContainer/address";
+import SelectModal from "@/components/Web/SelectModal";
+import SettingModal from "@/components/Web/SettingModal";
+import { formatAmount1, isplatformCoin } from "@/utils";
+import { Button, Input, message } from "antd";
 import { debounce } from "lodash";
+import { memo, useCallback, useEffect, useState } from "react";
+import AddLiquidity from "../AddLiquidity";
+import styles from "./index.less";
 
 const statusType: any = {
   0: "Invalid pai", //地址无效，
@@ -298,7 +292,6 @@ function Liquidity() {
           toAddress
         );
         if (getToNum) {
-          console.log(Number(formWei(getToNum, 18)) > Number(toBalance));
           if (Number(formWei(getToNum, 18)) > Number(toBalance)) {
             setToData({
               ...toData,

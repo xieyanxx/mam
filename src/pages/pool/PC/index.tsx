@@ -1,22 +1,15 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
-import styles from "./index.less";
 import venom from "@/assets/logo/block3.png";
-import cx from "classnames";
-import { Button, Collapse, CollapseProps, Switch, message } from "antd";
-import sei1 from "@/assets/logo/sei1.png";
-import block1 from "@/assets/logo/block1.png";
 import down from "@/assets/logo/down.png";
 import share from "@/assets/logo/share.png";
-import metamask from "@/assets/logo/metamask.png";
-import ImportPool from "./components/ImportPool";
 import {
-  formWei,
-  getContract,
-  getAllowance,
-  getDecimals,
   balanceOf,
+  formWei,
+  getAllowance,
   getBalance,
+  getContract,
+  getDecimals,
 } from "@/components/EthersContainer";
+import { poolAbi, readyAbi, tokenAbi } from "@/components/EthersContainer/abj";
 import {
   ChainToken,
   poolContractAddress,
@@ -29,9 +22,12 @@ import {
   timeDiff,
   timeIsEnd,
 } from "@/utils";
+import { Button, Collapse, CollapseProps, Switch, message } from "antd";
+import cx from "classnames";
+import { memo, useCallback, useEffect, useState } from "react";
 import Stake from "./components/Stake";
 import Unstake from "./components/Unstake";
-import { poolAbi, readyAbi, tokenAbi } from "@/components/EthersContainer/abj";
+import styles from "./index.less";
 
 const tabData = [
   { id: 1, name: "Active" },

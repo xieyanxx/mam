@@ -1,9 +1,8 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
-import styles from "./index.less";
-import cx from "classnames";
-import { Button, Input, Modal, Radio, message } from "antd";
 import close from "@/assets/logo/close.png";
 import icon1 from "@/assets/logo/icon1.png";
+import { Input, Modal, Radio, message } from "antd";
+import { memo, useCallback, useEffect, useState } from "react";
+import styles from "./index.less";
 
 function SettingModal({
   handleCancel,

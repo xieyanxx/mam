@@ -1,16 +1,8 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
-import styles from "./index.less";
-import cx from "classnames";
+import change from "@/assets/logo/change.png";
+import down from "@/assets/logo/down.png";
+import refresh from "@/assets/logo/refresh.png";
 import setting from "@/assets/logo/setting.png";
 import time from "@/assets/logo/time.png";
-import sei1 from "@/assets/logo/sei1.png";
-import down from "@/assets/logo/down.png";
-import usdt from "@/assets/logo/usdt.png";
-import change from "@/assets/logo/change.png";
-import refresh from "@/assets/logo/refresh.png";
-import { Button, Input, message } from "antd";
-import SettingModal from "@/components/Mobile/SettingModal";
-import SelectModal from "@/components/Mobile/SelectModal";
 import {
   balanceOf,
   formWei,
@@ -26,15 +18,20 @@ import {
   routeAbi,
   tokenAbi,
 } from "@/components/EthersContainer/abj";
-import { formatAmount, formatAmount1, isplatformCoin } from "@/utils";
 import {
   ChainToken,
   factoryContractAddress,
   readyContractAddress,
   routeContractAddress,
 } from "@/components/EthersContainer/address";
+import SelectModal from "@/components/Mobile/SelectModal";
+import SettingModal from "@/components/Mobile/SettingModal";
+import { formatAmount1, isplatformCoin } from "@/utils";
+import { Button, Input, message } from "antd";
 import { debounce, throttle } from "lodash";
+import { memo, useCallback, useEffect, useState } from "react";
 import ConfirmSwap from "../ConfirmSwap";
+import styles from "./index.less";
 const statusType: any = {
   0: "Invalid pai", //地址无效，
   1: "Enter Number", //没有输入金额，

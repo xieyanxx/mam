@@ -1,17 +1,7 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
-import styles from "./index.less";
+import add from "@/assets/logo/add.png";
+import down from "@/assets/logo/down.png";
 import setting from "@/assets/logo/setting.png";
 import time from "@/assets/logo/time.png";
-import down from "@/assets/logo/down.png";
-import add from "@/assets/logo/add.png";
-import { Button, Input, message } from "antd";
-import AddLiquidity from "../AddLiquidity";
-import {
-  ChainToken,
-  factoryContractAddress,
-  readyContractAddress,
-  routeContractAddress,
-} from "@/components/EthersContainer/address";
 import {
   balanceOf,
   formWei,
@@ -24,13 +14,22 @@ import {
 import {
   factoryAbi,
   readyAbi,
-  routeAbi,
   tokenAbi,
 } from "@/components/EthersContainer/abj";
-import { formatAmount1, isplatformCoin } from "@/utils";
-import { debounce } from "lodash";
-import SettingModal from "@/components/Mobile/SettingModal";
+import {
+  ChainToken,
+  factoryContractAddress,
+  readyContractAddress,
+  routeContractAddress,
+} from "@/components/EthersContainer/address";
 import SelectModal from "@/components/Mobile/SelectModal";
+import SettingModal from "@/components/Mobile/SettingModal";
+import { formatAmount1, isplatformCoin } from "@/utils";
+import { Button, Input, message } from "antd";
+import { debounce } from "lodash";
+import { memo, useCallback, useEffect, useState } from "react";
+import AddLiquidity from "../AddLiquidity";
+import styles from "./index.less";
 const statusType: any = {
   0: "Invalid pai", //地址无效，
   1: "Enter Number", //没有输入金额，
@@ -248,7 +247,6 @@ function Liquidity() {
           toAddress
         );
         if (getToNum) {
-          console.log(Number(formWei(getToNum, 18)) > Number(toBalance));
           if (Number(formWei(getToNum, 18)) > Number(toBalance)) {
             setToData({
               ...toData,
