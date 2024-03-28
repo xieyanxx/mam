@@ -253,7 +253,7 @@ function Mobile() {
       ),
       children: (
         <div className={styles.details_wrap}>
-          {active && (
+          {!hasListId.some((i) => i == current) && (
             <div className={styles.text_num_wrap}>
               <div className={styles.num_item}>
                 My Stake:{" "}

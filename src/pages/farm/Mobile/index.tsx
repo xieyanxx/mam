@@ -240,7 +240,7 @@ function Mobile() {
       ),
       children: (
         <div className={styles.details_wrap}>
-          {active && (
+          {!hasListId.some((i) => i == current) && (
             <div className={styles.text_num_wrap}>
               <div className={styles.num_item}>
                 My Stake:{" "}
@@ -383,6 +383,7 @@ function Mobile() {
                 onChange={(v) => {
                   if (v.length) {
                     setActive(true);
+                    setActiveCurrent(index);
                     setHasListId(hasListId.filter((i) => i !== index));
                   } else {
                     setActive(false);
