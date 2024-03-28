@@ -4,6 +4,8 @@ import Liquidity from "./components/Liquidity";
 import MyLps from "./components/MyLps";
 import Swap from "./components/Swap";
 import styles from "./index.less";
+import Footer from "@/components/Footer";
+
 
 const tabData = [
   { id: 1, name: "Swap" },
@@ -23,6 +25,7 @@ function PC() {
     }
   }, []);
   return (
+    <>
     <div className={styles.wrap}>
       <div className={styles.tab_wrap}>
         {tabData.map((item) => (
@@ -39,6 +42,8 @@ function PC() {
       {current == 2 && <Liquidity />}
       {current == 3 && <MyLps onchangTab={(val: number) => onChangeTab(val)} />}
     </div>
+    <Footer />
+    </>
   );
 }
 

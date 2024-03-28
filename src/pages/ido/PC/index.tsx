@@ -2,9 +2,11 @@ import sei from "@/assets/logo/sei.png";
 import snake from "@/assets/logo/snake.png";
 import { memo } from "react";
 import styles from "./index.less";
+import Footer from "@/components/Footer";
 
 function PC() {
   return (
+    <>
     <div className={styles.wrap}>
       <div className={styles.title}>
         The LETHAL LAUNCHPAD to
@@ -20,6 +22,8 @@ function PC() {
         <div>Get ready...</div>
       </div>
     </div>
+    <Footer/>
+    </>
   );
 }
 

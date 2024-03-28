@@ -28,6 +28,7 @@ import { memo, useCallback, useEffect, useState } from "react";
 import Stake from "./components/Stake";
 import Unstake from "./components/Unstake";
 import styles from "./index.less";
+import Footer from "@/components/Footer";
 
 const tabData = [
   { id: 1, name: "Active" },
@@ -275,176 +276,179 @@ function PC() {
     },
   ];
   return (
-    <div className={styles.wrap}>
-      <div className={styles.middle_content}>
-        <div className={styles.title_wrap}>
-          <img src={venom} alt="" />
-          <div className={styles.title_r}>
-            <div className={styles.title}>DeFi Zone </div>
-            <div className={styles.sub_title}>
-              Stake LP tokens to earn. Provide liquidity and stake.
+    <>
+      <div className={styles.wrap}>
+        <div className={styles.middle_content}>
+          <div className={styles.title_wrap}>
+            <img src={venom} alt="" />
+            <div className={styles.title_r}>
+              <div className={styles.title}>DeFi Zone </div>
+              <div className={styles.sub_title}>
+                Stake LP tokens to earn. Provide liquidity and stake.
+              </div>
             </div>
           </div>
-        </div>
-        <div className={styles.content_wrap}>
-          <div className={styles.tab_wrap}>
-            {tabData.map((tab) => (
-              <div
-                key={tab.id}
-                onClick={() => setCurrent(tab.id)}
-                className={cx(
-                  styles.tab_item,
-                  current == tab.id && styles.active
-                )}
-              >
-                {tab.name}
+          <div className={styles.content_wrap}>
+            <div className={styles.tab_wrap}>
+              {tabData.map((tab) => (
+                <div
+                  key={tab.id}
+                  onClick={() => setCurrent(tab.id)}
+                  className={cx(
+                    styles.tab_item,
+                    current == tab.id && styles.active
+                  )}
+                >
+                  {tab.name}
+                </div>
+              ))}
+            </div>
+            <Switch
+              className={styles.switch_wrap}
+              defaultChecked={false}
+              onChange={onChange}
+            />
+            <div className={styles.switch_text}>Staked only</div>
+          </div>
+          <div className={styles.content}>
+            {poolList.map((item: any, index: number) => (
+              <div key={index}>
+                <div className={styles.item_wrap}>
+                  <div className={styles.top_wrap}>
+                    <div className={styles.top_l}>
+                      <div className={styles.name}>
+                        {item.name[0].split(" ")[0]}
+                      </div>
+                      <div className={styles.name_1}>
+                        {item.name[0].split(" ")[1]}
+                      </div>
+                    </div>
+                    <div className={styles.top_r}>
+                      <img
+                        className={styles.img_b}
+                        src={
+                          ChainToken.filter(
+                            (i) =>
+                              i.name == item.name[0].split(" ")[0].split("-")[0]
+                          )[0]?.src
+                        }
+                        alt=""
+                      />
+                      <img
+                        className={styles.img_s}
+                        src={
+                          ChainToken.filter(
+                            (i) =>
+                              i.name == item.name[0].split(" ")[0].split("-")[1]
+                          )[0]?.src
+                        }
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                  <div className={styles.stake}>
+                    <div>My Stake:</div>
+                    <div className={styles.num}>
+                      {formatAmount(item.amount)}
+                      <p>({item.name[0]})</p>
+                    </div>
+                  </div>
+                  <div className={styles.md_wrap}>
+                    <div className={styles.md_text_wrap}>
+                      <div className={styles.text_l}>APY:</div>
+                      <div className={styles.text_r}>
+                        {formatAmount(item.apy)}%
+                      </div>
+                    </div>
+                    <div className={styles.md_text_wrap}>
+                      <div className={styles.text_l}>TVL:</div>
+                      <div className={styles.text_r}>
+                        {formatAmount(item.tvl)}USDT
+                      </div>
+                    </div>
+                    <div className={styles.text_bt}>
+                      <div className={styles.bt_l}>
+                        <div className={styles.bt_text}>
+                          {item.name[1]} Earned
+                        </div>
+                        <div>{formatAmount(item.userReward)}</div>
+                      </div>
+                      <Button
+                        className={styles.btn}
+                        onClick={() => handleClaim(item.id, index)}
+                        loading={activeCurrent == index && claimLoading}
+                      >
+                        Claim
+                      </Button>
+                    </div>
+                  </div>
+                  {!Number(item.amount) ? (
+                    <Button
+                      className={styles.stake_btn}
+                      loading={index == poolId ? loading : false}
+                      onClick={
+                        !item.stakeStatue
+                          ? () => handleApprove(item.token, index)
+                          : () => stakeShowModal(item, index)
+                      }
+                    >
+                      {item.stakeStatue ? "Stake" : "approve"}
+                    </Button>
+                  ) : (
+                    <div className={styles.stake_wrap}>
+                      <Button
+                        className={cx(styles.stake_btn, styles.stake_btn1)}
+                        onClick={() => stakeShowModal(item, index)}
+                      >
+                        Stake +
+                      </Button>
+                      <Button
+                        className={cx(styles.stake_btn, styles.stake_btn2)}
+                        onClick={() => unstakeShowModal(item, index)}
+                      >
+                        Unstake
+                      </Button>
+                    </div>
+                  )}
+                </div>
+                <Collapse
+                  onChange={(v) => {
+                    v.length ? setActive(true) : setActive(false);
+                    setActiveCurrent(index);
+                  }}
+                  bordered={false}
+                  className={styles.collapse_wrap}
+                  expandIcon={({ isActive }) => (
+                    <img
+                      src={down}
+                      style={{ rotate: isActive ? "180deg" : "360deg" }}
+                    />
+                  )}
+                  expandIconPosition={"end"}
+                  items={getItems(index, item)}
+                />
               </div>
             ))}
           </div>
-          <Switch
-            className={styles.switch_wrap}
-            defaultChecked={false}
-            onChange={onChange}
-          />
-          <div className={styles.switch_text}>Staked only</div>
         </div>
-        <div className={styles.content}>
-          {poolList.map((item: any, index: number) => (
-            <div key={index}>
-              <div className={styles.item_wrap}>
-                <div className={styles.top_wrap}>
-                  <div className={styles.top_l}>
-                    <div className={styles.name}>
-                      {item.name[0].split(" ")[0]}
-                    </div>
-                    <div className={styles.name_1}>
-                      {item.name[0].split(" ")[1]}
-                    </div>
-                  </div>
-                  <div className={styles.top_r}>
-                    <img
-                      className={styles.img_b}
-                      src={
-                        ChainToken.filter(
-                          (i) =>
-                            i.name == item.name[0].split(" ")[0].split("-")[0]
-                        )[0]?.src
-                      }
-                      alt=""
-                    />
-                    <img
-                      className={styles.img_s}
-                      src={
-                        ChainToken.filter(
-                          (i) =>
-                            i.name == item.name[0].split(" ")[0].split("-")[1]
-                        )[0]?.src
-                      }
-                      alt=""
-                    />
-                  </div>
-                </div>
-                <div className={styles.stake}>
-                  <div>My Stake:</div>
-                  <div className={styles.num}>
-                    {formatAmount(item.amount)}
-                    <p>({item.name[0]})</p>
-                  </div>
-                </div>
-                <div className={styles.md_wrap}>
-                  <div className={styles.md_text_wrap}>
-                    <div className={styles.text_l}>APY:</div>
-                    <div className={styles.text_r}>
-                      {formatAmount(item.apy)}%
-                    </div>
-                  </div>
-                  <div className={styles.md_text_wrap}>
-                    <div className={styles.text_l}>TVL:</div>
-                    <div className={styles.text_r}>
-                      {formatAmount(item.tvl)}USDT
-                    </div>
-                  </div>
-                  <div className={styles.text_bt}>
-                    <div className={styles.bt_l}>
-                      <div className={styles.bt_text}>
-                        {item.name[1]} Earned
-                      </div>
-                      <div>{formatAmount(item.userReward)}</div>
-                    </div>
-                    <Button
-                      className={styles.btn}
-                      onClick={() => handleClaim(item.id, index)}
-                      loading={activeCurrent == index && claimLoading}
-                    >
-                      Claim
-                    </Button>
-                  </div>
-                </div>
-                {!Number(item.amount) ? (
-                  <Button
-                    className={styles.stake_btn}
-                    loading={index == poolId ? loading : false}
-                    onClick={
-                      !item.stakeStatue
-                        ? () => handleApprove(item.token, index)
-                        : () => stakeShowModal(item, index)
-                    }
-                  >
-                    {item.stakeStatue ? "Stake" : "approve"}
-                  </Button>
-                ) : (
-                  <div className={styles.stake_wrap}>
-                    <Button
-                      className={cx(styles.stake_btn, styles.stake_btn1)}
-                      onClick={() => stakeShowModal(item, index)}
-                    >
-                      Stake +
-                    </Button>
-                    <Button
-                      className={cx(styles.stake_btn, styles.stake_btn2)}
-                      onClick={() => unstakeShowModal(item, index)}
-                    >
-                      Unstake
-                    </Button>
-                  </div>
-                )}
-              </div>
-              <Collapse
-                onChange={(v) => {
-                  v.length ? setActive(true) : setActive(false);
-                  setActiveCurrent(index);
-                }}
-                bordered={false}
-                className={styles.collapse_wrap}
-                expandIcon={({ isActive }) => (
-                  <img
-                    src={down}
-                    style={{ rotate: isActive ? "180deg" : "360deg" }}
-                  />
-                )}
-                expandIconPosition={"end"}
-                items={getItems(index, item)}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
 
-      <Stake
-        isModalOpen={stakeModalOpen}
-        handleCancel={handleStakeCancel}
-        poolInfo={currenPoolInfo}
-      ></Stake>
-      <Unstake
-        isModalOpen={unstakeModalOpen}
-        handleCancel={handleUnstakeCancel}
-        poolInfo={currenPoolInfo}
-      ></Unstake>
-      {/* <ImportPool
+        <Stake
+          isModalOpen={stakeModalOpen}
+          handleCancel={handleStakeCancel}
+          poolInfo={currenPoolInfo}
+        ></Stake>
+        <Unstake
+          isModalOpen={unstakeModalOpen}
+          handleCancel={handleUnstakeCancel}
+          poolInfo={currenPoolInfo}
+        ></Unstake>
+        {/* <ImportPool
         isModalOpen={stakeModalOpen}
         handleCancel={handleStakeCancel}
       ></ImportPool> */}
-    </div>
+      </div>
+      <Footer />
+    </>
   );
 }
 

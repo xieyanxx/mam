@@ -1,5 +1,4 @@
 import EthersContainer from "@/components/EthersContainer";
-import Footer from "@/components/Footer";
 import Nav from "@/components/Mobile/Header";
 import Header from "@/components/Web/Header";
 import { useMobileToggle } from "@/hooks/useMobileToggle";
@@ -21,8 +20,6 @@ export default () => {
       <EthersContainer>
         <Outlet />
       </EthersContainer>
-
-      <Footer />
     </>
   );
 };
