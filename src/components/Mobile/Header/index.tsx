@@ -1,10 +1,10 @@
 import React from "react";
 import { history, NavLink } from "umi";
 
-import styles from "./index.less";
-import logo from "@/assets/logo/logo.png";
 import English from "@/assets/logo/English.png";
+import logo from "@/assets/logo/logo.png";
 import WalletModal from "../WalletModal";
+import styles from "./index.less";
 type Props = {
   isIndex?: boolean;
 };
@@ -33,6 +33,10 @@ const Header: React.FC<Props> = () => {
     {
       name: "IDO",
       urlLink: "Ido",
+    },
+    {
+      name: "Faucet",
+      urlLink: "Faucet",
     },
   ];
   const onMenuClick = (path: string) => {

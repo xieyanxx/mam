@@ -11,6 +11,7 @@ export default defineConfig({
     { path: "/Farm", component: "@/pages/farm" },
     { path: "/Swap", component: "@/pages/swap" },
     { path: "/IDO", component: "@/pages/ido" },
+    { path: "/Faucet", component: "@/pages/faucet" },
   ],
 
   extraPostCSSPlugins: [

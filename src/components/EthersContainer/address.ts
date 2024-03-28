@@ -13,6 +13,7 @@ export const factoryContractAddress =
   "0x74dB217b86341b8515b842775930f2b7D7Ac1b6A";
 export const readyContractAddress =
   "0x2CF737fbCae290db246F7eCB71152910Bedb8Dfc";
+export const claimMAMBAContractAddress = "0x1e98D91428cbFd8c1957Fac9AcCcb69a071E84eF";
 export const ChainToken = [
   {
     id: 1,
