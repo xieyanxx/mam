@@ -1,7 +1,6 @@
-import initReactFastclick from "react-fastclick";
 import { debounce } from "lodash";
-import eruda from "eruda";
-eruda.init();
+import initReactFastclick from "react-fastclick";
+// eruda.init();
 
 initReactFastclick();
 
