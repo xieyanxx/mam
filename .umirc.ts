@@ -1,6 +1,5 @@
-import logo from "@/assets/logo/logo.png";
-import { defineConfig } from "umi";
 import px2vw from "postcss-px-to-viewport";
+import { defineConfig } from "umi";
 
 export default defineConfig({
   title: "MAMBA",
