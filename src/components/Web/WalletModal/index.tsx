@@ -16,7 +16,7 @@ import cx from "classnames";
 import { memo, useContext, useEffect, useState } from "react";
 import styles from "./index.less";
 
-function WalletModal({ isbig }: { isbig?: boolean }) {
+function WalletModal({ isbig, iscard }: { isbig?: boolean; iscard: boolean }) {
   const [connecting, setConnecting, getConnecting] =
     useGetState<boolean>(false);
   let ethersData = useContext(EthersContext);
@@ -36,6 +36,7 @@ function WalletModal({ isbig }: { isbig?: boolean }) {
     try {
       const wallet = await getWallet();
       await ethersData?.initEthers(wallet, walletType1);
+      window.location.reload();
       handleCancel();
     } catch (error: any) {
       if (error?.code === -32002) {
@@ -59,18 +60,26 @@ function WalletModal({ isbig }: { isbig?: boolean }) {
   }, [ethersData?.chainId]);
   return (
     <div className={styles.wrap}>
-      {ethersData?.address ? (
-        <div className={isbig ? styles.btn : styles.connect_btn}>
-          {getSubStr(ethersData?.address)}
-        </div>
-      ) : (
-        <Button
-          type="primary"
-          className={isbig ? styles.btn : styles.connect_btn}
-          onClick={showModal}
-        >
+      {iscard ? (
+        <Button type="primary" className={styles.card_btn} onClick={showModal}>
           Connect Wallet
         </Button>
+      ) : (
+        <>
+          {ethersData?.address ? (
+            <div className={isbig ? styles.btn : styles.connect_btn}>
+              {getSubStr(ethersData?.address)}
+            </div>
+          ) : (
+            <Button
+              type="primary"
+              className={isbig ? styles.btn : styles.connect_btn}
+              onClick={showModal}
+            >
+              Connect Wallet
+            </Button>
+          )}
+        </>
       )}
 
       <Modal

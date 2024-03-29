@@ -1,22 +1,22 @@
-import React, { memo, useContext, useEffect, useState } from "react";
-import styles from "./index.less";
-import cx from "classnames";
-import { Button, Modal, message } from "antd";
 import close from "@/assets/logo/close.png";
-import metamask from "@/assets/logo/metamask1.png";
 import coinbase from "@/assets/logo/coinbase.png";
 import math from "@/assets/logo/math.png";
+import metamask from "@/assets/logo/metamask1.png";
 import token from "@/assets/logo/token.png";
-import wallet from "@/assets/logo/wallet.png";
 import trust from "@/assets/logo/trust.png";
-import { useGetState } from "ahooks";
+import wallet from "@/assets/logo/wallet.png";
 import { EthersContext, WalletType } from "@/components/EthersContainer";
-import { MetaMaskWallet } from "@/components/EthersContainer/wallet/metamask";
 import { CoinbaseWallet } from "@/components/EthersContainer/wallet/coinbase";
+import { MetaMaskWallet } from "@/components/EthersContainer/wallet/metamask";
 import { WalletConnect } from "@/components/EthersContainer/wallet/walletconnect";
 import { getSubStr } from "@/utils";
+import { useGetState } from "ahooks";
+import { Button, Modal, message } from "antd";
+import cx from "classnames";
+import { memo, useContext, useEffect, useState } from "react";
+import styles from "./index.less";
 
-function WalletModal({ isbig }: { isbig?: boolean }) {
+function WalletModal({ iscard }: { iscard?: boolean }) {
   const [connecting, setConnecting, getConnecting] =
     useGetState<boolean>(false);
   let ethersData = useContext(EthersContext);
@@ -37,6 +37,7 @@ function WalletModal({ isbig }: { isbig?: boolean }) {
       const wallet = await getWallet();
       await ethersData?.initEthers(wallet, walletType1);
       handleCancel();
+      window.location.reload();
     } catch (error: any) {
       if (error?.code === -32002) {
         message.error(error.message);
@@ -69,18 +70,26 @@ function WalletModal({ isbig }: { isbig?: boolean }) {
   }, [ethersData?.chainId]);
   return (
     <div className={styles.wrap}>
-      {ethersData?.address ? (
-        <div className={isbig ? styles.btn : styles.connect_btn}>
-          {getSubStr(ethersData?.address)}
-        </div>
-      ) : (
-        <Button
-          type="primary"
-          className={isbig ? styles.btn : styles.connect_btn}
-          onClick={showModal}
-        >
+      {iscard ? (
+        <Button type="primary" className={styles.card_btn} onClick={showModal}>
           Connect
         </Button>
+      ) : (
+        <>
+          {ethersData?.address ? (
+            <div className={styles.connect_btn}>
+              {getSubStr(ethersData?.address)}
+            </div>
+          ) : (
+            <Button
+              type="primary"
+              className={styles.connect_btn}
+              onClick={showModal}
+            >
+              Connect
+            </Button>
+          )}
+        </>
       )}
 
       <Modal

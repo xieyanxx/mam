@@ -33,7 +33,7 @@ function PC() {
             </div>
           </div>
           <div className={styles.btn_wrap}>
-            <WalletModal isbig></WalletModal>
+            <WalletModal isbig iscard={false}></WalletModal>
             <div className={styles.btn} onClick={() => history.push("/Swap")}>
               Trade Now
             </div>

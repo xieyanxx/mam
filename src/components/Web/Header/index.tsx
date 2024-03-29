@@ -61,7 +61,7 @@ const Header: React.FC<Props> = () => {
           );
         })}
       </div>
-      <WalletModal></WalletModal>
+      <WalletModal iscard={false}></WalletModal>
     </div>
   );
 };

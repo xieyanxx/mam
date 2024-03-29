@@ -15,6 +15,8 @@ import {
   poolContractAddress,
   readyContractAddress,
 } from "@/components/EthersContainer/address";
+import Footer from "@/components/Footer";
+import WalletModal from "@/components/Web/WalletModal";
 import {
   formatAmount,
   getTime,
@@ -28,7 +30,6 @@ import { memo, useCallback, useEffect, useState } from "react";
 import Stake from "./components/Stake";
 import Unstake from "./components/Unstake";
 import styles from "./index.less";
-import Footer from "@/components/Footer";
 
 const tabData = [
   { id: 1, name: "Active" },
@@ -92,38 +93,43 @@ function PC() {
     );
     let getPoolList = await contract.getpool();
     let newList = getPoolList.map(async (item: any, index: number) => {
-      let userInfo = await contract.users(index, address);
-      let pendingInfo = await contract.pending(index, address);
       let apyData = await readyContract.getTVLandAPY2(index);
       const { APY, TVL } = apyData;
       let decimals = 18;
       let stakeStatue = "0";
       let balance = "0";
-      if (!isplatformCoin(item.token)) {
-        // 只有非平台币才需要授权
-        decimals = await getDecimals(item.token, walletType, tokenAbi);
-        stakeStatue = await getAllowance(
-          item.token,
-          address,
-          walletType,
-          tokenAbi,
-          poolContractAddress
-        );
+      let userInfo;
+      let pendingInfo;
+      if (address) {
+        userInfo = await contract.users(index, address);
+        pendingInfo = await contract.pending(index, address);
+        if (!isplatformCoin(item.token)) {
+          // 只有非平台币才需要授权
+          decimals = await getDecimals(item.token, walletType, tokenAbi);
+          stakeStatue = await getAllowance(
+            item.token,
+            address,
+            walletType,
+            tokenAbi,
+            poolContractAddress
+          );
 
-        balance = await balanceOf(item.token, tokenAbi, walletType, address);
-      } else {
-        balance = (await getBalance(walletType, address)).balanceVal;
+          balance = await balanceOf(item.token, tokenAbi, walletType, address);
+        } else {
+          balance = (await getBalance(walletType, address)).balanceVal;
+        }
       }
+
       let newInfo: any = {};
       newInfo.id = index;
-      newInfo.amount = formWei(userInfo.amount, decimals);
+      newInfo.amount = userInfo ? formWei(userInfo.amount, decimals) : 0;
       newInfo.token = item.token;
       newInfo.rewaredtoken = item.rewaredtoken;
       newInfo.starttime = item.starttime.toString();
       newInfo.endtime = item.endtime.toString();
       newInfo.totalStake = formWei(item.totalStake, decimals);
       newInfo.name = item.name.split(",");
-      newInfo.userReward = formWei(pendingInfo, decimals);
+      newInfo.userReward = pendingInfo ? formWei(pendingInfo, decimals) : 0;
       newInfo.balance = balance;
       newInfo.apy = (Number(formWei(APY)) / 100).toString();
       newInfo.tvl = formWei(TVL);
@@ -209,13 +215,13 @@ function PC() {
       setClaimLoading(false);
     }
   };
+
   useEffect(() => {
     getPoolList();
   }, [current, poolData, isOnly]);
   useEffect(() => {
-    if (!address) return;
     getPool();
-  }, [walletType]);
+  }, [walletType, address]);
   const getItems: (current: number, details: any) => CollapseProps["items"] = (
     current,
     details
@@ -382,33 +388,39 @@ function PC() {
                       </Button>
                     </div>
                   </div>
-                  {!Number(item.amount) ? (
-                    <Button
-                      className={styles.stake_btn}
-                      loading={index == poolId ? loading : false}
-                      onClick={
-                        !item.stakeStatue
-                          ? () => handleApprove(item.token, index)
-                          : () => stakeShowModal(item, index)
-                      }
-                    >
-                      {item.stakeStatue ? "Stake" : "approve"}
-                    </Button>
+                  {!address ? (
+                    <WalletModal iscard></WalletModal>
                   ) : (
-                    <div className={styles.stake_wrap}>
-                      <Button
-                        className={cx(styles.stake_btn, styles.stake_btn1)}
-                        onClick={() => stakeShowModal(item, index)}
-                      >
-                        Stake +
-                      </Button>
-                      <Button
-                        className={cx(styles.stake_btn, styles.stake_btn2)}
-                        onClick={() => unstakeShowModal(item, index)}
-                      >
-                        Unstake
-                      </Button>
-                    </div>
+                    <>
+                      {!Number(item.amount) ? (
+                        <Button
+                          className={styles.stake_btn}
+                          loading={index == poolId ? loading : false}
+                          onClick={
+                            !item.stakeStatue
+                              ? () => handleApprove(item.token, index)
+                              : () => stakeShowModal(item, index)
+                          }
+                        >
+                          {item.stakeStatue ? "Stake" : "approve"}
+                        </Button>
+                      ) : (
+                        <div className={styles.stake_wrap}>
+                          <Button
+                            className={cx(styles.stake_btn, styles.stake_btn1)}
+                            onClick={() => stakeShowModal(item, index)}
+                          >
+                            Stake +
+                          </Button>
+                          <Button
+                            className={cx(styles.stake_btn, styles.stake_btn2)}
+                            onClick={() => unstakeShowModal(item, index)}
+                          >
+                            Unstake
+                          </Button>
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
                 <Collapse

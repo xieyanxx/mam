@@ -28,6 +28,7 @@ import Stake from "./components/Stake";
 import styles from "./index.less";
 
 import Unstake from "./components/Unstake";
+import WalletModal from "@/components/Mobile/WalletModal";
 
 const tabData = [
   { id: 1, name: "Active" },
@@ -91,37 +92,41 @@ function Mobile() {
     );
     let getPoolList = await contract.getpool();
     let newList = getPoolList.map(async (item: any, index: number) => {
-      let userInfo = await contract.users(index, address);
-      let pendingInfo = await contract.pending(index, address);
       let apyData = await readyContract.getTVLandAPY1(index);
       const { APY, TVL } = apyData;
       let decimals = 18;
       let stakeStatue = "0";
       let balance = "0";
-      if (!isplatformCoin(item.token)) {
-        // 只有非平台币才需要授权
-        decimals = await getDecimals(item.token, walletType, tokenAbi);
-        stakeStatue = await getAllowance(
-          item.token,
-          address,
-          walletType,
-          tokenAbi,
-          farmContractAddress
-        );
-        balance = await balanceOf(item.token, tokenAbi, walletType, address);
-      } else {
-        balance = (await getBalance(walletType, address)).balanceVal;
+      let userInfo;
+      let pendingInfo;
+      if (address) {
+        userInfo = await contract.users(index, address);
+        pendingInfo = await contract.pending(index, address);
+        if (!isplatformCoin(item.token)) {
+          // 只有非平台币才需要授权
+          decimals = await getDecimals(item.token, walletType, tokenAbi);
+          stakeStatue = await getAllowance(
+            item.token,
+            address,
+            walletType,
+            tokenAbi,
+            farmContractAddress
+          );
+          balance = await balanceOf(item.token, tokenAbi, walletType, address);
+        } else {
+          balance = (await getBalance(walletType, address)).balanceVal;
+        }
       }
 
       let newInfo: any = {};
-      newInfo.amount = formWei(userInfo.amount, decimals);
+      newInfo.amount = userInfo ? formWei(userInfo.amount, decimals) : 0;
       newInfo.token = item.token;
       newInfo.rewaredtoken = item.rewaredtoken;
       newInfo.starttime = item.starttime.toString();
       newInfo.endtime = item.endtime.toString();
       newInfo.totalStake = formWei(item.totalStake, decimals);
       newInfo.name = item.name.split(",");
-      newInfo.userReward = formWei(pendingInfo, decimals);
+      newInfo.userReward = pendingInfo ? formWei(pendingInfo, decimals) : 0;
       newInfo.balance = balance;
       newInfo.apy = (Number(formWei(APY)) / 100).toString();
       newInfo.tvl = formWei(TVL);
@@ -209,9 +214,8 @@ function Mobile() {
     getPoolList();
   }, [current, poolData, isOnly]);
   useEffect(() => {
-    if (!address) return;
     getPool();
-  }, [walletType]);
+  }, [walletType, address]);
   const getItems: (current: number, details: any) => CollapseProps["items"] = (
     current,
     details
@@ -272,35 +276,41 @@ function Mobile() {
               Claim
             </Button>
           </div>
-          {!Number(details.amount) ? (
-            <div className={styles.btn_wrap}>
-              <Button
-                className={styles.stake_btn}
-                loading={current == poolId ? loading : false}
-                onClick={
-                  !details.stakeStatue
-                    ? () => handleApprove(details.token, current)
-                    : () => stakeShowModal(details, current)
-                }
-              >
-                {details.stakeStatue ? "Stake" : "approve"}
-              </Button>
-            </div>
+          {!address ? (
+            <WalletModal iscard></WalletModal>
           ) : (
-            <div className={styles.stake_wrap}>
-              <Button
-                className={cx(styles.stake_btn, styles.stake_btn1)}
-                onClick={() => stakeShowModal(details, current)}
-              >
-                Stake +
-              </Button>
-              <Button
-                className={cx(styles.stake_btn, styles.stake_btn2)}
-                onClick={() => unstakeShowModal(details, current)}
-              >
-                Unstake
-              </Button>
-            </div>
+            <>
+              {!Number(details.amount) ? (
+                <div className={styles.btn_wrap}>
+                  <Button
+                    className={styles.stake_btn}
+                    loading={current == poolId ? loading : false}
+                    onClick={
+                      !details.stakeStatue
+                        ? () => handleApprove(details.token, current)
+                        : () => stakeShowModal(details, current)
+                    }
+                  >
+                    {details.stakeStatue ? "Stake" : "approve"}
+                  </Button>
+                </div>
+              ) : (
+                <div className={styles.stake_wrap}>
+                  <Button
+                    className={cx(styles.stake_btn, styles.stake_btn1)}
+                    onClick={() => stakeShowModal(details, current)}
+                  >
+                    Stake +
+                  </Button>
+                  <Button
+                    className={cx(styles.stake_btn, styles.stake_btn2)}
+                    onClick={() => unstakeShowModal(details, current)}
+                  >
+                    Unstake
+                  </Button>
+                </div>
+              )}
+            </>
           )}
 
           <div className={styles.bottom_wrap}>
