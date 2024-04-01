@@ -1,3 +1,9 @@
+import { CoinbaseWallet } from "@/components/EthersContainer/wallet/coinbase";
+import { MetaMaskWallet } from "@/components/EthersContainer/wallet/metamask";
+import { OkxWallet } from "@/components/EthersContainer/wallet/okx";
+import { WalletConnect } from "@/components/EthersContainer/wallet/walletconnect";
+import { clearStorage } from "@/utils";
+import { ethers } from "ethers";
 import React, {
   useCallback,
   useEffect,
@@ -5,13 +11,8 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { ethers } from "ethers";
+import { defaultRpc } from "./address";
 import { EIP_EVENTS } from "./constant";
-import { CoinbaseWallet } from "@/components/EthersContainer/wallet/coinbase";
-import { WalletConnect } from "@/components/EthersContainer/wallet/walletconnect";
-import { MetaMaskWallet } from "@/components/EthersContainer/wallet/metamask";
-import { OkxWallet } from "@/components/EthersContainer/wallet/okx";
-import { clearStorage } from "@/utils";
 
 export enum WalletType {
   MetaMaskWallet = "MetaMaskWallet",
@@ -217,30 +218,38 @@ export default EthersContainer;
 export const getContract = async (
   address: string,
   abi: any,
-  walletType: string
+  walletType: string,
+  isDefault?: boolean
 ) => {
-  let provider: any;
-  switch (walletType) {
-    case WalletType.MetaMaskWallet:
-      provider = await MetaMaskWallet();
-      break;
-    case WalletType.WalletConnect:
-      provider = await WalletConnect();
-      break;
-    case WalletType.OkxWallet:
-      provider = await OkxWallet();
-      break;
-    case WalletType.CoinbaseWallet:
-      provider = await CoinbaseWallet();
-      break;
-    default: {
-      provider = await MetaMaskWallet();
-      break;
+  //没链接钱包时调用默认的rpc
+  if (isDefault) {
+    let _ethers = new ethers.providers.JsonRpcProvider(defaultRpc);
+    const signer = _ethers.getSigner();
+    return new ethers.Contract(address, abi, signer);
+  } else {
+    let provider: any;
+    switch (walletType) {
+      case WalletType.MetaMaskWallet:
+        provider = await MetaMaskWallet();
+        break;
+      case WalletType.WalletConnect:
+        provider = await WalletConnect();
+        break;
+      case WalletType.OkxWallet:
+        provider = await OkxWallet();
+        break;
+      case WalletType.CoinbaseWallet:
+        provider = await CoinbaseWallet();
+        break;
+      default: {
+        provider = await MetaMaskWallet();
+        break;
+      }
     }
+    let _ethers = new ethers.providers.Web3Provider(provider);
+    const signer = _ethers.getSigner();
+    return new ethers.Contract(address, abi, signer);
   }
-  const _ethers = new ethers.providers.Web3Provider(provider);
-  const signer = _ethers.getSigner();
-  return new ethers.Contract(address, abi, signer);
 };
 
 // export

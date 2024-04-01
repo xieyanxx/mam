@@ -14,6 +14,7 @@ import {
   poolContractAddress,
   readyContractAddress,
 } from "@/components/EthersContainer/address";
+import WalletModal from "@/components/Mobile/WalletModal";
 import {
   formatAmount,
   getTime,
@@ -27,7 +28,6 @@ import { memo, useCallback, useEffect, useState } from "react";
 import Stake from "./components/Stake";
 import Unstake from "./components/Unstake";
 import styles from "./index.less";
-import WalletModal from "@/components/Mobile/WalletModal";
 
 const tabData = [
   { id: 1, name: "Active" },
@@ -79,15 +79,18 @@ function Mobile() {
 
   //获取pool数组
   async function getPool() {
+    let isDefault = address ? false : true;
     const contract = await getContract(
       poolContractAddress,
       poolAbi,
-      walletType
+      walletType,
+      isDefault
     );
     const readyContract = await getContract(
       readyContractAddress,
       readyAbi,
-      walletType
+      walletType,
+      isDefault
     );
     let getPoolList = await contract.getpool();
     let newList = getPoolList.map(async (item: any, index: number) => {

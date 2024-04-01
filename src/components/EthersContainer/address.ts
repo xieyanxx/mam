@@ -4,6 +4,7 @@ import usdt from "@/assets/logo/usdt.png";
 import usdc from "@/assets/logo/usdc.png";
 
 // 测试
+export const defaultRpc='https://data-seed-prebsc-1-s1.bnbchain.org:8545'; //没链接钱包是默认的rpc
 export const network = "bsc";
 export const farmContractAddress = "0x0F005666480aF784f12446Ed6835B35308EDEC0e"; //farm合约地址
 export const poolContractAddress = "0x4864e451aFA91ddCE8a2c7870186Ff994e4b5007"; //pool合约地址
@@ -58,10 +59,3 @@ export const ChainToken = [
   },
 ];
 
-//预发布
-// export const network0913 = 'Goerli';
-// export const contractAddress0913 = '0x3FEbE371052828A94f6cC475e3579819e6E133C9'; //合约地址
-
-//正式
-// export const network0913 = 'eth';
-// export const contractAddress0913 = '0xE4173508c2C4a1FB23088D1C6154f91EE5D55Bdb'; //合约地址

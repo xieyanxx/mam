@@ -80,15 +80,18 @@ function PC() {
 
   //获取pool数组
   async function getPool() {
+    let isDefault = address ? false : true;
     const contract = await getContract(
       farmContractAddress,
       farmAbi,
-      walletType
+      walletType,
+      isDefault
     );
     const readyContract = await getContract(
       readyContractAddress,
       readyAbi,
-      walletType
+      walletType,
+      isDefault
     );
     let getPoolList = await contract.getpool();
     let newList = getPoolList.map(async (item: any, index: number) => {
